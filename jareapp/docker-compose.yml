@@ -1,0 +1,87 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: jareapp-postgres
+    environment:
+      POSTGRES_DB: jareapp
+      POSTGRES_USER: jareapp
+      POSTGRES_PASSWORD: jareapp_secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U jareapp']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: jareapp-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./packages/api
+      dockerfile: Dockerfile
+    container_name: jareapp-api
+    ports:
+      - '4000:4000'
+    environment:
+      DATABASE_URL: postgresql://jareapp:jareapp_secret@postgres:5432/jareapp
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: change_me_in_production_jwt_secret_key_256bits
+      JWT_REFRESH_SECRET: change_me_in_production_refresh_secret_key_256bits
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 30d
+      PORT: 4000
+      CLIENT_URL: http://localhost:3000
+      NODE_ENV: development
+      ADDRESS_ENCRYPTION_KEY: change_me_in_production_aes256_key_32chars
+      TWILIO_ACCOUNT_SID: ''
+      TWILIO_AUTH_TOKEN: ''
+      TWILIO_PHONE_NUMBER: ''
+      AWS_ACCESS_KEY_ID: ''
+      AWS_SECRET_ACCESS_KEY: ''
+      AWS_BUCKET_NAME: jareapp-media
+      AWS_REGION: me-south-1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./packages/api:/app
+      - /app/node_modules
+    command: sh -c "npx prisma migrate deploy && npm run seed && npm run dev"
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: jareapp-web
+    ports:
+      - '3000:3000'
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_SOCKET_URL: http://localhost:4000
+    depends_on:
+      - api
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+  redis_data:

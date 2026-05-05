@@ -442,3 +442,29 @@ export async function deleteMyAccount(req: AuthenticatedRequest, res: Response):
     res.status(500).json({ success: false, message: 'Failed to delete account' });
   }
 }
+
+// Aliases and additional exports to match route expectations
+export const getMyProfile = getUserById;
+export const updateMyProfile = updateProfile;
+export const getMyNotifications = getNotifications;
+export const markAllNotificationsRead = markNotificationsRead;
+
+export async function getNeighborhoodChampions(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.user!.userId } });
+    if (!user?.neighborhoodId) {
+      res.json({ success: true, data: [] });
+      return;
+    }
+
+    const champions = await prisma.user.findMany({
+      where: { neighborhoodId: user.neighborhoodId, role: 'NEIGHBORHOOD_CHAMPION', isActive: true },
+      select: { id: true, firstName: true, lastName: true, displayName: true, avatarUrl: true, bio: true, role: true },
+    });
+
+    res.json({ success: true, data: champions });
+  } catch (error) {
+    console.error('[Users] getNeighborhoodChampions error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch champions' });
+  }
+}

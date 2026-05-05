@@ -161,6 +161,7 @@ model Neighborhood {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
+  @@unique([nameEn, governorateId])
   @@map("neighborhoods")
 }
 

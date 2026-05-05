@@ -42,6 +42,7 @@ services:
       DATABASE_URL: postgresql://jareapp:jareapp_secret@postgres:5432/jareapp
       REDIS_URL: redis://redis:6379
       JWT_SECRET: change_me_in_production_jwt_secret_key_256bits
+      JWT_ACCESS_SECRET: change_me_in_production_jwt_secret_key_256bits
       JWT_REFRESH_SECRET: change_me_in_production_refresh_secret_key_256bits
       JWT_EXPIRES_IN: 15m
       JWT_REFRESH_EXPIRES_IN: 30d

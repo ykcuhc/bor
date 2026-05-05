@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #1B5E8B;
+  --color-primary-light: #2980B9;
+  --color-accent: #E8A020;
+  --color-accent-light: #F5C842;
+  --color-danger: #C0392B;
+  --color-warning: #E67E22;
+  --color-success: #27AE60;
+  --color-bg: #F7F9FC;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-text-primary: #1A2335;
+  --color-text-secondary: #64748B;
+  --color-text-muted: #94A3B8;
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    @apply bg-bg text-text-primary;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    line-height: 1.6;
+  }
+
+  [dir='rtl'] body,
+  [lang='ar'] body {
+    font-family: 'Cairo', 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white rounded-lg px-4 py-2 font-semibold hover:bg-primary-light transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-surface text-primary border border-primary rounded-lg px-4 py-2 font-semibold hover:bg-blue-50 transition-colors duration-200;
+  }
+
+  .btn-danger {
+    @apply bg-danger text-white rounded-lg px-4 py-2 font-semibold hover:opacity-90 transition-opacity duration-200;
+  }
+
+  .input-field {
+    @apply border border-border rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 bg-surface;
+  }
+
+  .card {
+    @apply bg-surface rounded-xl shadow-sm border border-border;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.375rem;
+}
+
+/* RTL support */
+[dir='rtl'] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 3px;
+}
+
+/* Mobile bottom safe area */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}

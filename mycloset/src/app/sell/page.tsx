@@ -8,6 +8,7 @@ import {
   Camera, Tag, Info, DollarSign, Loader2,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
+import { getSupabaseClient } from '@/lib/supabase/client';
 import { cn, formatKWD } from '@/lib/utils';
 import { calcEarnings, SHIPPING_FEE_KWD } from '@/lib/mockData';
 import type { Category, Condition } from '@/types';
@@ -33,25 +34,32 @@ const BRANDS = [
 
 // ── Step 1: Photos ─────────────────────────────────────────────────────────────
 
-function PhotoStep({ photos, setPhotos }: { photos: string[]; setPhotos: (p: string[]) => void }) {
+interface PhotoEntry { preview: string; file: File }
+
+function PhotoStep({
+  photos, setPhotos,
+}: {
+  photos: PhotoEntry[];
+  setPhotos: (p: PhotoEntry[]) => void;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files || []);
-    // Convert to object URLs for preview (in production, upload to Supabase Storage)
-    const urls = files.slice(0, 8 - photos.length).map(f => URL.createObjectURL(f));
-    setPhotos([...photos, ...urls]);
+    const incoming = Array.from(e.target.files || []).slice(0, 8 - photos.length);
+    const entries: PhotoEntry[] = incoming.map(f => ({ file: f, preview: URL.createObjectURL(f) }));
+    setPhotos([...photos, ...entries]);
     e.target.value = '';
   }
 
   function removePhoto(idx: number) {
+    URL.revokeObjectURL(photos[idx].preview);
     setPhotos(photos.filter((_, i) => i !== idx));
   }
 
   function setCover(idx: number) {
-    const newPhotos = [...photos];
-    const [cover] = newPhotos.splice(idx, 1);
-    setPhotos([cover, ...newPhotos]);
+    const next = [...photos];
+    const [cover] = next.splice(idx, 1);
+    setPhotos([cover, ...next]);
   }
 
   return (
@@ -64,10 +72,10 @@ function PhotoStep({ photos, setPhotos }: { photos: string[]; setPhotos: (p: str
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-        {photos.map((url, i) => (
+        {photos.map((entry, i) => (
           <div key={i} className="relative aspect-square group">
             <img
-              src={url}
+              src={entry.preview}
               alt={`Photo ${i + 1}`}
               className={cn(
                 'w-full h-full object-cover rounded-xl cursor-pointer transition-all',
@@ -377,7 +385,7 @@ function PricingStep({ data, setData }: { data: PricingData; setData: (d: Pricin
 // ── Step 4: Review ─────────────────────────────────────────────────────────────
 
 interface ReviewProps {
-  photos: string[];
+  photos: PhotoEntry[];
   details: DetailsData;
   pricing: PricingData;
 }
@@ -395,7 +403,7 @@ function ReviewStep({ photos, details, pricing }: ReviewProps) {
 
       <div className="flex gap-4">
         <img
-          src={photos[0]}
+          src={photos[0]?.preview}
           alt="Cover"
           className="w-24 h-24 rounded-xl object-cover flex-shrink-0"
         />
@@ -447,7 +455,8 @@ export default function SellPage() {
 
   const [step,    setStep]    = useState(0);
   const [loading, setLoading] = useState(false);
-  const [photos,  setPhotos]  = useState<string[]>([]);
+  const [uploadProgress, setUploadProgress] = useState('');
+  const [photos,  setPhotos]  = useState<PhotoEntry[]>([]);
   const [details, setDetails] = useState<DetailsData>({
     title: '', description: '', category: 'Women', subCategory: '',
     brand: '', size: '', condition: 'Good', color: '', tags: '',
@@ -484,27 +493,51 @@ export default function SellPage() {
       setStep(s => s + 1);
       return;
     }
-    // Submit
+    // Submit — upload images then create listing
     setLoading(true);
-    await new Promise(r => setTimeout(r, 800)); // Simulate upload
-    const id = await addListing({
-      title:        details.title.trim(),
-      description:  details.description.trim(),
-      images:       photos,
-      category:     details.category,
-      subCategory:  details.subCategory,
-      brand:        details.brand,
-      size:         details.size,
-      condition:    details.condition,
-      color:        details.color.split(',').map(c => c.trim()).filter(Boolean),
-      originalPrice: parseFloat(pricing.originalPrice) || 0,
-      listingPrice:  parseFloat(pricing.listingPrice),
-      quantity:      parseInt(pricing.quantity) || 1,
-      tags:          details.tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean),
-    });
-    setLoading(false);
-    showToast('Your listing is live! 🎉', 'success');
-    router.push(`/listings/${id}`);
+    try {
+      const supabase = getSupabaseClient();
+      const imageUrls: string[] = [];
+
+      for (let i = 0; i < photos.length; i++) {
+        setUploadProgress(`Uploading photo ${i + 1} of ${photos.length}…`);
+        const ext  = photos[i].file.name.split('.').pop() ?? 'jpg';
+        const path = `${currentUser!.id}/${Date.now()}-${i}.${ext}`;
+        const { error } = await supabase.storage
+          .from('listing-images')
+          .upload(path, photos[i].file, { contentType: photos[i].file.type, upsert: false });
+        if (error) throw error;
+        const { data: { publicUrl } } = supabase.storage.from('listing-images').getPublicUrl(path);
+        imageUrls.push(publicUrl);
+      }
+
+      setUploadProgress('Publishing listing…');
+      const id = await addListing({
+        title:         details.title.trim(),
+        description:   details.description.trim(),
+        images:        imageUrls,
+        category:      details.category,
+        subCategory:   details.subCategory,
+        brand:         details.brand,
+        size:          details.size,
+        condition:     details.condition,
+        color:         details.color.split(',').map(c => c.trim()).filter(Boolean),
+        originalPrice: parseFloat(pricing.originalPrice) || 0,
+        listingPrice:  parseFloat(pricing.listingPrice),
+        quantity:      parseInt(pricing.quantity) || 1,
+        tags:          details.tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean),
+      });
+
+      photos.forEach(p => URL.revokeObjectURL(p.preview));
+      showToast('Your listing is live! 🎉', 'success');
+      router.push(`/listings/${id}`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Upload failed. Please try again.';
+      showToast(msg, 'error');
+    } finally {
+      setLoading(false);
+      setUploadProgress('');
+    }
   }
 
   return (
@@ -574,7 +607,7 @@ export default function SellPage() {
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
           {step === STEPS.length - 1
-            ? (loading ? 'Publishing...' : 'Publish Listing')
+            ? (loading ? (uploadProgress || 'Publishing…') : 'Publish Listing')
             : 'Continue'
           }
           {!loading && step < STEPS.length - 1 && <ArrowRight className="w-4 h-4" />}

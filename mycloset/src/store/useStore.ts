@@ -68,7 +68,8 @@ interface OfferSlice {
 
 interface UISlice {
   isMobileMenuOpen: boolean;
-  toggleMobileMenu: () => void;
+  toggleMobileMenu:  () => void;
+  closeMobileMenu:   () => void;
   isOfferModalOpen: boolean;
   openOfferModal:   (listingId: string) => void;
   closeOfferModal:  () => void;
@@ -399,6 +400,7 @@ export const useStore = create<Store>()(
 
       isMobileMenuOpen:     false,
       toggleMobileMenu:     () => set(s => ({ isMobileMenuOpen: !s.isMobileMenuOpen })),
+      closeMobileMenu:      () => set({ isMobileMenuOpen: false }),
       isOfferModalOpen:     false,
       activeOfferListingId: null,
       openOfferModal:       (listingId) => set({ isOfferModalOpen: true, activeOfferListingId: listingId }),

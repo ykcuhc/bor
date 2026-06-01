@@ -20,6 +20,8 @@ interface FeedPostCardProps {
   isDemoMode?:          boolean;
   initialCommentsOpen?: boolean;
   demoComments?:        import('@/lib/types').Comment[];
+  /** Pre-fetched comments (live mode post detail page). When provided, CommentSection skips its own fetch. */
+  initialComments?:     import('@/lib/types').Comment[];
 }
 
 const REACTION_OPTIONS: ReactionType[] = ['like', 'helpful', 'thank', 'agree', 'sad'];
@@ -30,6 +32,7 @@ export default function FeedPostCard({
   isDemoMode = false,
   initialCommentsOpen = false,
   demoComments: propDemoComments,
+  initialComments,
 }: FeedPostCardProps) {
   const store = useFeedStore();
   const { active: activeReaction, count: reactionCount, react } = useReaction(
@@ -281,8 +284,9 @@ export default function FeedPostCard({
                 {REACTION_OPTIONS.map(r => (
                   <button
                     key={r}
+                    type="button"
                     onClick={() => react(r)}
-                    title={REACTION_META[r].label}
+                    aria-label={REACTION_META[r].label}
                     className={clsx(
                       'text-xl hover:scale-125 transition-transform',
                       activeReaction === r && 'scale-125'
@@ -326,7 +330,7 @@ export default function FeedPostCard({
         {showComments && (
           <CommentSection
             postId={post.id}
-            comments={isDemoMode ? demoComments : []}
+            comments={isDemoMode ? demoComments : (initialComments ?? [])}
             currentUserId={currentUserId}
             isDemoMode={isDemoMode}
             onNewComment={() => setCommentCount(c => c + 1)}

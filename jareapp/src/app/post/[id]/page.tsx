@@ -63,7 +63,8 @@ export default function PostDetailPage() {
           currentUserId={profile?.id ?? 'user-1'}
           isDemoMode={IS_DEMO}
           initialCommentsOpen
-          demoComments={displayComments}
+          demoComments={IS_DEMO ? displayComments : undefined}
+          initialComments={IS_DEMO ? undefined : displayComments}
         />
       )}
     </div>

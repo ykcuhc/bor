@@ -7,7 +7,7 @@
 //   preview generation → removal → final URL list for the post.
 // ============================================================
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { uploadImage, deleteImage, validateImageFile } from '@/lib/supabase/storage';
 import type { UploadedImage } from '@/lib/types/notifications';
 
@@ -34,6 +34,14 @@ export function useImageUpload(
   isDemoMode: boolean = false
 ): UseImageUploadReturn {
   const [uploads, setUploads] = useState<UploadState[]>([]);
+  const uploadsRef = useRef(uploads);
+  uploadsRef.current = uploads;
+
+  // Revoke all object URLs on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => { uploadsRef.current.forEach(u => URL.revokeObjectURL(u.preview)); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isUploading = uploads.some(u => u.progress < 100 && !u.error);
 

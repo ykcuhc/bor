@@ -14,12 +14,12 @@ export function usePost(postId: string, isDemoMode = false) {
   const [loading,  setLoading]  = useState(true);
   const [error,    setError]    = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (signal?: AbortSignal) => {
     if (isDemoMode) { setLoading(false); return; }
     try {
       const [postRes, commentsRes] = await Promise.all([
-        fetch(`/api/posts/${postId}`),
-        fetch(`/api/comments/${postId}`),
+        fetch(`/api/posts/${postId}`, { signal }),
+        fetch(`/api/comments/${postId}`, { signal }),
       ]);
       if (!postRes.ok)     throw new Error('Post not found');
       if (!commentsRes.ok) throw new Error('Failed to load comments');
@@ -27,13 +27,18 @@ export function usePost(postId: string, isDemoMode = false) {
       setPost(await postRes.json());
       setComments(await commentsRes.json());
     } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return;
       setError(err instanceof Error ? err.message : 'Error');
     } finally {
       setLoading(false);
     }
   }, [postId, isDemoMode]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    const controller = new AbortController();
+    load(controller.signal);
+    return () => controller.abort();
+  }, [load]);
 
   // Realtime: receive new comments live
   useEffect(() => {

@@ -4,7 +4,7 @@
 // Uses optimistic updates: the UI updates instantly, then
 // confirms/rolls back based on the server response.
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useFeedStore } from '@/store/feedStore';
 import type { ReactionType } from '@/lib/types';
 
@@ -14,11 +14,13 @@ export function useReaction(
   initialCount:    number,
   isDemoMode = false
 ) {
-  const store = useFeedStore();
+  const store   = useFeedStore();
+  const pending = useRef(false);
   const [active, setActive] = useState<ReactionType | null>(initialReaction);
   const [count,  setCount]  = useState(initialCount);
 
   async function react(reaction: ReactionType) {
+    if (pending.current) return;
     const prev     = active;
     const isToggle = prev === reaction;
     const next     = isToggle ? null : reaction;
@@ -30,6 +32,7 @@ export function useReaction(
 
     if (isDemoMode) return;
 
+    pending.current = true;
     try {
       const method = next === null ? 'DELETE' : 'POST';
       const res = await fetch(`/api/posts/${postId}/reactions`, {
@@ -44,6 +47,8 @@ export function useReaction(
       setActive(prev);
       setCount(c => c - (next === null ? -1 : prev === null ? 1 : 0));
       store.applyReaction(postId, prev, next);
+    } finally {
+      pending.current = false;
     }
   }
 

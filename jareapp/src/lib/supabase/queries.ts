@@ -178,7 +178,9 @@ export async function fetchBusinesses(
   }
 
   if (search) {
-    query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
+    // Escape ILIKE wildcards so user input is treated as a literal string
+    const safe = search.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_');
+    query = query.or(`name.ilike.%${safe}%,description.ilike.%${safe}%`);
   }
 
   const { data, error } = await query;

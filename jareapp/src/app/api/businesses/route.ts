@@ -35,18 +35,25 @@ export async function POST(request: NextRequest) {
     if (!body.name?.trim())     return NextResponse.json({ error: 'name is required' }, { status: 400 });
     if (!body.category?.trim()) return NextResponse.json({ error: 'category is required' }, { status: 400 });
 
-    // Resolve submitter's neighborhood
-    const { data: profile } = await supabase
-      .from('users')
-      .select('neighborhood_id, governorate_id')
-      .eq('id', user.id)
-      .single();
+    // Resolve submitter's neighborhood (fall back to profile when not sent by client)
+    let resolvedNeighborhoodId: string | null = body.neighborhood_id ?? null;
+    if (!resolvedNeighborhoodId) {
+      const { data: profile } = await supabase
+        .from('users')
+        .select('neighborhood_id')
+        .eq('id', user.id)
+        .single();
+      resolvedNeighborhoodId = profile?.neighborhood_id ?? null;
+    }
+    if (!resolvedNeighborhoodId) {
+      return NextResponse.json({ error: 'neighborhood_id could not be resolved' }, { status: 400 });
+    }
 
     const { data, error } = await supabase
       .from('businesses')
       .insert({
         owner_id:        user.id,
-        neighborhood_id: body.neighborhood_id ?? profile?.neighborhood_id,
+        neighborhood_id: resolvedNeighborhoodId,
         name:            body.name.trim(),
         category:        body.category.trim(),
         description:     body.description?.trim() ?? null,

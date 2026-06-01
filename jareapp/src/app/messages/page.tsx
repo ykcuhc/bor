@@ -66,7 +66,17 @@ function MessagesContent() {
   // Load threads
   useEffect(() => {
     if (IS_DEMO) { setThreads(DEMO_THREADS); return; }
-    setThreads([]);
+    fetch('/api/messages')
+      .then(r => r.ok ? r.json() : [])
+      .then((data: { other_user: User; last_message: string; last_time: string; unread_count: number }[]) => {
+        setThreads(data.map(t => ({
+          user:        t.other_user,
+          lastMessage: t.last_message,
+          lastTime:    t.last_time,
+          unread:      t.unread_count > 0,
+        })));
+      })
+      .catch(() => setThreads([]));
   }, []);
 
   // Auto-open thread when navigated from a profile via ?with=userId

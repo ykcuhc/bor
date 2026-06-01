@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
   const neighborhoodId   = searchParams.get('neighborhoodId') ?? '';
   const governorateId    = searchParams.get('governorateId')  ?? '';
   const category         = searchParams.get('category')       ?? undefined;
-  const limit            = parseInt(searchParams.get('limit')  ?? '20', 10);
-  const offset           = parseInt(searchParams.get('offset') ?? '0',  10);
+  const limit            = Math.max(1, Math.min(100, parseInt(searchParams.get('limit')  ?? '20', 10)));
+  const offset           = Math.max(0,              parseInt(searchParams.get('offset') ?? '0',  10));
 
   try {
     const supabase = await createClient();

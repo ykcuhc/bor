@@ -6,6 +6,7 @@ import { Home, Users, MessageSquare, Store, User, ShieldCheck, PlusCircle, Crown
 import { clsx } from 'clsx';
 import Avatar from '@/components/ui/Avatar';
 import VerificationBanner from '@/components/neighborhood/VerificationBanner';
+import { useNeighborhoodStats } from '@/hooks/useNeighborhoodStats';
 import { DUMMY_USERS, DUMMY_NEIGHBORHOODS } from '@/lib/data/dummy-data';
 import { useAuth } from '@/context/AuthContext';
 
@@ -18,6 +19,7 @@ export default function Sidebar() {
 
   const currentUser         = profile ?? DUMMY_USER;
   const currentNeighborhood = profile?.neighborhood ?? DUMMY_NEIGHBORHOOD;
+  const stats               = useNeighborhoodStats(currentUser.neighborhood_id ?? 'nh-1');
 
   const NAV_ITEMS = [
     { href: '/',                          label: 'Home Feed',      icon: Home },
@@ -98,11 +100,11 @@ export default function Sidebar() {
           <p>{currentNeighborhood.governorate?.name_en}</p>
           <div className="grid grid-cols-2 gap-2 pt-1">
             <div className="text-center bg-gray-50 rounded-lg py-2">
-              <p className="text-base font-bold text-gray-800">1,247</p>
+              <p className="text-base font-bold text-gray-800">{stats.member_count.toLocaleString()}</p>
               <p>Neighbors</p>
             </div>
             <div className="text-center bg-gray-50 rounded-lg py-2">
-              <p className="text-base font-bold text-gray-800">38</p>
+              <p className="text-base font-bold text-gray-800">{stats.business_count.toLocaleString()}</p>
               <p>Businesses</p>
             </div>
           </div>

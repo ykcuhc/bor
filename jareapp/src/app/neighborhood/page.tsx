@@ -11,6 +11,7 @@ import { FeedPostSkeleton } from '@/components/ui/Skeleton';
 import { useFeed } from '@/hooks/useFeed';
 import { useFeedStore } from '@/store/feedStore';
 import { useAuth } from '@/context/AuthContext';
+import { useNeighborhoodStats } from '@/hooks/useNeighborhoodStats';
 import type { Post } from '@/lib/types';
 import { DUMMY_POSTS, DUMMY_NEIGHBORHOODS } from '@/lib/data/dummy-data';
 import { useEffect } from 'react';
@@ -35,6 +36,7 @@ export default function NeighborhoodPage() {
   const neighborhoodId = profile?.neighborhood_id ?? 'nh-1';
   const governorateId  = profile?.governorate_id  ?? 'gov-2';
   const neighborhood   = profile?.neighborhood ?? DUMMY_NEIGHBORHOODS[0];
+  const stats          = useNeighborhoodStats(neighborhoodId);
 
   const currentCategory = TABS.find(t => t.key === activeTab)?.category;
 
@@ -84,7 +86,7 @@ export default function NeighborhoodPage() {
               <div>
                 <h1 className="text-white text-xl font-bold">{neighborhood.name_en}</h1>
                 <p className="text-brand-100 text-sm">
-                  {neighborhood.governorate?.name_en ?? profile?.governorate?.name_en} · 1,247 neighbors
+                  {neighborhood.governorate?.name_en ?? profile?.governorate?.name_en} · {stats.member_count.toLocaleString()} neighbors
                 </p>
               </div>
             </div>

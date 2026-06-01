@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Search, Circle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import Avatar from '@/components/ui/Avatar';
@@ -39,9 +40,11 @@ const DEMO_MSG_MAP: Record<string, DMMessage[]> = {
   ],
 };
 
-export default function MessagesPage() {
+function MessagesContent() {
   const { profile } = useAuth();
-  const currentUser = profile ?? DUMMY_USERS[0];
+  const currentUser  = profile ?? DUMMY_USERS[0];
+  const searchParams = useSearchParams();
+  const withUserId   = searchParams.get('with');
 
   const [threads,         setThreads]         = useState<Thread[]>([]);
   const [selectedThread,  setSelectedThread]  = useState<Thread | null>(null);
@@ -65,9 +68,23 @@ export default function MessagesPage() {
   // Load threads
   useEffect(() => {
     if (IS_DEMO) { setThreads(DEMO_THREADS); return; }
-    // In live mode: fetch /api/messages/threads (future endpoint)
     setThreads([]);
   }, []);
+
+  // Auto-open thread when navigated from a profile via ?with=userId
+  useEffect(() => {
+    if (!withUserId || threads.length === 0) return;
+    const existing = threads.find(t => t.user.id === withUserId);
+    if (existing) { setSelectedThread(existing); return; }
+    // Build a synthetic thread for users not yet in the list
+    const targetUser = DUMMY_USERS.find(u => u.id === withUserId);
+    if (targetUser && IS_DEMO) {
+      const newThread: Thread = { user: targetUser, lastMessage: '', lastTime: new Date().toISOString(), unread: false };
+      setThreads(prev => [newThread, ...prev]);
+      setSelectedThread(newThread);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [withUserId, threads.length]);
 
   const filteredThreads = threads.filter(t =>
     t.user.full_name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -103,7 +120,7 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 space-y-3">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 space-y-3" suppressHydrationWarning>
       {IS_DEMO && <DemoModeBanner />}
 
       <div className="card overflow-hidden" style={{ height: 'calc(100vh - 8rem)' }}>
@@ -239,5 +256,13 @@ export default function MessagesPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={<div className="max-w-5xl mx-auto px-4 py-8 text-center text-gray-400 text-sm">Loading messages…</div>}>
+      <MessagesContent />
+    </Suspense>
   );
 }

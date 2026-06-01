@@ -45,6 +45,35 @@ export default function FeedPostCard({
   const [showReactionPicker, setShowReactionPicker] = useState(false);
   const [showMenu,           setShowMenu]           = useState(false);
   const [deleting,           setDeleting]           = useState(false);
+  const [toast,              setToast]              = useState('');
+
+  function showToast(msg: string) {
+    setToast(msg);
+    setTimeout(() => setToast(''), 2500);
+  }
+
+  async function handleShare() {
+    const url = `${window.location.origin}/post/${post.id}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: post.title ?? 'JareApp post', text: post.body.slice(0, 100), url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        showToast('Link copied to clipboard');
+      }
+    } catch {
+      // user cancelled share — no action needed
+    }
+  }
+
+  async function handleReport() {
+    setShowMenu(false);
+    if (!confirm('Report this post as inappropriate?')) return;
+    if (!isDemoMode) {
+      await fetch(`/api/posts/${post.id}/report`, { method: 'POST' }).catch(() => null);
+    }
+    showToast('Report submitted. Thank you.');
+  }
 
   const PREVIEW_CHARS = 280;
   const isLong        = post.body.length > PREVIEW_CHARS;
@@ -139,7 +168,7 @@ export default function FeedPostCard({
                     </button>
                   )}
                   <button
-                    onClick={() => setShowMenu(false)}
+                    onClick={handleReport}
                     className="flex items-center gap-2 w-full px-3 py-2 text-gray-600 hover:bg-gray-50"
                   >
                     Report post
@@ -269,11 +298,22 @@ export default function FeedPostCard({
             Comment
           </button>
 
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
-                             text-gray-600 hover:bg-gray-50 transition-colors ml-auto">
+          <button
+            onClick={handleShare}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
+                       text-gray-600 hover:bg-gray-50 transition-colors ml-auto"
+          >
             <Share2 className="w-3.5 h-3.5" />
             Share
           </button>
+
+          {/* Toast */}
+          {toast && (
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white
+                            text-xs px-4 py-2.5 rounded-xl shadow-xl z-50 pointer-events-none">
+              {toast}
+            </div>
+          )}
         </div>
 
         {/* ── Comments ─────────────────────────────────────────── */}

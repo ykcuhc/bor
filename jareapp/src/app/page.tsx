@@ -256,6 +256,35 @@ function EmptyFeed() {
   );
 }
 
+function InviteCard() {
+  const [copied, setCopied] = useState(false);
+
+  async function handleInvite() {
+    const url = window.location.origin;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Join JareApp', text: 'Join me on JareApp — the neighborhood social platform for Kuwait!', url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      }
+    } catch {
+      // user cancelled
+    }
+  }
+
+  return (
+    <div className="card p-4 text-xs text-gray-400 text-center">
+      <p className="font-semibold text-gray-600 text-sm mb-1">Your neighborhood is live</p>
+      <p>Invite a neighbor to join JareApp</p>
+      <button onClick={handleInvite} className="mt-3 btn-secondary text-xs w-full">
+        {copied ? '✓ Link copied!' : 'Send Invite'}
+      </button>
+    </div>
+  );
+}
+
 function RightRail({ posts }: { posts: Post[] }) {
   const safetyPosts = posts.filter(p => p.category === 'safety').slice(0, 3);
   const eventPosts  = posts.filter(p => p.category === 'events').slice(0, 3);
@@ -290,11 +319,7 @@ function RightRail({ posts }: { posts: Post[] }) {
           }
         </div>
 
-        <div className="card p-4 text-xs text-gray-400 text-center">
-          <p className="font-semibold text-gray-600 text-sm mb-1">Your neighborhood is live</p>
-          <p>Invite a neighbor to join JareApp</p>
-          <button className="mt-3 btn-secondary text-xs w-full">Send Invite</button>
-        </div>
+        <InviteCard />
       </div>
     </div>
   );

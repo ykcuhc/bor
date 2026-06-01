@@ -117,14 +117,12 @@ export default function CreatePostForm({
     onClose?.();
   }
 
-  void governorateId; // used for context, not rendered directly here
-
   return (
     <div className="card p-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-gray-900">Post to Neighborhood</h2>
         {onClose && (
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100 text-gray-400">
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100 text-gray-400" aria-label="Close composer">
             <X className="w-4 h-4" />
           </button>
         )}

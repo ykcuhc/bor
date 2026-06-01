@@ -71,6 +71,8 @@ export default function Header() {
                 <button
                   onClick={() => setProfileMenuOpen(o => !o)}
                   className="focus:outline-none"
+                  aria-label={`Open profile menu for ${displayUser.full_name}`}
+                  aria-expanded={profileMenuOpen}
                 >
                   <Avatar
                     src={displayUser.avatar_url}

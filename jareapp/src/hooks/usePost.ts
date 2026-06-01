@@ -43,12 +43,10 @@ export function usePost(postId: string, isDemoMode = false) {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'comments', filter: `post_id=eq.${postId}` },
-        async (payload) => {
+        async (_payload) => {
           const res = await fetch(`/api/comments/${postId}`);
           if (res.ok) setComments(await res.json());
-          // Update comment_count optimistically on the post
           setPost(p => p ? { ...p, comment_count: p.comment_count + 1 } : p);
-          void payload; // suppress lint
         }
       )
       .subscribe();

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Search, Plus, Crown } from 'lucide-react';
+import Link from 'next/link';
 import Sidebar from '@/components/layout/Sidebar';
 import BusinessCard from '@/components/services/BusinessCard';
 import DemoModeBanner from '@/components/ui/DemoModeBanner';
@@ -18,21 +19,17 @@ export default function ServicesPage() {
   const { profile } = useAuth();
   const [searchQuery,     setSearchQuery]     = useState('');
   const [activeCategory,  setActiveCategory]  = useState('all');
-  // Debounce search so we don't fire a request on every keystroke
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const neighborhoodId = profile?.neighborhood_id ?? 'nh-1';
   const governorateId  = profile?.governorate_id  ?? 'gov-2';
 
-  // Update debounced value 400 ms after the user stops typing
-  function handleSearchChange(value: string) {
-    setSearchQuery(value);
-    clearTimeout((handleSearchChange as unknown as { _t: ReturnType<typeof setTimeout> })._t);
-    (handleSearchChange as unknown as { _t: ReturnType<typeof setTimeout> })._t = setTimeout(
-      () => setDebouncedSearch(value),
-      400
-    );
-  }
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => setDebouncedSearch(searchQuery), 400);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [searchQuery]);
 
   const { businesses: liveBusinesses, loading } = useBusinesses(
     neighborhoodId,
@@ -81,9 +78,9 @@ export default function ServicesPage() {
                   Businesses trusted by your neighbors — recommended by the community.
                 </p>
               </div>
-              <button className="btn-primary text-sm flex items-center gap-1.5">
+              <Link href="/business/new" className="btn-primary text-sm flex items-center gap-1.5">
                 <Plus className="w-4 h-4" /> Add Business
-              </button>
+              </Link>
             </div>
 
             {/* Search */}
@@ -93,7 +90,7 @@ export default function ServicesPage() {
                 type="text"
                 placeholder="Search businesses and services…"
                 value={searchQuery}
-                onChange={e => handleSearchChange(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 className="input pl-9"
               />
             </div>

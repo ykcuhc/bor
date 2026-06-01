@@ -1,6 +1,7 @@
 'use client';
 
 import { use, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { MapPin, ShieldCheck, Calendar, MessageSquare, Star, Edit3, Check, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import Avatar from '@/components/ui/Avatar';
@@ -16,6 +17,7 @@ const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
 
 export default function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id }           = use(params);
+  const router           = useRouter();
   const { profile: me, refreshProfile } = useAuth();
 
   const [user,      setUser]      = useState<User | null>(null);
@@ -133,7 +135,10 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
                 </button>
               )
             ) : (
-              <button className="btn-primary text-sm flex items-center gap-1.5">
+              <button
+                onClick={() => router.push(`/messages?with=${id}`)}
+                className="btn-primary text-sm flex items-center gap-1.5"
+              >
                 <MessageSquare className="w-4 h-4" />
                 Message
               </button>

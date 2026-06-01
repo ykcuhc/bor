@@ -9,7 +9,7 @@
 //   counter increments instantly without any polling.
 // ============================================================
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { Notification } from '@/lib/types/notifications';
 
@@ -25,7 +25,7 @@ export function useNotifications(
   userId:     string,
   isDemoMode: boolean = false
 ): UseNotificationsReturn {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -77,7 +77,11 @@ export function useNotifications(
       prev.map(n => n.id === id ? { ...n, read_at: new Date().toISOString() } : n)
     );
     if (!isDemoMode) {
-      await fetch(`/api/notifications/${id}`, { method: 'PATCH' });
+      const res = await fetch(`/api/notifications/${id}`, { method: 'PATCH' });
+      if (!res.ok) {
+        // Roll back if the server rejected the update
+        setNotifications(prev => prev.map(n => n.id === id ? { ...n, read_at: null } : n));
+      }
     }
   }
 

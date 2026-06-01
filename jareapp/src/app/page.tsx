@@ -44,7 +44,8 @@ function HomeFeedContent() {
   const [sort,         setSort]         = useState<SortMode>('recent');
   const [showCompose,  setShowCompose]  = useState(searchParams.get('compose') === 'true');
   const [newPostBadge, setNewPostBadge] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const bottomRef        = useRef<HTMLDivElement>(null);
+  const prevPostsCountRef = useRef(0);
 
   // Geographical IDs — from real profile in live mode, fallback to demo values
   const neighborhoodId = profile?.neighborhood_id ?? 'nh-1';
@@ -81,9 +82,16 @@ function HomeFeedContent() {
     return () => obs.disconnect();
   }, [hasMore, loading, loadMore]);
 
-  // Flash a "New posts" badge when realtime inserts arrive
+  // Flash a "New posts" badge when realtime inserts arrive in trending view
   useEffect(() => {
-    if (sort === 'recent') setNewPostBadge(false);
+    const current = store.posts.length;
+    const prev    = prevPostsCountRef.current;
+    prevPostsCountRef.current = current;
+    if (sort === 'recent') {
+      setNewPostBadge(false);
+    } else if (current > prev && prev > 0) {
+      setNewPostBadge(true);
+    }
   }, [store.posts.length, sort]);
 
   const displayPosts = sortPosts(store.posts, sort);

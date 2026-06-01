@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, MessageSquare, Menu, X, MapPin, LogOut } from 'lucide-react';
+import { Search, MessageSquare, Menu, X, MapPin, LogOut, Bell } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import { useAuth } from '@/context/AuthContext';
@@ -14,6 +14,19 @@ export default function Header() {
   const [searchQuery,    setSearchQuery]    = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen,setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close profile dropdown on click outside
+  useEffect(() => {
+    if (!profileMenuOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
+        setProfileMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [profileMenuOpen]);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -67,7 +80,7 @@ export default function Header() {
 
             {/* Profile dropdown */}
             {displayUser && (
-              <div className="relative ml-1">
+              <div className="relative ml-1" ref={profileMenuRef}>
                 <button
                   onClick={() => setProfileMenuOpen(o => !o)}
                   className="focus:outline-none"
@@ -84,7 +97,6 @@ export default function Header() {
                 {profileMenuOpen && (
                   <div
                     className="absolute right-0 top-10 bg-white rounded-xl shadow-lg border border-gray-100 py-1 w-48 z-30"
-                    onMouseLeave={() => setProfileMenuOpen(false)}
                   >
                     <div className="px-3 py-2 border-b border-gray-100">
                       <p className="font-semibold text-sm text-gray-900 truncate">{displayUser.full_name}</p>
@@ -132,9 +144,10 @@ export default function Header() {
           <MobileNavLink href="/neighborhood"  label="Neighborhood"   onClick={() => setMobileMenuOpen(false)} />
           <MobileNavLink href="/messages"      label="Messages"       onClick={() => setMobileMenuOpen(false)} />
           <MobileNavLink href="/services"      label="Local Services" onClick={() => setMobileMenuOpen(false)} />
-          {displayUser && (
-            <MobileNavLink href={`/profile/${displayUser.id}`} label="My Profile" onClick={() => setMobileMenuOpen(false)} />
-          )}
+          {displayUser && <>
+            <MobileNavLink href={`/profile/${displayUser.id}`} label="My Profile"    onClick={() => setMobileMenuOpen(false)} />
+            <MobileNavLink href="/notifications"               label="Notifications" onClick={() => setMobileMenuOpen(false)} icon={<Bell className="w-4 h-4" />} />
+          </>}
           {displayUser ? (
             <button
               onClick={() => { setMobileMenuOpen(false); signOut(); }}
@@ -151,14 +164,15 @@ export default function Header() {
   );
 }
 
-function MobileNavLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
+function MobileNavLink({ href, label, onClick, icon }: { href: string; label: string; onClick: () => void; icon?: React.ReactNode }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700
+      className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700
                  hover:bg-brand-50 hover:text-brand-700 transition-colors"
     >
+      {icon}
       {label}
     </Link>
   );

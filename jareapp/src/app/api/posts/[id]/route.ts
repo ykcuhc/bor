@@ -34,7 +34,14 @@ export async function DELETE(
     const post = await fetchPost(supabase, id);
     if (!post) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     if (post.author_id !== user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      // Allow neighborhood admins to remove any post in their neighborhood
+      const { data: admin } = await supabase
+        .from('neighborhood_admins')
+        .select('id')
+        .eq('neighborhood_id', post.neighborhood_id)
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (!admin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Soft delete — keeps the row for audit/moderation purposes

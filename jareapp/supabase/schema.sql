@@ -355,3 +355,47 @@ CREATE POLICY "Businesses viewable by neighborhood"
 -- Premium memberships: private to owner
 CREATE POLICY "Own memberships only"
   ON premium_memberships FOR SELECT USING (auth.uid() = user_id);
+
+-- Reactions: all four operations — without these, RLS blocks everything
+CREATE POLICY "Reactions are publicly viewable"
+  ON reactions FOR SELECT USING (true);
+
+CREATE POLICY "Authenticated users can react"
+  ON reactions FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own reaction"
+  ON reactions FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own reaction"
+  ON reactions FOR DELETE USING (auth.uid() = user_id);
+
+-- Direct messages: recipients must be able to mark messages as read
+CREATE POLICY "Recipients can mark messages read"
+  ON direct_messages FOR UPDATE
+  USING (auth.uid() = recipient_id);
+
+-- Businesses: owners can create and update their own listings
+CREATE POLICY "Authenticated users can create businesses"
+  ON businesses FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY "Owners can update own business"
+  ON businesses FOR UPDATE USING (auth.uid() = owner_id);
+
+-- ============================================================
+-- comment_count decrement trigger
+-- Keeps comment_count accurate when comments are hard-deleted.
+-- Soft-deletes (is_removed = true) are handled at the query layer.
+-- ============================================================
+CREATE OR REPLACE FUNCTION decrement_comment_count()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE posts
+  SET comment_count = GREATEST(0, comment_count - 1)
+  WHERE id = OLD.post_id;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trg_decrement_comment_count
+  AFTER DELETE ON comments
+  FOR EACH ROW EXECUTE FUNCTION decrement_comment_count();

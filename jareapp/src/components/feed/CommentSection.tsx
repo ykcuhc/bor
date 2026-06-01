@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { Send } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
@@ -29,6 +29,15 @@ export default function CommentSection({
   const [newBody, setNewBody] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  // Fetch existing comments in live mode (not pre-seeded by parent)
+  useEffect(() => {
+    if (isDemoMode || comments.length > 0) return;
+    fetch(`/api/comments/${postId}`)
+      .then(r => r.ok ? r.json() : [])
+      .then((data: Comment[]) => setLocal(data))
+      .catch(() => {});
+  }, [postId, isDemoMode, comments.length]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

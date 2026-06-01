@@ -9,9 +9,7 @@ import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
 import { useAuth } from '@/context/AuthContext';
 import type { PostCategory } from '@/lib/types';
-
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
+import { IS_DEMO } from '@/lib/constants';
 
 type SearchTab = 'all' | 'posts' | 'businesses' | 'people';
 

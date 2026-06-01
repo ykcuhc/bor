@@ -10,9 +10,7 @@ import { useMessages, type DMMessage } from '@/hooks/useMessages';
 import { useAuth } from '@/context/AuthContext';
 import type { User } from '@/lib/types';
 import { DUMMY_USERS } from '@/lib/data/dummy-data';
-
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
+import { IS_DEMO } from '@/lib/constants';
 
 // Demo-mode thread mock data lives here so the component always has something to render
 interface Thread {
@@ -136,6 +134,7 @@ function MessagesContent() {
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder="Search conversations…"
+                  aria-label="Search conversations"
                   className="input pl-8 text-xs py-1.5"
                 />
               </div>

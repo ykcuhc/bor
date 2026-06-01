@@ -15,13 +15,11 @@ import { useAuth }      from '@/context/AuthContext';
 import type { Post, PostCategory } from '@/lib/types';
 import { POST_CATEGORY_META } from '@/lib/types';
 import { DUMMY_POSTS } from '@/lib/data/dummy-data';
+import { IS_DEMO } from '@/lib/constants';
 
 type SortMode = 'recent' | 'trending';
 
 // Detect demo mode from env at runtime
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
-
 function sortPosts(posts: Post[], sort: SortMode): Post[] {
   const pinned   = posts.filter(p => p.is_pinned);
   const unpinned = posts.filter(p => !p.is_pinned);

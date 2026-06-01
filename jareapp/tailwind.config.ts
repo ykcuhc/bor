@@ -26,6 +26,9 @@ const config: Config = {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
+      spacing: {
+        '4.5': '1.125rem',
+      },
     },
   },
   plugins: [],

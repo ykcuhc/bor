@@ -7,9 +7,7 @@ import { FeedPostSkeleton } from '@/components/ui/Skeleton';
 import { usePost } from '@/hooks/usePost';
 import { useAuth } from '@/context/AuthContext';
 import { DUMMY_POSTS, DUMMY_COMMENTS } from '@/lib/data/dummy-data';
-
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
+import { IS_DEMO } from '@/lib/constants';
 
 export default function PostDetailPage() {
   const params  = useParams();

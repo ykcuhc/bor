@@ -6,9 +6,7 @@ import { ArrowLeft, Store, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { BUSINESS_CATEGORIES } from '@/lib/data/dummy-data';
-
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
+import { IS_DEMO } from '@/lib/constants';
 
 type Step = 'form' | 'success';
 
@@ -128,7 +126,7 @@ export default function NewBusinessPage() {
             <select
               value={category}
               onChange={e => setCategory(e.target.value)}
-              className="input bg-white"
+              className="select bg-white"
               required
             >
               <option value="">Select a category…</option>

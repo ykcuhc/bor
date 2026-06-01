@@ -11,9 +11,7 @@ import { ProfileSkeleton, FeedPostSkeleton } from '@/components/ui/Skeleton';
 import { useAuth } from '@/context/AuthContext';
 import type { User, Post } from '@/lib/types';
 import { DUMMY_USERS, DUMMY_POSTS } from '@/lib/data/dummy-data';
-
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
+import { IS_DEMO } from '@/lib/constants';
 
 export default function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id }           = use(params);

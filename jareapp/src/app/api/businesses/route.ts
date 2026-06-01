@@ -1,4 +1,5 @@
-// GET /api/businesses — Neighbourhood-scoped business directory
+// GET  /api/businesses — Neighbourhood-scoped business directory
+// POST /api/businesses — Register a new business listing
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient }      from '@/lib/supabase/server';
@@ -19,6 +20,45 @@ export async function GET(request: NextRequest) {
     const supabase   = await createClient();
     const businesses = await fetchBusinesses(supabase, neighborhoodId, governorateId, { category, search });
     return NextResponse.json(businesses);
+  } catch (err) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : 'Error' }, { status: 500 });
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const body = await request.json();
+    if (!body.name?.trim())     return NextResponse.json({ error: 'name is required' }, { status: 400 });
+    if (!body.category?.trim()) return NextResponse.json({ error: 'category is required' }, { status: 400 });
+
+    // Resolve submitter's neighborhood
+    const { data: profile } = await supabase
+      .from('users')
+      .select('neighborhood_id, governorate_id')
+      .eq('id', user.id)
+      .single();
+
+    const { data, error } = await supabase
+      .from('businesses')
+      .insert({
+        owner_id:        user.id,
+        neighborhood_id: body.neighborhood_id ?? profile?.neighborhood_id,
+        name:            body.name.trim(),
+        category:        body.category.trim(),
+        description:     body.description?.trim() ?? null,
+        phone:           body.phone?.trim() ?? null,
+        address:         body.address?.trim() ?? null,
+        is_verified:     false,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return NextResponse.json(data, { status: 201 });
   } catch (err) {
     return NextResponse.json({ error: err instanceof Error ? err.message : 'Error' }, { status: 500 });
   }

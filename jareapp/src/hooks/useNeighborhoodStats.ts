@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { DUMMY_USERS, DUMMY_BUSINESSES } from '@/lib/data/dummy-data';
-
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
+import { IS_DEMO } from '@/lib/constants';
 
 interface NeighborhoodStats {
   member_count:   number;

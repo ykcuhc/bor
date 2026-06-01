@@ -15,9 +15,7 @@ import { useNeighborhoodStats } from '@/hooks/useNeighborhoodStats';
 import type { Post } from '@/lib/types';
 import { DUMMY_POSTS, DUMMY_NEIGHBORHOODS } from '@/lib/data/dummy-data';
 import { useEffect } from 'react';
-
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
+import { IS_DEMO } from '@/lib/constants';
 
 type Tab = 'discussion' | 'safety' | 'events';
 

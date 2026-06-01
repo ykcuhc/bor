@@ -11,9 +11,7 @@ import { useBusinesses } from '@/hooks/useBusinesses';
 import { useAuth } from '@/context/AuthContext';
 import { DUMMY_BUSINESSES, BUSINESS_CATEGORIES } from '@/lib/data/dummy-data';
 import type { Business } from '@/lib/types';
-
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
+import { IS_DEMO } from '@/lib/constants';
 
 export default function ServicesPage() {
   const { profile } = useAuth();

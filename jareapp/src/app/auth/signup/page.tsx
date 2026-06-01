@@ -8,13 +8,11 @@ import NeighborhoodSelector from '@/components/neighborhood/NeighborhoodSelector
 import type { GovernorateData, NeighborhoodData } from '@/lib/data/kuwait-regions';
 import { signUp } from '@/app/auth/actions';
 import { createClient } from '@/lib/supabase/client';
+import { IS_DEMO } from '@/lib/constants';
 
 type Step = 'account' | 'location' | 'done';
 
 // Detect demo mode
-const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
-
 export default function SignupPage() {
   const router   = useRouter();
   const supabase = createClient();

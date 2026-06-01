@@ -12,7 +12,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 // Routes that require an active session
 const PROTECTED_ROUTES = [
   '/', '/neighborhood', '/messages', '/services', '/profile',
-  '/admin', '/verify', '/premium', '/business', '/post', '/search',
+  '/admin', '/verify', '/premium', '/business', '/post', '/search', '/notifications',
 ];
 // Routes only for unauthenticated users
 const AUTH_ROUTES = ['/auth/login', '/auth/signup'];

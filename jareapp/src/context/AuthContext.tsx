@@ -33,9 +33,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const supabase = createClient();
-
   const fetchProfile = useCallback(async (userId: string) => {
+    const supabase = createClient();
+    if (!supabase) return;
     const { data } = await supabase
       .from('users')
       .select(`
@@ -50,12 +50,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .single();
 
     if (data) setProfile(data as User);
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
-    if (IS_DEMO) return; // Skip Supabase calls in demo mode
+    if (IS_DEMO) return;
 
-    // Hydrate session on mount
+    const supabase = createClient();
+    if (!supabase) return;
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setSupabaseUser(session?.user ?? null);
@@ -66,7 +68,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    // Keep session in sync on tab focus / token refresh / sign out
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setSupabaseUser(session?.user ?? null);
@@ -78,10 +79,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase, fetchProfile]);
+  }, [fetchProfile]);
 
   async function signOut() {
     if (IS_DEMO) return;
+    const supabase = createClient();
+    if (!supabase) return;
     await supabase.auth.signOut();
     setProfile(null);
     setSession(null);

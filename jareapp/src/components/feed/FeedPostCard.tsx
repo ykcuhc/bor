@@ -45,6 +45,7 @@ export default function FeedPostCard({
   const [showReactionPicker, setShowReactionPicker] = useState(false);
   const [showMenu,           setShowMenu]           = useState(false);
   const [deleting,           setDeleting]           = useState(false);
+  const [confirmDelete,      setConfirmDelete]      = useState(false);
   const [toast,              setToast]              = useState('');
 
   function showToast(msg: string) {
@@ -68,7 +69,6 @@ export default function FeedPostCard({
 
   async function handleReport() {
     setShowMenu(false);
-    if (!confirm('Report this post as inappropriate?')) return;
     if (!isDemoMode) {
       await fetch(`/api/posts/${post.id}/report`, { method: 'POST' }).catch(() => null);
     }
@@ -85,7 +85,13 @@ export default function FeedPostCard({
   const isOwnPost      = post.author_id === currentUserId;
 
   async function handleDelete() {
-    if (!confirm('Delete this post? This cannot be undone.')) return;
+    // Two-step: first click arms, second click fires
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      setTimeout(() => setConfirmDelete(false), 3000);
+      return;
+    }
+    setConfirmDelete(false);
     setDeleting(true);
     if (isDemoMode) { store.removePost(post.id); return; }
     try {
@@ -164,7 +170,7 @@ export default function FeedPostCard({
                       className="flex items-center gap-2 w-full px-3 py-2 text-red-600 hover:bg-red-50 transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      {deleting ? 'Deleting…' : 'Delete post'}
+                      {deleting ? 'Deleting…' : confirmDelete ? 'Confirm delete?' : 'Delete post'}
                     </button>
                   )}
                   <button

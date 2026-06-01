@@ -27,15 +27,25 @@ interface UseFeedOptions {
 }
 
 export function useFeed({ neighborhoodId, governorateId, category, isDemoMode }: UseFeedOptions) {
-  const supabase = createClient();
-  const store    = useFeedStore();
+  const supabase   = createClient();
+  // Select individual stable references — avoids store-object churn in useCallback/useEffect deps
+  const posts             = useFeedStore(s => s.posts);
+  const loading           = useFeedStore(s => s.loading);
+  const error             = useFeedStore(s => s.error);
+  const hasMore           = useFeedStore(s => s.hasMore);
+  const setPosts          = useFeedStore(s => s.setPosts);
+  const appendPosts       = useFeedStore(s => s.appendPosts);
+  const setLoading        = useFeedStore(s => s.setLoading);
+  const setError          = useFeedStore(s => s.setError);
+  const setHasMore        = useFeedStore(s => s.setHasMore);
+  const insertRealtimePost = useFeedStore(s => s.insertRealtimePost);
   // Track current page offset for pagination
   const offsetRef = useRef(0);
 
   const loadPosts = useCallback(async (reset = false) => {
     if (isDemoMode) return; // Demo mode uses store pre-populated with dummy data
 
-    store.setLoading(true);
+    setLoading(true);
     const offset = reset ? 0 : offsetRef.current;
 
     try {
@@ -52,18 +62,18 @@ export function useFeed({ neighborhoodId, governorateId, category, isDemoMode }:
       const data: Post[] = await res.json();
 
       if (reset) {
-        store.setPosts(data);
+        setPosts(data);
         offsetRef.current = data.length;
       } else {
-        store.appendPosts(data);
+        appendPosts(data);
         offsetRef.current += data.length;
       }
 
-      store.setHasMore(data.length === PAGE_SIZE);
+      setHasMore(data.length === PAGE_SIZE);
     } catch (err) {
-      store.setError(err instanceof Error ? err.message : 'Failed to load feed');
+      setError(err instanceof Error ? err.message : 'Failed to load feed');
     }
-  }, [neighborhoodId, governorateId, category, isDemoMode, store]);
+  }, [neighborhoodId, governorateId, category, isDemoMode, setPosts, appendPosts, setLoading, setError, setHasMore]);
 
   // Initial load + reload when category changes
   useEffect(() => {
@@ -91,19 +101,19 @@ export function useFeed({ neighborhoodId, governorateId, category, isDemoMode }:
           const res  = await fetch(`/api/posts/${payload.new.id}`);
           if (!res.ok) return;
           const post: Post = await res.json();
-          store.insertRealtimePost(post);
+          insertRealtimePost(post);
         }
       )
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [supabase, neighborhoodId, isDemoMode, store]);
+  }, [supabase, neighborhoodId, isDemoMode, insertRealtimePost]);
 
   return {
-    posts:    store.posts,
-    loading:  store.loading,
-    error:    store.error,
-    hasMore:  store.hasMore,
+    posts,
+    loading,
+    error,
+    hasMore,
     loadMore: () => loadPosts(false),
     reload:   () => loadPosts(true),
   };

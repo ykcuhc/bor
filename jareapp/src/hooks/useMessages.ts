@@ -115,6 +115,9 @@ export function useMessages(
       // Replace optimistic with real row (gets the server-generated ID)
       setMessages(prev => prev.map(m => m.id === optimistic.id ? saved : m));
       return true;
+    } catch {
+      setMessages(prev => prev.filter(m => m.id !== optimistic.id));
+      return false;
     } finally {
       setSending(false);
     }

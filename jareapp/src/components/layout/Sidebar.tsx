@@ -27,7 +27,7 @@ export default function Sidebar() {
     { href: '/messages',                  label: 'Messages',       icon: MessageSquare },
     { href: '/services',                  label: 'Local Services', icon: Store },
     { href: `/profile/${currentUser.id}`, label: 'My Profile',     icon: User },
-    { href: '/admin',                     label: 'Admin Panel',    icon: Shield },
+    // Admin Panel intentionally omitted — admins navigate to /admin directly
   ];
 
   return (

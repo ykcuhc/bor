@@ -24,9 +24,9 @@ export default function PremiumPage() {
       return;
     }
 
-    // In a real app, redirect to payment gateway
-    setToast(`Redirecting to ${tier} checkout…`);
-    setTimeout(() => setToast(''), 3000);
+    // Payment integration not yet wired — inform user
+    setToast('Payment coming soon — contact support to upgrade.');
+    setTimeout(() => setToast(''), 4000);
   }
 
   return (

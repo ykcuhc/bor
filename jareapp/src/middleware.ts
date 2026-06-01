@@ -10,7 +10,10 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
 // Routes that require an active session
-const PROTECTED_ROUTES = ['/', '/neighborhood', '/messages', '/services', '/profile'];
+const PROTECTED_ROUTES = [
+  '/', '/neighborhood', '/messages', '/services', '/profile',
+  '/admin', '/verify', '/premium', '/business', '/post', '/search',
+];
 // Routes only for unauthenticated users
 const AUTH_ROUTES = ['/auth/login', '/auth/signup'];
 

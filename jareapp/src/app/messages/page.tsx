@@ -85,11 +85,24 @@ function MessagesContent() {
     const existing = threads.find(t => t.user.id === withUserId);
     if (existing) { setSelectedThread(existing); return; }
     // Build a synthetic thread for users not yet in the list
-    const targetUser = DUMMY_USERS.find(u => u.id === withUserId);
-    if (targetUser && IS_DEMO) {
-      const newThread: Thread = { user: targetUser, lastMessage: '', lastTime: new Date().toISOString(), unread: false };
-      setThreads(prev => [newThread, ...prev]);
-      setSelectedThread(newThread);
+    if (IS_DEMO) {
+      const targetUser = DUMMY_USERS.find(u => u.id === withUserId);
+      if (targetUser) {
+        const newThread: Thread = { user: targetUser, lastMessage: '', lastTime: new Date().toISOString(), unread: false };
+        setThreads(prev => [newThread, ...prev]);
+        setSelectedThread(newThread);
+      }
+    } else {
+      // Live mode: fetch the target user's profile and open a new thread
+      fetch(`/api/profile/${withUserId}`)
+        .then(r => r.ok ? r.json() : null)
+        .then((user: User | null) => {
+          if (!user) return;
+          const newThread: Thread = { user, lastMessage: '', lastTime: new Date().toISOString(), unread: false };
+          setThreads(prev => [newThread, ...prev]);
+          setSelectedThread(newThread);
+        })
+        .catch(() => null);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [withUserId, threads.length]);

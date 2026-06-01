@@ -38,11 +38,12 @@ interface AdminMember {
 export default function AdminPage() {
   const { profile } = useAuth();
   const [tab,      setTab]      = useState<AdminTab>('posts');
-  const [isAdmin,  setIsAdmin]  = useState<boolean | null>(null);
+  const [isAdmin,  setIsAdmin]  = useState(false);
   const [posts,    setPosts]    = useState<AdminPost[]>([]);
   const [members,  setMembers]  = useState<AdminMember[]>([]);
   const [loading,  setLoading]  = useState(true);
-  const [actionMsg,setActionMsg]= useState('');
+  const [actionMsg,      setActionMsg]      = useState('');
+  const [pendingRemoveId,setPendingRemoveId] = useState<string | null>(null);
 
   const neighborhoodId = profile?.neighborhood_id ?? '';
 
@@ -52,7 +53,7 @@ export default function AdminPage() {
       setLoading(false);
       return;
     }
-    if (!neighborhoodId) { setLoading(false); return; }
+    if (!neighborhoodId) return; // keep loading spinner until profile is available
 
     try {
       const [adminRes, postsRes, membersRes] = await Promise.all([
@@ -90,7 +91,13 @@ export default function AdminPage() {
   }
 
   async function removePost(postId: string) {
-    if (!confirm('Remove this post from the neighborhood feed?')) return;
+    // Two-step confirmation — first click arms, second click fires
+    if (pendingRemoveId !== postId) {
+      setPendingRemoveId(postId);
+      setTimeout(() => setPendingRemoveId(null), 3000);
+      return;
+    }
+    setPendingRemoveId(null);
     if (IS_DEMO) {
       setPosts(prev => prev.filter(p => p.id !== postId));
       setActionMsg('Post removed');
@@ -201,6 +208,7 @@ export default function AdminPage() {
                 post={post}
                 onTogglePin={() => togglePin(post.id, post.is_pinned)}
                 onRemove={() => removePost(post.id)}
+                pendingRemove={pendingRemoveId === post.id}
               />
             ))
           )}
@@ -270,10 +278,12 @@ function AdminPostRow({
   post,
   onTogglePin,
   onRemove,
+  pendingRemove = false,
 }: {
   post: AdminPost;
   onTogglePin: () => void;
   onRemove: () => void;
+  pendingRemove?: boolean;
 }) {
   return (
     <div className={clsx('card p-3 flex items-start gap-3', post.is_pinned && 'border-amber-200 bg-amber-50/30')}>
@@ -303,10 +313,15 @@ function AdminPostRow({
         </button>
         <button
           onClick={onRemove}
-          title="Remove post"
-          className="p-1.5 rounded-lg text-red-400 hover:bg-red-50 transition-colors"
+          title={pendingRemove ? 'Click again to confirm removal' : 'Remove post'}
+          className={clsx(
+            'p-1.5 rounded-lg transition-colors text-xs font-medium',
+            pendingRemove
+              ? 'bg-red-500 text-white hover:bg-red-600 px-2'
+              : 'text-red-400 hover:bg-red-50'
+          )}
         >
-          <Trash2 className="w-3.5 h-3.5" />
+          {pendingRemove ? 'Confirm?' : <Trash2 className="w-3.5 h-3.5" />}
         </button>
       </div>
     </div>

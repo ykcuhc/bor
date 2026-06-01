@@ -7,72 +7,116 @@ import Avatar from '@/components/ui/Avatar';
 import type { PostCategory, GeographicalScope, Post } from '@/lib/types';
 import { POST_CATEGORY_META } from '@/lib/types';
 import { DUMMY_USERS, DUMMY_NEIGHBORHOODS } from '@/lib/data/dummy-data';
+import { useAuth } from '@/context/AuthContext';
 
 interface CreatePostFormProps {
-  onPostCreated: (post: Post) => void;
-  onClose?: () => void;
+  neighborhoodId:  string;
+  governorateId:   string;
+  onPostCreated:   (post: Post) => void;
+  onClose?:        () => void;
+  isDemoMode?:     boolean;
 }
 
-const CURRENT_USER = DUMMY_USERS[0];
-const CURRENT_NEIGHBORHOOD = DUMMY_NEIGHBORHOODS[0];
-
-// All selectable categories when composing a new post
 const CATEGORY_OPTIONS = Object.entries(POST_CATEGORY_META) as [PostCategory, typeof POST_CATEGORY_META[PostCategory]][];
 
-export default function CreatePostForm({ onPostCreated, onClose }: CreatePostFormProps) {
-  const [category, setCategory] = useState<PostCategory>('general');
-  const [scope, setScope] = useState<GeographicalScope>('neighborhood');
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+export default function CreatePostForm({
+  neighborhoodId,
+  governorateId,
+  onPostCreated,
+  onClose,
+  isDemoMode = false,
+}: CreatePostFormProps) {
+  const { profile } = useAuth();
 
-  // Classifieds and events benefit from a title; others are optional
+  // In demo mode fall back to dummy user/neighborhood so the form renders
+  const currentUser = profile ?? DUMMY_USERS[0];
+  const neighborhoodName = profile?.neighborhood?.name_en
+    ?? DUMMY_NEIGHBORHOODS.find(n => n.id === neighborhoodId)?.name_en
+    ?? 'Your Neighborhood';
+  const governorateName = profile?.governorate?.name_en ?? 'Your Governorate';
+
+  const [category,    setCategory]   = useState<PostCategory>('general');
+  const [scope,       setScope]      = useState<GeographicalScope>('neighborhood');
+  const [title,       setTitle]      = useState('');
+  const [body,        setBody]       = useState('');
+  const [submitting,  setSubmitting] = useState(false);
+  const [error,       setError]      = useState('');
+
   const showTitle = category === 'classifieds' || category === 'events' || category === 'safety';
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!body.trim()) {
-      setError('Please write something before posting.');
-      return;
-    }
+    if (!body.trim()) { setError('Please write something before posting.'); return; }
     setError('');
     setSubmitting(true);
 
-    // Build the new post object optimistically.
-    // In production: call Supabase insert on the `posts` table,
-    // then use the returned row (which has the server-generated ID and timestamp).
-    const newPost: Post = {
-      id: `post-${Date.now()}`,
-      author_id: CURRENT_USER.id,
-      neighborhood_id: CURRENT_NEIGHBORHOOD.id,
-      title: title.trim() || null,
-      body: body.trim(),
-      image_urls: null,
-      category,
-      geographical_scope: scope,
-      is_pinned: false,
-      is_removed: false,
-      comment_count: 0,
-      reaction_count: 0,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      author: CURRENT_USER,
-      neighborhood: CURRENT_NEIGHBORHOOD,
-      user_reaction: null,
-    };
+    if (isDemoMode) {
+      // Optimistic demo post — no network call needed
+      const newPost: Post = {
+        id:                 `post-${Date.now()}`,
+        author_id:          currentUser.id,
+        neighborhood_id:    neighborhoodId,
+        title:              title.trim() || null,
+        body:               body.trim(),
+        image_urls:         null,
+        category,
+        geographical_scope: scope,
+        is_pinned:          false,
+        is_removed:         false,
+        comment_count:      0,
+        reaction_count:     0,
+        created_at:         new Date().toISOString(),
+        updated_at:         new Date().toISOString(),
+        author:             currentUser,
+        neighborhood:       profile?.neighborhood ?? DUMMY_NEIGHBORHOODS[0],
+        user_reaction:      null,
+      };
+      onPostCreated(newPost);
+      reset();
+      return;
+    }
 
-    onPostCreated(newPost);
-    setSubmitting(false);
+    try {
+      const res = await fetch('/api/posts', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          neighborhood_id:    neighborhoodId,
+          body:               body.trim(),
+          title:              title.trim() || null,
+          category,
+          geographical_scope: scope,
+        }),
+      });
+
+      if (!res.ok) {
+        const { error: msg } = await res.json();
+        throw new Error(msg ?? 'Failed to post');
+      }
+
+      const post: Post = await res.json();
+      onPostCreated(post);
+      reset();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function reset() {
     setBody('');
     setTitle('');
     setCategory('general');
+    setScope('neighborhood');
+    setSubmitting(false);
     onClose?.();
   }
 
+  void governorateId; // used for context, not rendered directly here
+
   return (
     <div className="card p-4">
-      {/* ── Header ──────────────────────────────────────────── */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-gray-900">Post to Neighborhood</h2>
         {onClose && (
@@ -83,12 +127,11 @@ export default function CreatePostForm({ onPostCreated, onClose }: CreatePostFor
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
-        {/* ── Author row ──────────────────────────────────────── */}
+        {/* Author row + scope toggle */}
         <div className="flex items-center gap-3">
-          <Avatar src={CURRENT_USER.avatar_url} name={CURRENT_USER.full_name} size="md" />
+          <Avatar src={currentUser.avatar_url} name={currentUser.full_name} size="md" />
           <div>
-            <p className="font-medium text-sm text-gray-900">{CURRENT_USER.full_name}</p>
-            {/* Scope selector — neighborhood vs. governorate-wide */}
+            <p className="font-medium text-sm text-gray-900">{currentUser.full_name}</p>
             <button
               type="button"
               onClick={() => setScope(s => s === 'neighborhood' ? 'governorate' : 'neighborhood')}
@@ -100,15 +143,15 @@ export default function CreatePostForm({ onPostCreated, onClose }: CreatePostFor
               )}
             >
               {scope === 'neighborhood'
-                ? <><Lock className="w-2.5 h-2.5" /> {CURRENT_NEIGHBORHOOD.name_en}</>
-                : <><Globe className="w-2.5 h-2.5" /> {CURRENT_NEIGHBORHOOD.governorate?.name_en} (Governorate-wide)</>
+                ? <><Lock className="w-2.5 h-2.5" /> {neighborhoodName}</>
+                : <><Globe className="w-2.5 h-2.5" /> {governorateName} (Governorate-wide)</>
               }
               <ChevronDown className="w-2.5 h-2.5" />
             </button>
           </div>
         </div>
 
-        {/* ── Category selector ───────────────────────────────── */}
+        {/* Category chips */}
         <div>
           <p className="label">Category</p>
           <div className="flex flex-wrap gap-2">
@@ -130,10 +173,12 @@ export default function CreatePostForm({ onPostCreated, onClose }: CreatePostFor
           </div>
         </div>
 
-        {/* ── Title (conditional) ──────────────────────────────── */}
+        {/* Optional title */}
         {showTitle && (
           <div>
-            <label className="label">Title <span className="text-gray-400">(recommended)</span></label>
+            <label className="label">
+              Title <span className="text-gray-400">(recommended)</span>
+            </label>
             <input
               type="text"
               value={title}
@@ -149,7 +194,7 @@ export default function CreatePostForm({ onPostCreated, onClose }: CreatePostFor
           </div>
         )}
 
-        {/* ── Body ────────────────────────────────────────────── */}
+        {/* Body */}
         <div>
           <label className="label">
             {category === 'general' ? "What's happening in your neighborhood?" : 'Details'}
@@ -158,10 +203,10 @@ export default function CreatePostForm({ onPostCreated, onClose }: CreatePostFor
             value={body}
             onChange={e => setBody(e.target.value)}
             placeholder={
-              category === 'safety'         ? 'Describe what happened, when, and where…'
+              category === 'safety'          ? 'Describe what happened, when, and where…'
               : category === 'recommendation' ? 'Who are you recommending and why?'
               : category === 'classifieds'    ? 'Describe the item, condition, and price…'
-              : category === 'lost_found'     ? 'Describe the item or pet and where it was last seen…'
+              : category === 'lost_found'     ? 'Describe the item/pet and where last seen…'
               : 'Share with your neighbors…'
             }
             rows={4}
@@ -173,22 +218,14 @@ export default function CreatePostForm({ onPostCreated, onClose }: CreatePostFor
 
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        {/* ── Actions ─────────────────────────────────────────── */}
         <div className="flex items-center justify-between pt-1">
-          {/* Image upload placeholder */}
-          <button
-            type="button"
-            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-brand-600 transition-colors"
-          >
+          <button type="button" className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-brand-600 transition-colors">
             <ImageIcon className="w-4 h-4" />
             Add photo
           </button>
-
           <div className="flex items-center gap-2">
             {onClose && (
-              <button type="button" onClick={onClose} className="btn-secondary text-sm">
-                Cancel
-              </button>
+              <button type="button" onClick={onClose} className="btn-secondary text-sm">Cancel</button>
             )}
             <button type="submit" disabled={submitting || !body.trim()} className="btn-primary text-sm">
               {submitting ? 'Posting…' : 'Post'}

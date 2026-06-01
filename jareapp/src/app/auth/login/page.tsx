@@ -1,36 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useActionState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { MapPin, Eye, EyeOff } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { useState } from 'react';
+import { signIn } from '@/app/auth/actions';
 
-export default function LoginPage() {
-  const router   = useRouter();
-  const supabase = createClient();
+// useActionState requires an initial state object
+const INITIAL_STATE = { error: '' };
 
-  const [email, setEmail]       = useState('');
-  const [password, setPassword] = useState('');
-  const [showPw, setShowPw]     = useState(false);
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState('');
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const redirectTo   = searchParams.get('redirect') ?? '/';
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  const [state, formAction, pending] = useActionState(signIn, INITIAL_STATE);
+  const [showPw, setShowPw] = useState(false);
 
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (authError) {
-      setError(authError.message);
-      setLoading(false);
-    } else {
-      router.push('/');
-      router.refresh();
+  // On successful sign-in the server action calls redirect() — the component
+  // will unmount before this effect fires for the success case.
+  useEffect(() => {
+    if (!state?.error && !pending) {
+      // If redirect() didn't fire (demo/no-Supabase), navigate client-side
+      window.location.href = redirectTo;
     }
-  }
+  }, [state, pending, redirectTo]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -46,13 +41,16 @@ export default function LoginPage() {
         </div>
 
         <div className="card p-6 space-y-4">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form action={formAction} className="space-y-4">
+            {/* Hidden field for redirect target */}
+            <input type="hidden" name="redirect" value={redirectTo} />
+
             <div>
-              <label className="label">Email address</label>
+              <label htmlFor="email" className="label">Email address</label>
               <input
+                id="email"
+                name="email"
                 type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
                 required
                 autoComplete="email"
                 className="input"
@@ -62,16 +60,16 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="label mb-0">Password</label>
+                <label htmlFor="password" className="label mb-0">Password</label>
                 <Link href="/auth/forgot" className="text-xs text-brand-600 hover:text-brand-700">
                   Forgot password?
                 </Link>
               </div>
               <div className="relative">
                 <input
+                  id="password"
+                  name="password"
                   type={showPw ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
                   className="input pr-10"
@@ -81,20 +79,21 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => setShowPw(p => !p)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  tabIndex={-1}
                 >
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {error && (
+            {state?.error && (
               <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-                {error}
+                {state.error}
               </div>
             )}
 
-            <button type="submit" disabled={loading} className="btn-primary w-full">
-              {loading ? 'Signing in…' : 'Sign in'}
+            <button type="submit" disabled={pending} className="btn-primary w-full">
+              {pending ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
 
@@ -107,9 +106,17 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          By signing in, you agree to our Terms of Service and Privacy Policy.
+          By signing in you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

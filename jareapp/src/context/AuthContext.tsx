@@ -4,60 +4,90 @@ import { createContext, useContext, useEffect, useState, useCallback } from 'rea
 import type { Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@/lib/types';
+import { DUMMY_USERS } from '@/lib/data/dummy-data';
+
+const IS_DEMO = !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://YOUR_PROJECT_ID.supabase.co';
 
 interface AuthContextValue {
-  session: Session | null;
-  supabaseUser: SupabaseUser | null;
-  profile: User | null;
-  loading: boolean;
-  signOut: () => Promise<void>;
+  session:       Session | null;
+  supabaseUser:  SupabaseUser | null;
+  profile:       User | null;
+  loading:       boolean;
+  isDemoMode:    boolean;
+  signOut:        () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const supabase = createClient();
-  const [session, setSession]         = useState<Session | null>(null);
+  const [session,      setSession]      = useState<Session | null>(null);
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
-  const [profile, setProfile]         = useState<User | null>(null);
-  const [loading, setLoading]         = useState(true);
+  const [profile,      setProfile]      = useState<User | null>(null);
+  const [loading,      setLoading]      = useState(true);
+
+  // In demo mode we always use the first dummy user so every page renders
+  useEffect(() => {
+    if (IS_DEMO) {
+      setProfile(DUMMY_USERS[0]);
+      setLoading(false);
+    }
+  }, []);
+
+  const supabase = createClient();
 
   const fetchProfile = useCallback(async (userId: string) => {
     const { data } = await supabase
       .from('users')
       .select(`
         *,
-        neighborhood:neighborhoods(*, governorate:governorates(*)),
-        governorate:governorates(*)
+        neighborhood:neighborhoods!users_neighborhood_id_fkey(
+          id, name_en, name_ar, governorate_id,
+          governorate:governorates!neighborhoods_governorate_id_fkey(id, name_en, name_ar, code)
+        ),
+        governorate:governorates!users_governorate_id_fkey(id, name_en, name_ar, code)
       `)
       .eq('id', userId)
       .single();
+
     if (data) setProfile(data as User);
   }, [supabase]);
 
   useEffect(() => {
+    if (IS_DEMO) return; // Skip Supabase calls in demo mode
+
     // Hydrate session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setSupabaseUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id).finally(() => setLoading(false));
-      else setLoading(false);
+      if (session?.user) {
+        fetchProfile(session.user.id).finally(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
     });
 
-    // Listen for auth state changes (sign in / sign out / token refresh)
+    // Keep session in sync on tab focus / token refresh / sign out
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setSupabaseUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
-      else setProfile(null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, [supabase, fetchProfile]);
 
   async function signOut() {
+    if (IS_DEMO) return;
     await supabase.auth.signOut();
+    setProfile(null);
+    setSession(null);
+    setSupabaseUser(null);
   }
 
   async function refreshProfile() {
@@ -65,7 +95,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, supabaseUser, profile, loading, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{
+      session, supabaseUser, profile, loading, isDemoMode: IS_DEMO, signOut, refreshProfile,
+    }}>
       {children}
     </AuthContext.Provider>
   );

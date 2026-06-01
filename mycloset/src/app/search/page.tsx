@@ -10,7 +10,7 @@ import { SlidersHorizontal } from 'lucide-react';
 
 function SearchResults() {
   const searchParams = useSearchParams();
-  const { setFilters, filteredListings } = useStore();
+  const { setFilters, filteredListings, loadListings } = useStore();
 
   // Sync URL params → store filters on mount and when params change
   useEffect(() => {
@@ -23,6 +23,7 @@ function SearchResults() {
       category: category || undefined,
       sortBy:   sortBy   || 'newest',
     });
+    loadListings();
   }, [searchParams]);
 
   const results = filteredListings();

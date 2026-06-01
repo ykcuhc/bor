@@ -487,15 +487,7 @@ export default function SellPage() {
     // Submit
     setLoading(true);
     await new Promise(r => setTimeout(r, 800)); // Simulate upload
-    const id = addListing({
-      sellerId: currentUser!.id,
-      seller: {
-        id:          currentUser!.id,
-        username:    currentUser!.username,
-        displayName: currentUser!.displayName,
-        avatar:      currentUser!.avatar,
-        isVerified:  currentUser!.isVerified,
-      },
+    const id = await addListing({
       title:        details.title.trim(),
       description:  details.description.trim(),
       images:       photos,

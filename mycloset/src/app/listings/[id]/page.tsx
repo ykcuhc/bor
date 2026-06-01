@@ -17,15 +17,17 @@ import type { Listing } from '@/types';
 // ── Comment section ────────────────────────────────────────────────────────────
 
 function CommentSection({ listingId }: { listingId: string }) {
-  const { getCommentsByListing, addComment, isAuthenticated, showToast } = useStore();
+  const { comments, loadComments, addComment, isAuthenticated, showToast } = useStore();
   const [body, setBody] = useState('');
-  const comments = getCommentsByListing(listingId);
+  const listingComments = comments.filter(c => c.listingId === listingId);
 
-  function handleSubmit(e: React.FormEvent) {
+  useEffect(() => { loadComments(listingId); }, [listingId]);
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!isAuthenticated) { showToast('Sign in to comment', 'info'); return; }
     if (!body.trim()) return;
-    addComment(listingId, body.trim());
+    await addComment(listingId, body.trim());
     setBody('');
   }
 
@@ -33,15 +35,15 @@ function CommentSection({ listingId }: { listingId: string }) {
     <div className="mt-8">
       <h3 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
         <MessageCircle className="w-5 h-5 text-brand-600" />
-        Comments ({comments.length})
+        Comments ({listingComments.length})
       </h3>
 
       {/* Comment list */}
       <div className="space-y-4 mb-5">
-        {comments.length === 0 && (
+        {listingComments.length === 0 && (
           <p className="text-sm text-gray-400 italic">No comments yet. Ask the seller a question!</p>
         )}
-        {comments.map(c => (
+        {listingComments.map(c => (
           <div key={c.id} className="flex gap-3">
             <img src={c.author.avatar} alt={c.author.username} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
             <div className="flex-1 bg-gray-50 rounded-xl px-4 py-3">
@@ -149,16 +151,44 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
 export default function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { getListing, toggleLike, openOfferModal, isAuthenticated, showToast, incrementViews, currentUser } = useStore();
+  const { getListing, toggleLike, openOfferModal, isAuthenticated, showToast, incrementViews, currentUser, loadListings, listingsLoaded } = useStore();
+  const [localListing, setLocalListing] = useState<Listing | null>(null);
+  const [fetchError, setFetchError]     = useState(false);
 
-  const listing = getListing(id);
+  // Load listing from store cache; if missing, fetch directly from Supabase
+  useEffect(() => {
+    const fromStore = getListing(id);
+    if (fromStore) {
+      setLocalListing(fromStore);
+      incrementViews(id);
+      return;
+    }
+    // Not in store yet — fetch directly
+    import('@/lib/supabase/client').then(({ getSupabaseClient }) =>
+      import('@/lib/supabase/queries').then(({ fetchListingById }) =>
+        fetchListingById(getSupabaseClient(), id, currentUser?.id)
+          .then(l => { if (l) { setLocalListing(l); incrementViews(id); } else setFetchError(true); })
+          .catch(() => setFetchError(true))
+      )
+    );
+  }, [id, listingsLoaded]);
+
+  const listing = localListing ?? getListing(id);
   const isLiked = currentUser?.likedListings.includes(id) ?? listing?.isLikedByCurrentUser ?? false;
 
-  useEffect(() => {
-    if (listing) incrementViews(id);
-  }, [id]);
+  if (!listing && !fetchError) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
+        <div className="animate-pulse space-y-4 max-w-2xl mx-auto">
+          <div className="aspect-square bg-gray-100 rounded-2xl" />
+          <div className="h-6 bg-gray-100 rounded w-3/4" />
+          <div className="h-4 bg-gray-100 rounded w-1/2" />
+        </div>
+      </div>
+    );
+  }
 
-  if (!listing) {
+  if (fetchError || !listing) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <div className="text-6xl mb-4">🔍</div>

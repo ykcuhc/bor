@@ -9,11 +9,11 @@ import { useStore } from '@/store/useStore';
 export default function LoginPage() {
   const router = useRouter();
   const { login, showToast } = useStore();
-  const [email, setEmail]     = useState('');
+  const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
-  const [showPw, setShowPw]   = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
+  const [showPw,   setShowPw]   = useState(false);
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,14 +25,13 @@ export default function LoginPage() {
       showToast('Welcome back!', 'success');
       router.push('/');
     } else {
-      setError('Invalid email or password. Try layla@example.com / password123');
+      setError('Invalid email or password. Please try again.');
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gray-50">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/">
             <span className="text-3xl font-extrabold text-brand-600">[MyCloset Logo]</span>
@@ -43,13 +42,6 @@ export default function LoginPage() {
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Demo hint */}
-            <div className="bg-brand-50 border border-brand-100 rounded-xl p-3 text-xs text-brand-700">
-              <strong>Demo accounts:</strong><br />
-              layla@example.com / password123<br />
-              noura@example.com / password123
-            </div>
-
             {error && (
               <div className="bg-red-50 border border-red-100 text-red-700 text-sm px-4 py-3 rounded-xl">
                 {error}
@@ -94,7 +86,9 @@ export default function LoginPage() {
                 </button>
               </div>
               <div className="text-right mt-1.5">
-                <Link href="/auth/forgot" className="text-xs text-brand-600 hover:underline">Forgot password?</Link>
+                <Link href="/auth/forgot" className="text-xs text-brand-600 hover:underline">
+                  Forgot password?
+                </Link>
               </div>
             </div>
 
@@ -111,7 +105,9 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
               Don&apos;t have an account?{' '}
-              <Link href="/auth/register" className="font-semibold text-brand-600 hover:underline">Sign up free</Link>
+              <Link href="/auth/register" className="font-semibold text-brand-600 hover:underline">
+                Sign up free
+              </Link>
             </p>
           </div>
         </div>

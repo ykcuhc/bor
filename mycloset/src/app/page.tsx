@@ -26,9 +26,12 @@ const TRUST_BADGES = [
 ];
 
 export default function HomePage() {
-  const { filteredListings, resetFilters } = useStore();
+  const { filteredListings, loadListings, resetFilters, listingsLoaded } = useStore();
 
-  useEffect(() => { resetFilters(); }, []);
+  useEffect(() => {
+    resetFilters();
+    loadListings();
+  }, []);
 
   const allListings = filteredListings();
   const featured    = allListings.filter(l => l.status === 'available').slice(0, 10);

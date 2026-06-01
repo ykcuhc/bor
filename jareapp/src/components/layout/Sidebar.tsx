@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, MessageSquare, Store, User, ShieldCheck, PlusCircle, Crown } from 'lucide-react';
+import { Home, Users, MessageSquare, Store, User, ShieldCheck, PlusCircle, Crown, Shield } from 'lucide-react';
 import { clsx } from 'clsx';
 import Avatar from '@/components/ui/Avatar';
 import VerificationBanner from '@/components/neighborhood/VerificationBanner';
@@ -25,6 +25,7 @@ export default function Sidebar() {
     { href: '/messages',                  label: 'Messages',       icon: MessageSquare },
     { href: '/services',                  label: 'Local Services', icon: Store },
     { href: `/profile/${currentUser.id}`, label: 'My Profile',     icon: User },
+    { href: '/admin',                     label: 'Admin Panel',    icon: Shield },
   ];
 
   return (

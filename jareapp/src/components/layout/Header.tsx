@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Search, MessageSquare, Menu, X, MapPin, LogOut } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import NotificationBell from '@/components/notifications/NotificationBell';
@@ -9,9 +10,16 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
   const { profile, signOut, isDemoMode } = useAuth();
+  const router = useRouter();
   const [searchQuery,    setSearchQuery]    = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen,setProfileMenuOpen] = useState(false);
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
+  }
 
   const displayUser = profile;
 
@@ -29,11 +37,11 @@ export default function Header() {
           </Link>
 
           {/* ── Search ───────────────────────────────────────── */}
-          <div className="flex-1 max-w-xl">
+          <form onSubmit={handleSearch} className="flex-1 max-w-xl">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
-                type="text"
+                type="search"
                 placeholder="Search neighbors, businesses, posts…"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
@@ -42,7 +50,7 @@ export default function Header() {
                            focus:border-transparent focus:bg-white transition-colors"
               />
             </div>
-          </div>
+          </form>
 
           {/* ── Desktop nav ──────────────────────────────────── */}
           <nav className="hidden md:flex items-center gap-1">

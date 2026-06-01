@@ -15,14 +15,22 @@ import { REACTION_META } from '@/lib/types';
 import { DUMMY_COMMENTS } from '@/lib/data/dummy-data';
 
 interface FeedPostCardProps {
-  post:          Post;
-  currentUserId: string;
-  isDemoMode?:   boolean;
+  post:                 Post;
+  currentUserId:        string;
+  isDemoMode?:          boolean;
+  initialCommentsOpen?: boolean;
+  demoComments?:        import('@/lib/types').Comment[];
 }
 
 const REACTION_OPTIONS: ReactionType[] = ['like', 'helpful', 'thank', 'agree', 'sad'];
 
-export default function FeedPostCard({ post, currentUserId, isDemoMode = false }: FeedPostCardProps) {
+export default function FeedPostCard({
+  post,
+  currentUserId,
+  isDemoMode = false,
+  initialCommentsOpen = false,
+  demoComments: propDemoComments,
+}: FeedPostCardProps) {
   const store = useFeedStore();
   const { active: activeReaction, count: reactionCount, react } = useReaction(
     post.id,
@@ -32,7 +40,7 @@ export default function FeedPostCard({ post, currentUserId, isDemoMode = false }
   );
 
   const [expanded,           setExpanded]           = useState(false);
-  const [showComments,       setShowComments]       = useState(false);
+  const [showComments,       setShowComments]       = useState(initialCommentsOpen);
   const [commentCount,       setCommentCount]       = useState(post.comment_count);
   const [showReactionPicker, setShowReactionPicker] = useState(false);
   const [showMenu,           setShowMenu]           = useState(false);
@@ -44,7 +52,7 @@ export default function FeedPostCard({ post, currentUserId, isDemoMode = false }
     ? post.body.slice(0, PREVIEW_CHARS) + '…'
     : post.body;
 
-  const demoComments   = DUMMY_COMMENTS.filter(c => c.post_id === post.id);
+  const demoComments   = propDemoComments ?? DUMMY_COMMENTS.filter(c => c.post_id === post.id);
   const isOwnPost      = post.author_id === currentUserId;
 
   async function handleDelete() {
@@ -154,6 +162,39 @@ export default function FeedPostCard({ post, currentUserId, isDemoMode = false }
           >
             {expanded ? 'Show less' : 'Read more'}
           </button>
+        )}
+
+        {/* ── Images ──────────────────────────────────────────────── */}
+        {post.image_urls && post.image_urls.length > 0 && (
+          <div className={clsx(
+            'mt-3 grid gap-1.5 rounded-xl overflow-hidden',
+            post.image_urls.length === 1 ? 'grid-cols-1'
+            : post.image_urls.length === 2 ? 'grid-cols-2'
+            : 'grid-cols-2'
+          )}>
+            {post.image_urls.slice(0, 4).map((url, idx) => (
+              <div
+                key={url}
+                className={clsx(
+                  'relative bg-gray-100 overflow-hidden',
+                  post.image_urls!.length === 1 ? 'aspect-video' : 'aspect-square',
+                  post.image_urls!.length === 3 && idx === 0 ? 'row-span-2' : ''
+                )}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={url}
+                  alt={`Image ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                {idx === 3 && post.image_urls!.length > 4 && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <span className="text-white text-xl font-bold">+{post.image_urls!.length - 4}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         )}
 
         {/* ── Engagement stats ─────────────────────────────────── */}

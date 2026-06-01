@@ -1,0 +1,496 @@
+// Prisma schema for JareApp - Kuwait Neighborhood Social Platform
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  USER
+  NEIGHBORHOOD_CHAMPION
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum Language {
+  AR
+  EN
+}
+
+enum PostCategory {
+  GENERAL
+  SAFETY
+  LOST_AND_FOUND
+  SERVICES
+  MARKETPLACE
+  EVENTS
+  RECOMMENDATIONS
+  COMPLAINTS
+  ANNOUNCEMENTS
+}
+
+enum AlertType {
+  FIRE
+  FLOOD
+  ACCIDENT
+  CRIME
+  MEDICAL
+  INFRASTRUCTURE
+  WEATHER
+  OTHER
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum EventCategory {
+  SOCIAL
+  SPORTS
+  EDUCATIONAL
+  CULTURAL
+  RELIGIOUS
+  CHARITY
+  BUSINESS
+  OTHER
+}
+
+enum RSVPStatus {
+  GOING
+  MAYBE
+  NOT_GOING
+}
+
+enum BusinessCategory {
+  RESTAURANT
+  CAFE
+  GROCERY
+  PHARMACY
+  CLINIC
+  GYM
+  SALON
+  ELECTRONICS
+  CLOTHING
+  SERVICES
+  EDUCATION
+  OTHER
+}
+
+enum ReactionType {
+  LIKE
+  LOVE
+  HAHA
+  WOW
+  SAD
+  ANGRY
+}
+
+enum ConnectionStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+enum NotificationType {
+  NEW_POST
+  NEW_COMMENT
+  NEW_REACTION
+  NEW_ALERT
+  NEW_EVENT
+  NEW_MESSAGE
+  CONNECTION_REQUEST
+  CONNECTION_ACCEPTED
+  MENTION
+  BUSINESS_REVIEW
+  SYSTEM
+}
+
+enum ReportReason {
+  SPAM
+  INAPPROPRIATE_CONTENT
+  HARASSMENT
+  MISINFORMATION
+  ILLEGAL_CONTENT
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+
+model Governorate {
+  id           String        @id @default(uuid())
+  nameEn       String
+  nameAr       String
+  code         String        @unique
+  neighborhoods Neighborhood[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("governorates")
+}
+
+model Neighborhood {
+  id            String        @id @default(uuid())
+  nameEn        String
+  nameAr        String
+  governorateId String
+  governorate   Governorate   @relation(fields: [governorateId], references: [id])
+  latitude      Float?
+  longitude     Float?
+  users         User[]
+  posts         Post[]
+  alerts        Alert[]
+  events        Event[]
+  businesses    Business[]
+  messages      Message[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([nameEn, governorateId])
+  @@map("neighborhoods")
+}
+
+model User {
+  id                 String             @id @default(uuid())
+  phone              String             @unique
+  email              String?            @unique
+  passwordHash       String?
+  firstName          String
+  lastName           String
+  displayName        String?
+  avatarUrl          String?
+  bio                String?
+  role               UserRole           @default(USER)
+  preferredLanguage  Language           @default(AR)
+  neighborhoodId     String?
+  neighborhood       Neighborhood?      @relation(fields: [neighborhoodId], references: [id])
+  addressEncrypted   String?
+  isVerified         Boolean            @default(false)
+  isActive           Boolean            @default(true)
+  lastLoginAt        DateTime?
+  posts              Post[]
+  alerts             Alert[]
+  events             Event[]
+  eventAttendees     EventAttendee[]
+  businessReviews    BusinessReview[]
+  comments           Comment[]
+  reactions          Reaction[]
+  sentMessages       Message[]          @relation("SentMessages")
+  receivedMessages   Message[]          @relation("ReceivedMessages")
+  connectionsFrom    UserConnection[]   @relation("ConnectionFrom")
+  connectionsTo      UserConnection[]   @relation("ConnectionTo")
+  notifications      Notification[]
+  reports            Report[]           @relation("ReportedBy")
+  reportedContent    Report[]           @relation("ReportedUser")
+  otpCodes           OtpCode[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@map("users")
+}
+
+model Post {
+  id              String        @id @default(uuid())
+  authorId        String
+  author          User          @relation(fields: [authorId], references: [id])
+  neighborhoodId  String
+  neighborhood    Neighborhood  @relation(fields: [neighborhoodId], references: [id])
+  category        PostCategory  @default(GENERAL)
+  titleEn         String?
+  titleAr         String?
+  contentEn       String?
+  contentAr       String?
+  images          String[]
+  isAnonymous     Boolean       @default(false)
+  isPinned        Boolean       @default(false)
+  isActive        Boolean       @default(true)
+  viewCount       Int           @default(0)
+  comments        Comment[]
+  reactions       Reaction[]
+  reports         Report[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@map("posts")
+}
+
+model Alert {
+  id              String        @id @default(uuid())
+  authorId        String
+  author          User          @relation(fields: [authorId], references: [id])
+  neighborhoodId  String
+  neighborhood    Neighborhood  @relation(fields: [neighborhoodId], references: [id])
+  type            AlertType
+  severity        AlertSeverity @default(MEDIUM)
+  titleEn         String?
+  titleAr         String?
+  descriptionEn   String?
+  descriptionAr   String?
+  images          String[]
+  latitude        Float?
+  longitude       Float?
+  isActive        Boolean       @default(true)
+  isVerified      Boolean       @default(false)
+  expiresAt       DateTime?
+  comments        Comment[]
+  reactions       Reaction[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@map("alerts")
+}
+
+model Event {
+  id              String          @id @default(uuid())
+  organizerId     String
+  organizer       User            @relation(fields: [organizerId], references: [id])
+  neighborhoodId  String
+  neighborhood    Neighborhood    @relation(fields: [neighborhoodId], references: [id])
+  category        EventCategory   @default(SOCIAL)
+  titleEn         String?
+  titleAr         String?
+  descriptionEn   String?
+  descriptionAr   String?
+  images          String[]
+  location        String?
+  latitude        Float?
+  longitude       Float?
+  startAt         DateTime
+  endAt           DateTime?
+  maxAttendees    Int?
+  isPublic        Boolean         @default(true)
+  isActive        Boolean         @default(true)
+  attendees       EventAttendee[]
+  comments        Comment[]
+  reactions       Reaction[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@map("events")
+}
+
+model EventAttendee {
+  id        String     @id @default(uuid())
+  eventId   String
+  event     Event      @relation(fields: [eventId], references: [id])
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  status    RSVPStatus @default(GOING)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@unique([eventId, userId])
+  @@map("event_attendees")
+}
+
+model Business {
+  id              String           @id @default(uuid())
+  ownerId         String?
+  neighborhoodId  String
+  neighborhood    Neighborhood     @relation(fields: [neighborhoodId], references: [id])
+  category        BusinessCategory @default(OTHER)
+  nameEn          String
+  nameAr          String?
+  descriptionEn   String?
+  descriptionAr   String?
+  phone           String?
+  email           String?
+  website         String?
+  address         String?
+  latitude        Float?
+  longitude       Float?
+  images          String[]
+  openingHours    Json?
+  isVerified      Boolean          @default(false)
+  isActive        Boolean          @default(true)
+  averageRating   Float            @default(0)
+  reviewCount     Int              @default(0)
+  reviews         BusinessReview[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("businesses")
+}
+
+model BusinessReview {
+  id          String    @id @default(uuid())
+  businessId  String
+  business    Business  @relation(fields: [businessId], references: [id])
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  rating      Int
+  reviewEn    String?
+  reviewAr    String?
+  images      String[]
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([businessId, userId])
+  @@map("business_reviews")
+}
+
+model Comment {
+  id              String    @id @default(uuid())
+  authorId        String
+  author          User      @relation(fields: [authorId], references: [id])
+  postId          String?
+  post            Post?     @relation(fields: [postId], references: [id])
+  alertId         String?
+  alert           Alert?    @relation(fields: [alertId], references: [id])
+  eventId         String?
+  event           Event?    @relation(fields: [eventId], references: [id])
+  parentId        String?
+  parent          Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies         Comment[] @relation("CommentReplies")
+  contentEn       String?
+  contentAr       String?
+  images          String[]
+  isActive        Boolean   @default(true)
+  reactions       Reaction[]
+  reports         Report[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("comments")
+}
+
+model Reaction {
+  id        String       @id @default(uuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  type      ReactionType @default(LIKE)
+  postId    String?
+  post      Post?        @relation(fields: [postId], references: [id])
+  alertId   String?
+  alert     Alert?       @relation(fields: [alertId], references: [id])
+  eventId   String?
+  event     Event?       @relation(fields: [eventId], references: [id])
+  commentId String?
+  comment   Comment?     @relation(fields: [commentId], references: [id])
+  createdAt DateTime     @default(now())
+
+  @@map("reactions")
+}
+
+model Message {
+  id              String       @id @default(uuid())
+  senderId        String
+  sender          User         @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId      String
+  receiver        User         @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  neighborhoodId  String?
+  neighborhood    Neighborhood? @relation(fields: [neighborhoodId], references: [id])
+  contentEn       String?
+  contentAr       String?
+  images          String[]
+  isRead          Boolean      @default(false)
+  readAt          DateTime?
+  isActive        Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@map("messages")
+}
+
+model UserConnection {
+  id          String           @id @default(uuid())
+  fromUserId  String
+  fromUser    User             @relation("ConnectionFrom", fields: [fromUserId], references: [id])
+  toUserId    String
+  toUser      User             @relation("ConnectionTo", fields: [toUserId], references: [id])
+  status      ConnectionStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([fromUserId, toUserId])
+  @@map("user_connections")
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  type        NotificationType
+  titleEn     String?
+  titleAr     String?
+  bodyEn      String?
+  bodyAr      String?
+  data        Json?
+  isRead      Boolean          @default(false)
+  readAt      DateTime?
+  createdAt   DateTime         @default(now())
+
+  @@map("notifications")
+}
+
+model Report {
+  id               String       @id @default(uuid())
+  reportedById     String
+  reportedBy       User         @relation("ReportedBy", fields: [reportedById], references: [id])
+  reportedUserId   String?
+  reportedUser     User?        @relation("ReportedUser", fields: [reportedUserId], references: [id])
+  postId           String?
+  post             Post?        @relation(fields: [postId], references: [id])
+  commentId        String?
+  comment          Comment?     @relation(fields: [commentId], references: [id])
+  reason           ReportReason
+  descriptionEn    String?
+  descriptionAr    String?
+  status           ReportStatus @default(PENDING)
+  reviewedAt       DateTime?
+  reviewNote       String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@map("reports")
+}
+
+model OtpCode {
+  id          String    @id @default(uuid())
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id])
+  phone       String
+  code        String
+  isUsed      Boolean   @default(false)
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+
+  @@map("otp_codes")
+}
+
+model Advertisement {
+  id              String    @id @default(uuid())
+  titleEn         String?
+  titleAr         String?
+  descriptionEn   String?
+  descriptionAr   String?
+  imageUrl        String?
+  linkUrl         String?
+  targetGovernorate String?
+  targetNeighborhood String?
+  startsAt        DateTime
+  endsAt          DateTime
+  isActive        Boolean   @default(true)
+  impressionCount Int       @default(0)
+  clickCount      Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("advertisements")
+}

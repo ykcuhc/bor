@@ -1,0 +1,21 @@
+{
+  "name": "jareapp",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "docker compose up --build",
+    "dev:api": "cd packages/api && npm run dev",
+    "dev:web": "cd apps/web && npm run dev",
+    "build": "npm run build --workspaces",
+    "seed": "cd packages/api && npm run seed",
+    "migrate": "cd packages/api && npx prisma migrate dev",
+    "migrate:deploy": "cd packages/api && npx prisma migrate deploy"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

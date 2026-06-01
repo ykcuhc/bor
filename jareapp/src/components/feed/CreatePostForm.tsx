@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Image as ImageIcon, X, ChevronDown, Globe, Lock } from 'lucide-react';
+import { X, ChevronDown, Globe, Lock } from 'lucide-react';
 import { clsx } from 'clsx';
 import Avatar from '@/components/ui/Avatar';
+import ImageUploader from '@/components/ui/ImageUploader';
 import type { PostCategory, GeographicalScope, Post } from '@/lib/types';
 import { POST_CATEGORY_META } from '@/lib/types';
 import { DUMMY_USERS, DUMMY_NEIGHBORHOODS } from '@/lib/data/dummy-data';
@@ -39,6 +40,7 @@ export default function CreatePostForm({
   const [scope,       setScope]      = useState<GeographicalScope>('neighborhood');
   const [title,       setTitle]      = useState('');
   const [body,        setBody]       = useState('');
+  const [imageUrls,   setImageUrls]  = useState<string[]>([]);
   const [submitting,  setSubmitting] = useState(false);
   const [error,       setError]      = useState('');
 
@@ -58,7 +60,7 @@ export default function CreatePostForm({
         neighborhood_id:    neighborhoodId,
         title:              title.trim() || null,
         body:               body.trim(),
-        image_urls:         null,
+        image_urls:         imageUrls.length ? imageUrls : null,
         category,
         geographical_scope: scope,
         is_pinned:          false,
@@ -84,6 +86,7 @@ export default function CreatePostForm({
           neighborhood_id:    neighborhoodId,
           body:               body.trim(),
           title:              title.trim() || null,
+          image_urls:         imageUrls.length ? imageUrls : null,
           category,
           geographical_scope: scope,
         }),
@@ -107,6 +110,7 @@ export default function CreatePostForm({
   function reset() {
     setBody('');
     setTitle('');
+    setImageUrls([]);
     setCategory('general');
     setScope('neighborhood');
     setSubmitting(false);
@@ -216,21 +220,23 @@ export default function CreatePostForm({
           <p className="text-xs text-gray-400 text-right mt-1">{body.length}/2000</p>
         </div>
 
+        {/* Image upload */}
+        <ImageUploader
+          bucket="post-images"
+          maxImages={5}
+          isDemoMode={isDemoMode}
+          onUrlsChange={setImageUrls}
+        />
+
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <div className="flex items-center justify-between pt-1">
-          <button type="button" className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-brand-600 transition-colors">
-            <ImageIcon className="w-4 h-4" />
-            Add photo
+        <div className="flex items-center justify-end gap-2 pt-1">
+          {onClose && (
+            <button type="button" onClick={onClose} className="btn-secondary text-sm">Cancel</button>
+          )}
+          <button type="submit" disabled={submitting || !body.trim()} className="btn-primary text-sm">
+            {submitting ? 'Posting…' : 'Post'}
           </button>
-          <div className="flex items-center gap-2">
-            {onClose && (
-              <button type="button" onClick={onClose} className="btn-secondary text-sm">Cancel</button>
-            )}
-            <button type="submit" disabled={submitting || !body.trim()} className="btn-primary text-sm">
-              {submitting ? 'Posting…' : 'Post'}
-            </button>
-          </div>
         </div>
       </form>
     </div>

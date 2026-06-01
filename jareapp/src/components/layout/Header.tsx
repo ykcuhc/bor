@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Search, Bell, MessageSquare, Menu, X, MapPin, LogOut } from 'lucide-react';
+import { Search, MessageSquare, Menu, X, MapPin, LogOut } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
+import NotificationBell from '@/components/notifications/NotificationBell';
 import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
@@ -54,13 +55,7 @@ export default function Header() {
               {isDemoMode && <span className="absolute top-1 right-1 w-2 h-2 bg-brand-500 rounded-full" />}
             </Link>
 
-            <button
-              className="relative p-2 rounded-lg text-gray-600 hover:text-brand-600 hover:bg-brand-50 transition-colors"
-              aria-label="Notifications"
-            >
-              <Bell className="w-5 h-5" />
-              {isDemoMode && <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />}
-            </button>
+            <NotificationBell />
 
             {/* Profile dropdown */}
             {displayUser && (

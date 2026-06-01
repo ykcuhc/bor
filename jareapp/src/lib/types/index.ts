@@ -8,7 +8,7 @@ export type VerificationStatus = 'unverified' | 'pending' | 'verified';
 export type PostCategory = 'general' | 'safety' | 'recommendation' | 'classifieds' | 'lost_found' | 'events' | 'question';
 export type GeographicalScope = 'neighborhood' | 'governorate';
 export type ReactionType = 'like' | 'helpful' | 'thank' | 'agree' | 'sad';
-export type MembershipTier = 'basic' | 'premium' | 'business';
+export type MembershipTier = 'free' | 'premium' | 'business';
 
 // ── Governorate ──────────────────────────────────────────────
 export interface Governorate {
@@ -43,6 +43,7 @@ export interface User {
   governorate_id: string | null;
   verification_status: VerificationStatus;
   is_premium: boolean;
+  membership_tier?: MembershipTier;
   phone: string | null;
   created_at: string;
   updated_at: string;

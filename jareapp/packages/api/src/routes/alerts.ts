@@ -2,9 +2,9 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import {
   createAlert,
-  getAlerts,
+  listAlerts,
   getAlertById,
-  deactivateAlert,
+  deleteAlert,
 } from '../controllers/alerts.controller';
 
 const router = Router();
@@ -12,8 +12,8 @@ const router = Router();
 router.use(authenticate);
 
 router.post('/', createAlert);
-router.get('/', getAlerts);
+router.get('/', listAlerts);
 router.get('/:id', getAlertById);
-router.patch('/:id/deactivate', deactivateAlert);
+router.patch('/:id/deactivate', deleteAlert);
 
 export default router;

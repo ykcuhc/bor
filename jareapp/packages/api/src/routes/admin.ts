@@ -12,7 +12,7 @@ import {
 
 const router = Router();
 
-router.use(authenticate, requireRole(['ADMIN', 'SUPER_ADMIN']));
+router.use(authenticate, requireRole('ADMIN', 'SUPER_ADMIN'));
 
 router.get('/reports', getReports);
 router.patch('/reports/:id', resolveReport);

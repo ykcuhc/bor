@@ -8,7 +8,7 @@ import {
   deletePost,
   reactToPost,
   reportPost,
-  getPostsByCategory,
+  listPosts,
 } from '../controllers/posts.controller';
 
 const router = Router();
@@ -16,7 +16,7 @@ const router = Router();
 router.use(authenticate);
 
 router.post('/', postLimiter, createPost);
-router.get('/category/:category', getPostsByCategory);
+router.get('/category/:category', listPosts);
 router.get('/:id', getPostById);
 router.patch('/:id', updatePost);
 router.delete('/:id', deletePost);

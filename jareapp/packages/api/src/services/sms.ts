@@ -17,16 +17,13 @@ function getClient(): ReturnType<typeof twilio> {
 }
 
 export async function sendOtpSms(phone: string, code: string): Promise<void> {
-  const fromNumber = process.env.TWILIO_PHONE_NUMBER;
-  if (!fromNumber) {
-    throw new Error('TWILIO_PHONE_NUMBER is not configured');
-  }
-
-  // In development, just log the OTP instead of sending
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[DEV SMS] To: ${phone}, OTP: ${code}`);
+  // In development or when Twilio is not configured, just log the OTP
+  if (process.env.NODE_ENV !== 'production' || !process.env.TWILIO_PHONE_NUMBER) {
+    console.log(`\n📱 [DEV OTP] Phone: ${phone} | Code: ${code}\n`);
     return;
   }
+
+  const fromNumber = process.env.TWILIO_PHONE_NUMBER;
 
   const client = getClient();
   const messageBody = `Your JareApp verification code is: ${code}. Valid for ${process.env.OTP_EXPIRES_MINUTES || 10} minutes. Do not share this code.`;

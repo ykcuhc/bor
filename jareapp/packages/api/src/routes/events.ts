@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import {
   createEvent,
-  getEvents,
+  listEvents,
   getEventById,
   rsvpEvent,
   updateEvent,
@@ -14,7 +14,7 @@ const router = Router();
 router.use(authenticate);
 
 router.post('/', createEvent);
-router.get('/', getEvents);
+router.get('/', listEvents);
 router.get('/:id', getEventById);
 router.post('/:id/rsvp', rsvpEvent);
 router.patch('/:id', updateEvent);

@@ -46,7 +46,7 @@ export default function RegisterPage() {
     });
     setLoading(false);
     if (ok) {
-      showToast('Welcome to MyCloset! 🎉', 'success');
+      showToast('Welcome to Miova! 🎉', 'success');
       router.push('/');
     } else {
       setError('An account with this email or username already exists.');
@@ -58,7 +58,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/">
-            <span className="text-3xl font-extrabold text-brand-600">[MyCloset Logo]</span>
+            <span className="text-3xl font-extrabold text-brand-600">Miova<span className="text-accent-500">.</span></span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 mt-4">Create your closet</h1>
           <p className="text-gray-500 mt-1">Start buying and selling for free</p>

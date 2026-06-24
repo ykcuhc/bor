@@ -10,7 +10,7 @@ import AuthProvider from '@/components/AuthProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "MyCloset — Kuwait's Fashion Marketplace",
+  title: "Miova. — Kuwait's Fashion Marketplace",
   description: 'Buy and sell fashion, accessories, and more from thousands of closets across Kuwait.',
   keywords: ['Kuwait', 'fashion', 'marketplace', 'buy', 'sell', 'clothing', 'accessories'],
 };

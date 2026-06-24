@@ -22,7 +22,7 @@ const FOOTER_LINKS = {
     { label: 'Contact Us',    href: '/contact' },
   ],
   'Company': [
-    { label: 'About MyCloset', href: '/about' },
+    { label: 'About Miova.', href: '/about' },
     { label: 'Careers',       href: '/careers' },
     { label: 'Press',         href: '/press' },
     { label: 'Blog',          href: '/blog' },
@@ -36,9 +36,9 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <span className="text-2xl font-bold text-white">[MyCloset Logo]</span>
+            <span className="text-2xl font-bold text-white">Miova<span className="text-accent-400">.</span></span>
             <p className="mt-3 text-sm text-gray-400 leading-relaxed">
-              Kuwait&apos;s #1 social commerce platform for fashion.
+              Kuwait&apos;s fashion marketplace.
               Buy and sell from thousands of closets — safely, easily, and from home.
             </p>
             <div className="flex gap-3 mt-5">
@@ -75,7 +75,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} MyCloset · Kuwait. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Miova. · Kuwait. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
             <Link href="/terms"   className="hover:text-gray-300 transition-colors">Terms of Service</Link>

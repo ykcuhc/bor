@@ -90,7 +90,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
             <span className="text-xl font-bold text-brand-600 tracking-tight whitespace-nowrap">
-              MyCloset
+              Miova.
             </span>
           </Link>
 
@@ -230,7 +230,7 @@ export default function Header() {
       >
         {/* Panel header */}
         <div className="flex items-center justify-between px-4 h-14 border-b border-gray-100 flex-shrink-0">
-          <span className="text-lg font-bold text-brand-600">MyCloset</span>
+          <span className="text-lg font-bold text-brand-600">Miova.</span>
           <button onClick={closeMobileMenu} className="p-2 text-gray-500 hover:text-gray-700 transition-colors">
             <X className="w-5 h-5" />
           </button>

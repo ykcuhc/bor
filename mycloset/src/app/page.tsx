@@ -47,13 +47,13 @@ export default function HomePage() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-200 bg-white/10 px-3 py-1 rounded-full mb-5 uppercase tracking-widest">
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-300 bg-white/10 px-3 py-1 rounded-full mb-5 uppercase tracking-widest">
               🇰🇼 Kuwait&apos;s #1 Fashion Marketplace
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-6">
               Your Closet.<br />
               Your{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-200 to-white">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 to-accent-100">
                 Online Booth.
               </span>
             </h1>

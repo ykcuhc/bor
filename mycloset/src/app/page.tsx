@@ -45,11 +45,11 @@ export default function HomePage() {
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 lg:py-20">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
 
-            {/* Left */}
-            <div>
+            {/* Left — centered on mobile, left-aligned on md+ */}
+            <div className="text-center md:text-left">
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 bg-brand-50 border border-brand-100 px-3 py-1.5 rounded-full mb-6 uppercase tracking-widest">
                 🇰🇼 Kuwait&apos;s Fashion Marketplace
               </span>
@@ -60,10 +60,10 @@ export default function HomePage() {
                   My way.
                 </span>
               </h1>
-              <p className="text-lg text-gray-500 leading-relaxed mb-8 max-w-md">
+              <p className="text-lg text-gray-500 leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
                 Buy, sell, and discover pre-loved treasures from people like you.
               </p>
-              <div className="flex flex-wrap gap-3 mb-10">
+              <div className="flex flex-wrap gap-3 mb-8 justify-center md:justify-start">
                 <Link
                   href="/search"
                   className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-brand-600 to-brand-700 text-white font-semibold rounded-full hover:from-brand-700 hover:to-brand-800 transition-all shadow-lg shadow-brand-200"
@@ -77,7 +77,7 @@ export default function HomePage() {
                   Sell Your Items
                 </Link>
               </div>
-              <div className="flex flex-wrap gap-6 text-sm text-gray-500">
+              <div className="flex flex-wrap gap-4 text-sm text-gray-500 justify-center md:justify-start">
                 <span className="flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-accent-500" /> Secure Payments
                 </span>
@@ -90,19 +90,19 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right — decorative image panel */}
-            <div className="relative hidden lg:flex items-center justify-center h-[420px]">
+            {/* Right — decorative image panel — visible md+ */}
+            <div className="relative hidden md:flex items-center justify-center h-[320px] lg:h-[420px]">
               {/* Gradient circles */}
-              <div className="absolute w-80 h-80 rounded-full bg-gradient-to-br from-brand-100 to-accent-100 opacity-70 top-10 right-10" />
-              <div className="absolute w-48 h-48 rounded-full bg-gradient-to-br from-accent-200 to-brand-200 opacity-50 bottom-8 left-8" />
+              <div className="absolute w-64 h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-brand-100 to-accent-100 opacity-70 top-10 right-10" />
+              <div className="absolute w-36 h-36 lg:w-48 lg:h-48 rounded-full bg-gradient-to-br from-accent-200 to-brand-200 opacity-50 bottom-8 left-8" />
               {/* Clothing rack photo */}
               <img
                 src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=700&q=80&auto=format&fit=crop"
                 alt="Fashion closet"
-                className="relative z-10 w-[85%] h-[380px] object-cover rounded-3xl shadow-2xl shadow-brand-200/40"
+                className="relative z-10 w-[85%] h-[280px] lg:h-[380px] object-cover rounded-3xl shadow-2xl shadow-brand-200/40"
               />
               {/* Floating card */}
-              <div className="absolute bottom-12 -left-4 z-20 bg-white rounded-2xl shadow-xl px-5 py-4 border border-gray-100">
+              <div className="absolute bottom-8 -left-4 z-20 bg-white rounded-2xl shadow-xl px-4 py-3 border border-gray-100">
                 <p className="text-xs text-gray-400 mb-0.5">New listing</p>
                 <p className="text-sm font-bold text-brand-900">Gucci Marmont Bag</p>
                 <p className="text-sm font-semibold text-accent-600 mt-0.5">KD 320.000</p>
@@ -149,7 +149,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-10 sm:space-y-14">
 
         {/* ── Popular Picks + Sell card ─────────────────────────── */}
         <section>
@@ -167,7 +167,7 @@ export default function HomePage() {
                   View all <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                 {trending.length > 0
                   ? trending.slice(0, 8).map(l => <ProductCard key={l.id} listing={l} />)
                   : Array.from({ length: 8 }).map((_, i) => (
@@ -183,8 +183,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right: Sell promo card */}
-            <div className="lg:sticky lg:top-24 bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 rounded-3xl p-7 text-white shadow-2xl shadow-brand-900/30 overflow-hidden relative">
+            {/* Right: Sell promo card — desktop only */}
+            <div className="hidden lg:block lg:sticky lg:top-24 bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 rounded-3xl p-7 text-white shadow-2xl shadow-brand-900/30 overflow-hidden relative">
               <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/5" />
               <div className="absolute -bottom-8 -left-6 w-32 h-32 rounded-full bg-accent-500/10" />
               <div className="relative">
@@ -233,7 +233,7 @@ export default function HomePage() {
                 Browse all <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               {allListings.filter(l => l.status === 'available').slice(0, 10).map(l => (
                 <ProductCard key={l.id} listing={l} />
               ))}
@@ -242,14 +242,14 @@ export default function HomePage() {
         )}
 
         {/* ── Gradient CTA Banner ───────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 rounded-3xl p-10 md:p-14 text-white text-center shadow-2xl shadow-brand-900/20">
+        <section className="relative overflow-hidden bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 rounded-2xl sm:rounded-3xl p-7 sm:p-10 md:p-14 text-white text-center shadow-2xl shadow-brand-900/20">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full bg-accent-500/10 blur-3xl" />
             <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-brand-600/20 blur-3xl" />
           </div>
           <div className="relative">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-3">Ready to sell?</h2>
-            <p className="text-brand-200 text-lg mb-8 max-w-lg mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3">Ready to sell?</h2>
+            <p className="text-brand-200 text-base sm:text-lg mb-6 sm:mb-8 max-w-lg mx-auto">
               Turn your unwanted items into cash. List in minutes, reach thousands of buyers in Kuwait.
             </p>
             <Link

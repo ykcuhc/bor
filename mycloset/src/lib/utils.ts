@@ -6,11 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatKWD(amount: number): string {
-  return new Intl.NumberFormat('en-KW', {
-    style: 'currency',
-    currency: 'KWD',
-    minimumFractionDigits: 3,
-  }).format(amount);
+  return `KD ${amount.toFixed(3)}`;
 }
 
 export function formatRelativeTime(isoDate: string): string {

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
+import Logo from '@/components/ui/Logo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,8 +34,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gray-50">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/">
-            <span className="text-3xl font-extrabold text-brand-600">Miova<span className="text-accent-500">.</span></span>
+          <Link href="/" className="inline-flex justify-center">
+            <Logo size="lg" />
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 mt-4">Welcome back</h1>
           <p className="text-gray-500 mt-1">Sign in to your closet</p>

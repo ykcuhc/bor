@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
+import Logo from '@/components/ui/Logo';
 import { useStore } from '@/store/useStore';
 import { cn } from '@/lib/utils';
 
@@ -58,7 +59,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/">
-            <span className="text-3xl font-extrabold text-brand-600">Miova<span className="text-accent-500">.</span></span>
+            <Logo size="lg" />
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 mt-4">Create your closet</h1>
           <p className="text-gray-500 mt-1">Start buying and selling for free</p>

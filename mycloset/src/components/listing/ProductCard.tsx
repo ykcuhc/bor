@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Heart, Share2, BadgeCheck } from 'lucide-react';
+import { Heart, BadgeCheck } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import type { Listing } from '@/types';
 import { cn, formatKWD, getDiscountPercent } from '@/lib/utils';
@@ -26,16 +26,9 @@ export default function ProductCard({ listing, showSoldBadge = true }: ProductCa
     toggleLike(listing.id);
   }
 
-  function handleShare(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    navigator.clipboard.writeText(`${window.location.origin}/listings/${listing.id}`);
-    showToast('Link copied!', 'success');
-  }
-
   return (
     <Link href={`/listings/${listing.id}`} className="group block">
-      <div className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200">
+      <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg hover:shadow-brand-100/40 hover:-translate-y-0.5 transition-all duration-200">
         {/* ── Image container ──────────────────────────────────────────── */}
         <div className="relative aspect-square overflow-hidden bg-gray-50">
           <img
@@ -56,82 +49,55 @@ export default function ProductCard({ listing, showSoldBadge = true }: ProductCa
 
           {/* Discount badge */}
           {discount > 0 && listing.status !== 'sold' && (
-            <span className="absolute top-2 left-2 bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <span className="absolute top-2 left-2 bg-gradient-to-r from-brand-600 to-brand-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
               -{discount}%
             </span>
           )}
 
-          {/* Action buttons — appear on hover */}
-          <div className="absolute top-2 right-2 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={handleLike}
-              className={cn(
-                'w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-all',
-                isLiked
-                  ? 'bg-brand-600 text-white'
-                  : 'bg-white text-gray-600 hover:text-brand-600'
-              )}
-              aria-label={isLiked ? 'Unlike' : 'Like'}
-            >
-              <Heart className={cn('w-4 h-4', isLiked && 'fill-current')} />
-            </button>
-            <button
-              onClick={handleShare}
-              className="w-8 h-8 rounded-full bg-white text-gray-600 hover:text-brand-600 flex items-center justify-center shadow-md transition-colors"
-              aria-label="Share"
-            >
-              <Share2 className="w-4 h-4" />
-            </button>
-          </div>
+          {/* Heart — always visible on mobile, hover on desktop */}
+          <button
+            onClick={handleLike}
+            className={cn(
+              'absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-all',
+              isLiked
+                ? 'bg-brand-600 text-white'
+                : 'bg-white/90 text-gray-500 hover:text-brand-600 group-hover:opacity-100 opacity-0 sm:opacity-100'
+            )}
+            aria-label={isLiked ? 'Unlike' : 'Like'}
+          >
+            <Heart className={cn('w-4 h-4', isLiked && 'fill-current')} />
+          </button>
         </div>
 
         {/* ── Card body ───────────────────────────────────────────────── */}
         <div className="p-3">
-          {/* Seller */}
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <img
-              src={listing.seller.avatar}
-              alt={listing.seller.username}
-              className="w-5 h-5 rounded-full object-cover"
-            />
-            <span className="text-xs text-gray-500 font-medium truncate">
-              @{listing.seller.username}
-            </span>
-            {listing.seller.isVerified && (
-              <BadgeCheck className="w-3.5 h-3.5 text-brand-500 flex-shrink-0" />
-            )}
-          </div>
-
           {/* Title */}
-          <h3 className="text-sm font-medium text-gray-900 leading-tight line-clamp-2 mb-1">
+          <h3 className="text-sm font-semibold text-gray-900 leading-tight line-clamp-2 mb-1">
             {listing.title}
           </h3>
 
-          {/* Brand + Size */}
-          <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-            {listing.brand && <span className="font-medium">{listing.brand}</span>}
-            {listing.brand && listing.size && <span>·</span>}
-            {listing.size && <span>Size {listing.size}</span>}
-          </div>
+          {/* Brand */}
+          {listing.brand && (
+            <p className="text-xs text-gray-400 mb-2 truncate">{listing.brand}</p>
+          )}
 
           {/* Pricing row */}
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-base font-bold text-gray-900">
+              <span className="text-sm font-bold text-brand-900">
                 {formatKWD(listing.listingPrice)}
               </span>
               {listing.originalPrice > listing.listingPrice && (
-                <span className="text-xs text-gray-400 line-through">
+                <span className="text-xs text-gray-300 line-through">
                   {formatKWD(listing.originalPrice)}
                 </span>
               )}
             </div>
-
-            {/* Like count */}
-            <div className="flex items-center gap-1 text-xs text-gray-400">
-              <Heart className={cn('w-3.5 h-3.5', isLiked && 'fill-brand-400 text-brand-400')} />
-              <span>{listing.likesCount}</span>
-            </div>
+            {listing.seller.isVerified && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-accent-600 bg-accent-50 px-2 py-0.5 rounded-full">
+                <BadgeCheck className="w-3 h-3" /> Verified
+              </span>
+            )}
           </div>
         </div>
       </div>

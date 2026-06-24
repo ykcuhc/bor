@@ -82,20 +82,20 @@ export default function ProductCard({ listing, showSoldBadge = true }: ProductCa
           )}
 
           {/* Pricing row */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-sm font-bold text-brand-900">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <div className="flex items-baseline gap-1 min-w-0">
+              <span className="text-sm font-bold text-brand-900 whitespace-nowrap">
                 {formatKWD(listing.listingPrice)}
               </span>
               {listing.originalPrice > listing.listingPrice && (
-                <span className="text-xs text-gray-300 line-through">
+                <span className="text-xs text-gray-300 line-through whitespace-nowrap">
                   {formatKWD(listing.originalPrice)}
                 </span>
               )}
             </div>
             {listing.seller.isVerified && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-accent-600 bg-accent-50 px-2 py-0.5 rounded-full">
-                <BadgeCheck className="w-3 h-3" /> Verified
+              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-accent-600 bg-accent-50 px-1.5 py-0.5 rounded-full flex-shrink-0">
+                <BadgeCheck className="w-3 h-3 flex-shrink-0" /> Verified
               </span>
             )}
           </div>

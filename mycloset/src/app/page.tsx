@@ -53,7 +53,7 @@ export default function HomePage() {
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 bg-brand-50 border border-brand-100 px-3 py-1.5 rounded-full mb-6 uppercase tracking-widest">
                 🇰🇼 Kuwait&apos;s Fashion Marketplace
               </span>
-              <h1 className="text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-brand-900 mb-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-brand-900 mb-6">
                 My style.<br />
                 My closet.<br />
                 <span className="bg-gradient-to-r from-brand-600 via-accent-500 to-accent-400 bg-clip-text text-transparent">

@@ -281,8 +281,8 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
           </div>
 
           {/* Price */}
-          <div className="flex items-baseline gap-3 mb-6">
-            <span className="text-3xl font-extrabold text-gray-900">{formatKWD(listing.listingPrice)}</span>
+          <div className="flex flex-wrap items-baseline gap-3 mb-6">
+            <span className="text-2xl sm:text-3xl font-extrabold text-gray-900">{formatKWD(listing.listingPrice)}</span>
             {listing.originalPrice > listing.listingPrice && (
               <>
                 <span className="text-lg text-gray-400 line-through">{formatKWD(listing.originalPrice)}</span>
@@ -302,7 +302,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
 
           {/* Action buttons */}
           {!isSold && (
-            <div className="flex gap-3 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
               <button
                 onClick={handleBuyNow}
                 className="flex-1 flex items-center justify-center gap-2 py-4 bg-brand-600 text-white font-bold text-base rounded-xl hover:bg-brand-700 transition-colors shadow-sm"
@@ -326,7 +326,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             </div>
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-gray-400" />
-              <span>Protected by <strong className="text-gray-900">MyCloset Buyer Guarantee</strong></span>
+              <span>Protected by <strong className="text-gray-900">Miova Buyer Guarantee</strong></span>
             </div>
             <div className="flex items-center gap-2">
               <RefreshCcw className="w-4 h-4 text-gray-400" />

@@ -31,7 +31,7 @@ export default function ClosetPage({ params }: { params: Promise<{ username: str
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <div className="text-6xl mb-4">👀</div>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Closet not found</h2>
-        <p className="text-gray-500">This user doesn&apos;t exist on MyCloset.</p>
+        <p className="text-gray-500">This user doesn&apos;t exist on Miova.</p>
       </div>
     );
   }

@@ -171,7 +171,7 @@ function DetailsStep({ data, setData }: { data: DetailsData; setData: (d: Detail
       </div>
 
       {/* Category + Brand row */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1.5">
             Department <span className="text-red-500">*</span>
@@ -200,7 +200,7 @@ function DetailsStep({ data, setData }: { data: DetailsData; setData: (d: Detail
       </div>
 
       {/* Size + Condition */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1.5">Size</label>
           <select
@@ -295,7 +295,7 @@ function PricingStep({ data, setData }: { data: PricingData; setData: (d: Pricin
         <p className="text-sm text-gray-500 mt-1">Set a competitive price to sell faster.</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1.5">
             Original Retail Price (KWD)
@@ -354,7 +354,7 @@ function PricingStep({ data, setData }: { data: PricingData; setData: (d: Pricin
           {[
             ['Listing Price',        formatKWD(listing)],
             ['Shipping (buyer pays)',`+ ${formatKWD(SHIPPING_FEE_KWD)}`],
-            ['MyCloset Fee (20%)',   `- ${formatKWD(platformFee)}`],
+            ['Miova Fee (20%)',       `- ${formatKWD(platformFee)}`],
           ].map(([label, value]) => (
             <div key={label} className="flex justify-between text-sm">
               <span className="text-gray-600">{label}</span>
@@ -470,7 +470,7 @@ export default function SellPage() {
       <div className="max-w-lg mx-auto px-4 py-20 text-center">
         <div className="text-6xl mb-4">🔐</div>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Sign in to sell</h2>
-        <p className="text-gray-500 mb-6">You need an account to list items on MyCloset.</p>
+        <p className="text-gray-500 mb-6">You need an account to list items on Miova.</p>
         <Link href="/auth/login" className="px-6 py-3 bg-brand-600 text-white font-bold rounded-full hover:bg-brand-700 transition-colors">
           Sign In
         </Link>

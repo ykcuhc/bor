@@ -133,7 +133,7 @@ function HeroBanner() {
             <div className="flex-1 min-w-0">
               <h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight mb-1">
                 {slide.headline}{' '}
-                <span className="text-accent-300">{slide.accent}</span>
+                <span className="font-accent italic text-accent-300">{slide.accent}</span>
               </h1>
               <p className="text-white/70 text-sm sm:text-base mt-2 mb-5 max-w-md leading-relaxed line-clamp-2 hidden sm:block">
                 {slide.desc}
@@ -188,7 +188,7 @@ function SectionHead({ title, subtitle, href }: { title: string; subtitle?: stri
     <div className="flex items-start justify-between mb-4">
       <div>
         <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">{title}</h2>
-        {subtitle && <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{subtitle}</p>}
+        {subtitle && <p className="font-code text-xs text-gray-400 mt-0.5 tracking-wide">{subtitle}</p>}
       </div>
       {href && (
         <Link href={href} className="flex-shrink-0 mt-0.5 text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-0.5 transition-colors">

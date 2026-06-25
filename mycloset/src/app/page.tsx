@@ -187,7 +187,7 @@ function SectionHead({ title, subtitle, href }: { title: string; subtitle?: stri
   return (
     <div className="flex items-start justify-between mb-4">
       <div>
-        <h2 className="text-base sm:text-lg font-bold text-gray-900">{title}</h2>
+        <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">{title}</h2>
         {subtitle && <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{subtitle}</p>}
       </div>
       {href && (
@@ -294,7 +294,7 @@ export default function HomePage() {
           <section>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
                   <span>⚡</span> Flash Deals
                 </h2>
                 <div className="flex items-center gap-1 text-sm text-gray-500">
@@ -373,7 +373,7 @@ export default function HomePage() {
           <section>
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h2 className="text-base sm:text-lg font-bold text-gray-900">Just Added</h2>
+                <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">Just Added</h2>
                 <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Fresh listings from across Kuwait</p>
               </div>
               <Link href="/search" className="flex-shrink-0 mt-0.5 text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-0.5">

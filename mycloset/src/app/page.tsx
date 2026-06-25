@@ -1,265 +1,469 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight, ShieldCheck, BadgeCheck, Package,
-  ShoppingBag, Shirt, Baby, Watch, Home, Monitor,
-  LayoutGrid, UserRound, Footprints, Tag, Users, Sparkles,
+  ArrowRight, BadgeCheck, ShoppingBag, Shirt, Baby, Watch,
+  Home, Monitor, LayoutGrid, Heart, Sparkles, ChevronLeft,
+  ChevronRight, Wind, Dumbbell, BookOpen, Star,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
+import { cn } from '@/lib/utils';
+
+// ── Static data ────────────────────────────────────────────────────────────────
+
+const HERO_SLIDES = [
+  {
+    id: 1,
+    headline: 'Everything Kuwait Loves.',
+    accent: 'In One Place.',
+    desc: 'Shop from verified stores and community sellers across fashion, electronics, beauty, home, and more.',
+    cta1: { label: 'Shop Now', href: '/search' },
+    cta2: { label: 'Start Selling', href: '/sell' },
+    bg: 'from-brand-900 via-brand-800 to-brand-700',
+    image: 'https://picsum.photos/seed/hero-fashion/600/400',
+  },
+  {
+    id: 2,
+    headline: 'Flash Deals.',
+    accent: 'Up to 70% Off.',
+    desc: "Limited-time offers from Kuwait's best verified stores. Grab them before they're gone.",
+    cta1: { label: 'Shop Deals', href: '/search?sortBy=price_asc' },
+    bg: 'from-red-900 via-red-800 to-accent-700',
+    image: 'https://picsum.photos/seed/hero-deals/600/400',
+  },
+  {
+    id: 3,
+    headline: 'Open Your Store.',
+    accent: 'Earn with Ease.',
+    desc: 'Join thousands of sellers reaching buyers across Kuwait. Free to list, fast to sell.',
+    cta1: { label: 'Start Selling', href: '/sell' },
+    cta2: { label: 'Learn More', href: '/sell' },
+    bg: 'from-purple-900 via-brand-800 to-brand-700',
+    image: 'https://picsum.photos/seed/hero-sell/600/400',
+  },
+];
 
 const CATEGORIES = [
-  { label: 'Women',       icon: UserRound,   href: '/search?category=Women' },
-  { label: 'Men',         icon: Shirt,        href: '/search?category=Men' },
-  { label: 'Kids',        icon: Baby,         href: '/search?category=Kids' },
-  { label: 'Bags',        icon: ShoppingBag,  href: '/search?category=Women' },
-  { label: 'Shoes',       icon: Footprints,   href: '/search' },
-  { label: 'Watches',     icon: Watch,        href: '/search' },
-  { label: 'Home',        icon: Home,         href: '/search?category=Home' },
-  { label: 'Electronics', icon: Monitor,      href: '/search?category=Electronics' },
-  { label: 'All',         icon: LayoutGrid,   href: '/search' },
+  { label: 'Fashion',     icon: Shirt,       href: '/search?category=Women',       color: 'bg-pink-50   text-pink-500' },
+  { label: 'Electronics', icon: Monitor,     href: '/search?category=Electronics', color: 'bg-blue-50   text-blue-500' },
+  { label: 'Beauty',      icon: Sparkles,    href: '/search?category=Beauty',      color: 'bg-rose-50   text-rose-500' },
+  { label: 'Perfumes',    icon: Wind,        href: '/search',                       color: 'bg-purple-50 text-purple-500' },
+  { label: 'Home',        icon: Home,        href: '/search?category=Home',        color: 'bg-amber-50  text-amber-500' },
+  { label: 'Watches',     icon: Watch,       href: '/search',                       color: 'bg-gray-100  text-gray-600' },
+  { label: 'Sports',      icon: Dumbbell,    href: '/search',                       color: 'bg-green-50  text-green-500' },
+  { label: 'Kids',        icon: Baby,        href: '/search?category=Kids',        color: 'bg-yellow-50 text-yellow-500' },
+  { label: 'Health',      icon: Heart,       href: '/search',                       color: 'bg-red-50    text-red-500' },
+  { label: 'Books',       icon: BookOpen,    href: '/search',                       color: 'bg-indigo-50 text-indigo-500' },
+  { label: 'Bags',        icon: ShoppingBag, href: '/search',                       color: 'bg-orange-50 text-orange-500' },
+  { label: 'All',         icon: LayoutGrid,  href: '/search',                       color: 'bg-brand-50  text-brand-600' },
 ];
 
-const SELL_FEATURES = [
-  { icon: Tag,    title: "It's free to list",  desc: 'No hidden fees' },
-  { icon: Sparkles, title: 'Sell in minutes',  desc: 'Quick and easy listing' },
-  { icon: Users,  title: 'Trusted community',  desc: 'Real people, real reviews' },
+const MOCK_STORES = [
+  { id: 1, name: 'Zara Kuwait',      cover: 'https://picsum.photos/seed/store-zara/320/140',  logo: 'https://picsum.photos/seed/logo-zara/60/60',  products: 245 },
+  { id: 2, name: 'H&M Kuwait',       cover: 'https://picsum.photos/seed/store-hm/320/140',    logo: 'https://picsum.photos/seed/logo-hm/60/60',    products: 312 },
+  { id: 3, name: 'Noon Electronics', cover: 'https://picsum.photos/seed/store-noon/320/140',  logo: 'https://picsum.photos/seed/logo-noon/60/60',  products: 1840 },
+  { id: 4, name: 'Sephora Kuwait',   cover: 'https://picsum.photos/seed/store-seph/320/140',  logo: 'https://picsum.photos/seed/logo-seph/60/60',  products: 520 },
+  { id: 5, name: 'Mango Fashion',    cover: 'https://picsum.photos/seed/store-mango/320/140', logo: 'https://picsum.photos/seed/logo-mango/60/60', products: 189 },
+  { id: 6, name: 'Nike Kuwait',      cover: 'https://picsum.photos/seed/store-nike/320/140',  logo: 'https://picsum.photos/seed/logo-nike/60/60',  products: 421 },
 ];
+
+const COLLECTIONS = [
+  { title: 'Summer Essentials',  image: 'https://picsum.photos/seed/coll-summer/600/300',  href: '/search?q=summer',            items: '2.4K items' },
+  { title: 'Gaming Setup',       image: 'https://picsum.photos/seed/coll-gaming/600/300',  href: '/search?category=Electronics',items: '890 items'  },
+  { title: 'Luxury Fragrances',  image: 'https://picsum.photos/seed/coll-luxury/600/300',  href: '/search?q=perfume',           items: '340 items'  },
+  { title: 'Home Refresh',       image: 'https://picsum.photos/seed/coll-home/600/300',    href: '/search?category=Home',       items: '1.2K items' },
+  { title: 'Fitness Collection', image: 'https://picsum.photos/seed/coll-fitness/600/300', href: '/search?q=fitness',           items: '560 items'  },
+  { title: 'Kids & Baby',        image: 'https://picsum.photos/seed/coll-kids/600/300',    href: '/search?category=Kids',       items: '780 items'  },
+];
+
+type JustAddedFilter = 'today' | 'week' | 'month';
+
+// ── Countdown timer ────────────────────────────────────────────────────────────
+
+function CountdownTimer({ initialSeconds }: { initialSeconds: number }) {
+  const [secs, setSecs] = useState(initialSeconds);
+  useEffect(() => {
+    const t = setInterval(() => setSecs(s => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return (
+    <span className="inline-flex items-center gap-0.5 font-mono text-xs font-bold ml-1">
+      <span className="bg-red-500 text-white px-1.5 py-0.5 rounded">{pad(h)}</span>
+      <span className="text-red-500">:</span>
+      <span className="bg-red-500 text-white px-1.5 py-0.5 rounded">{pad(m)}</span>
+      <span className="text-red-500">:</span>
+      <span className="bg-red-500 text-white px-1.5 py-0.5 rounded">{pad(s)}</span>
+    </span>
+  );
+}
+
+// ── Hero banner ────────────────────────────────────────────────────────────────
+
+function HeroBanner() {
+  const [cur, setCur] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => setCur(c => (c + 1) % HERO_SLIDES.length), 5000);
+  }, []);
+
+  useEffect(() => {
+    startTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [startTimer]);
+
+  function go(idx: number) { setCur(idx); startTimer(); }
+
+  const slide = HERO_SLIDES[cur];
+
+  return (
+    <section className="relative overflow-hidden select-none">
+      <div className={cn('bg-gradient-to-r', slide.bg)}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center min-h-[200px] sm:min-h-[240px] md:min-h-[280px] py-8 gap-6 lg:gap-10">
+
+            {/* Text */}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight mb-1">
+                {slide.headline}{' '}
+                <span className="text-accent-300">{slide.accent}</span>
+              </h1>
+              <p className="text-white/70 text-sm sm:text-base mt-2 mb-5 max-w-md leading-relaxed line-clamp-2 hidden sm:block">
+                {slide.desc}
+              </p>
+              <div className="flex flex-wrap gap-2.5">
+                <Link href={slide.cta1.href}
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-white text-brand-800 font-bold text-sm rounded-full hover:bg-brand-50 transition-colors shadow-sm">
+                  {slide.cta1.label} <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                {slide.cta2 && (
+                  <Link href={slide.cta2.href}
+                    className="inline-flex items-center gap-1.5 px-5 py-2.5 border border-white/40 text-white font-semibold text-sm rounded-full hover:bg-white/10 transition-colors">
+                    {slide.cta2.label}
+                  </Link>
+                )}
+              </div>
+            </div>
+
+            {/* Image */}
+            <div className="hidden sm:block flex-shrink-0 w-44 md:w-56 lg:w-72 h-36 md:h-44 lg:h-56 rounded-2xl overflow-hidden shadow-2xl">
+              <img src={slide.image} alt="" className="w-full h-full object-cover" loading="eager" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Prev / Next */}
+      <button onClick={() => go((cur - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+        className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center transition-colors">
+        <ChevronLeft className="w-4 h-4" />
+      </button>
+      <button onClick={() => go((cur + 1) % HERO_SLIDES.length)}
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center transition-colors">
+        <ChevronRight className="w-4 h-4" />
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+        {HERO_SLIDES.map((_, i) => (
+          <button key={i} onClick={() => go(i)}
+            className={cn('h-1.5 rounded-full transition-all', i === cur ? 'w-6 bg-white' : 'w-1.5 bg-white/40')} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ── Section header ─────────────────────────────────────────────────────────────
+
+function SectionHead({ title, subtitle, href }: { title: string; subtitle?: string; href?: string }) {
+  return (
+    <div className="flex items-start justify-between mb-4">
+      <div>
+        <h2 className="text-base sm:text-lg font-bold text-gray-900">{title}</h2>
+        {subtitle && <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{subtitle}</p>}
+      </div>
+      {href && (
+        <Link href={href} className="flex-shrink-0 mt-0.5 text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-0.5 transition-colors">
+          See all <ChevronRight className="w-3.5 h-3.5" />
+        </Link>
+      )}
+    </div>
+  );
+}
+
+// ── Star rating display ────────────────────────────────────────────────────────
+
+function Stars({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map(i => (
+        <Star key={i} className={cn('w-3 h-3', i <= Math.round(rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200 fill-gray-200')} />
+      ))}
+    </div>
+  );
+}
+
+// ── Main page ──────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
-  const { filteredListings, loadListings, resetFilters } = useStore();
+  const { filteredListings, loadListings, resetFilters, isAuthenticated } = useStore();
+  const [justAddedFilter, setJustAddedFilter] = useState<JustAddedFilter>('week');
 
   useEffect(() => {
     resetFilters();
     loadListings();
   }, []);
 
-  const allListings = filteredListings();
-  const popular  = [...allListings].filter(l => l.status === 'available').sort((a, b) => b.likesCount - a.likesCount).slice(0, 10);
-  const trending = popular.slice(0, 5);
+  const all       = filteredListings();
+  const available = all.filter(l => l.status === 'available');
+  const bestSellers = [...available].sort((a, b) => b.likesCount - a.likesCount).slice(0, 10);
+  const flashDeals  = available.filter(l => l.originalPrice > l.listingPrice).slice(0, 8);
+  const justAdded   = [...available]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 10);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="bg-[#F8FAFC] pb-8">
 
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 lg:py-20">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+      {/* ① Hero ──────────────────────────────────────────────────── */}
+      <HeroBanner />
 
-            {/* Left — centered on mobile, left-aligned on md+ */}
-            <div className="text-center md:text-left">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 bg-brand-50 border border-brand-100 px-3 py-1.5 rounded-full mb-6 uppercase tracking-widest">
-                🇰🇼 Kuwait&apos;s Fashion Marketplace
-              </span>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-brand-900 mb-6">
-                My style.<br />
-                My closet.<br />
-                <span className="bg-gradient-to-r from-brand-600 via-accent-500 to-accent-400 bg-clip-text text-transparent">
-                  My way.
-                </span>
-              </h1>
-              <p className="text-lg text-gray-500 leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
-                Buy, sell, and discover pre-loved treasures from people like you.
-              </p>
-              <div className="flex flex-wrap gap-3 mb-8 justify-center md:justify-start">
-                <Link
-                  href="/search"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-brand-600 to-brand-700 text-white font-semibold rounded-full hover:from-brand-700 hover:to-brand-800 transition-all shadow-lg shadow-brand-200"
-                >
-                  Shop Now <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/sell"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 border-2 border-brand-600 text-brand-600 font-semibold rounded-full hover:bg-brand-50 transition-colors"
-                >
-                  Sell Your Items
-                </Link>
-              </div>
-              <div className="flex flex-wrap gap-4 text-sm text-gray-500 justify-center md:justify-start">
-                <span className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-accent-500" /> Secure Payments
-                </span>
-                <span className="flex items-center gap-2">
-                  <BadgeCheck className="w-4 h-4 text-accent-500" /> Verified Sellers
-                </span>
-                <span className="flex items-center gap-2">
-                  <Package className="w-4 h-4 text-accent-500" /> Easy Returns
-                </span>
-              </div>
-            </div>
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8 pt-5">
 
-            {/* Right — decorative image panel — visible md+ */}
-            <div className="relative hidden md:flex items-center justify-center h-[320px] lg:h-[420px]">
-              {/* Gradient circles */}
-              <div className="absolute w-64 h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-brand-100 to-accent-100 opacity-70 top-10 right-10" />
-              <div className="absolute w-36 h-36 lg:w-48 lg:h-48 rounded-full bg-gradient-to-br from-accent-200 to-brand-200 opacity-50 bottom-8 left-8" />
-              {/* Clothing rack photo */}
-              <img
-                src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=700&q=80&auto=format&fit=crop"
-                alt="Fashion closet"
-                className="relative z-10 w-[85%] h-[280px] lg:h-[380px] object-cover rounded-3xl shadow-2xl shadow-brand-200/40"
-              />
-              {/* Floating card */}
-              <div className="absolute bottom-8 -left-4 z-20 bg-white rounded-2xl shadow-xl px-4 py-3 border border-gray-100">
-                <p className="text-xs text-gray-400 mb-0.5">New listing</p>
-                <p className="text-sm font-bold text-brand-900">Gucci Marmont Bag</p>
-                <p className="text-sm font-semibold text-accent-600 mt-0.5">KD 320.000</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Search + Category Strip ───────────────────────────────── */}
-      <section className="bg-white border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            {/* Search */}
-            <form
-              onSubmit={e => { e.preventDefault(); const q = (e.currentTarget.elements.namedItem('q') as HTMLInputElement).value.trim(); if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`; }}
-              className="relative w-full sm:w-64 flex-shrink-0"
-            >
-              <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-              </svg>
-              <input
-                name="q"
-                type="search"
-                placeholder="Search for items, brands, or keywords"
-                className="w-full pl-10 pr-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-full focus:bg-white focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none transition-all"
-              />
-            </form>
-
-            {/* Category icons */}
-            <div className="flex items-center gap-1 overflow-x-auto pb-1 flex-1">
-              {CATEGORIES.map(({ label, icon: Icon, href }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  className="flex flex-col items-center gap-1.5 px-3.5 py-2 rounded-xl hover:bg-brand-50 text-gray-500 hover:text-brand-600 transition-colors flex-shrink-0 group"
-                >
-                  <Icon className="w-5 h-5 transition-colors" />
-                  <span className="text-[11px] font-medium whitespace-nowrap">{label}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-10 sm:space-y-14">
-
-        {/* ── Popular Picks + Sell card ─────────────────────────── */}
-        <section>
-          <div className="grid lg:grid-cols-[1fr_300px] gap-6 items-start">
-
-            {/* Left: product grid */}
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Popular Picks</h2>
-                  <p className="text-sm text-gray-400 mt-0.5">Most-loved items this week</p>
+        {/* ② Quick Categories ────────────────────────────────────── */}
+        <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-1">
+            {CATEGORIES.map(({ label, icon: Icon, href, color }) => (
+              <Link key={label} href={href}
+                className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-gray-50 transition-colors group">
+                <div className={cn('w-9 h-9 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105', color)}>
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <Link href="/search?sortBy=most_liked"
-                  className="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors">
-                  View all <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-                {trending.length > 0
-                  ? trending.slice(0, 8).map(l => <ProductCard key={l.id} listing={l} />)
-                  : Array.from({ length: 8 }).map((_, i) => (
-                      <div key={i} className="bg-white rounded-2xl border border-gray-100 animate-pulse">
-                        <div className="aspect-square bg-gray-100 rounded-t-2xl" />
-                        <div className="p-3 space-y-2">
-                          <div className="h-3 bg-gray-100 rounded w-3/4" />
-                          <div className="h-3 bg-gray-100 rounded w-1/2" />
-                        </div>
-                      </div>
-                    ))
-                }
-              </div>
-            </div>
-
-            {/* Right: Sell promo card — desktop only */}
-            <div className="hidden lg:block lg:sticky lg:top-24 bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 rounded-3xl p-7 text-white shadow-2xl shadow-brand-900/30 overflow-hidden relative">
-              <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/5" />
-              <div className="absolute -bottom-8 -left-6 w-32 h-32 rounded-full bg-accent-500/10" />
-              <div className="relative">
-                <p className="text-xs font-semibold text-accent-300 uppercase tracking-widest mb-3">For Sellers</p>
-                <h3 className="text-2xl font-extrabold leading-tight mb-3">
-                  Sell in minutes.<br />
-                  <span className="text-accent-300">Earn with ease.</span>
-                </h3>
-                <p className="text-sm text-brand-200 leading-relaxed mb-6">
-                  Join thousands of sellers turning their closet into cash. List your first item for free.
-                </p>
-                <Link
-                  href="/sell"
-                  className="inline-flex items-center gap-2 w-full justify-center px-5 py-3 bg-accent-500 hover:bg-accent-600 text-white font-bold rounded-full transition-colors shadow-lg shadow-accent-900/30 text-sm mb-6"
-                >
-                  Start Selling <ArrowRight className="w-4 h-4" />
-                </Link>
-                <div className="space-y-3 border-t border-white/10 pt-5">
-                  {SELL_FEATURES.map(({ icon: Icon, title, desc }) => (
-                    <div key={title} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-4 h-4 text-accent-300" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white">{title}</p>
-                        <p className="text-xs text-brand-300">{desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+                <span className="text-[10px] sm:text-[11px] font-medium text-gray-600 group-hover:text-brand-600 text-center leading-tight">
+                  {label}
+                </span>
+              </Link>
+            ))}
           </div>
         </section>
 
-        {/* ── Just In ───────────────────────────────────────────── */}
-        {allListings.length > 5 && (
+        {/* ③ Verified Stores ─────────────────────────────────────── */}
+        <section>
+          <SectionHead
+            title="Shop From Verified Stores"
+            subtitle="Trusted businesses verified by Miova"
+            href="/search"
+          />
+          <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar snap-x snap-mandatory">
+            {MOCK_STORES.map(store => (
+              <Link key={store.id} href="/search"
+                className="flex-shrink-0 w-48 sm:w-56 bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all snap-start group">
+                <div className="h-20 overflow-hidden bg-gray-100">
+                  <img src={store.cover} alt={store.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                </div>
+                <div className="p-3">
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <img src={store.logo} alt={store.name} className="w-8 h-8 rounded-lg object-cover ring-2 ring-white shadow flex-shrink-0" loading="lazy" />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1">
+                        <p className="text-xs font-bold text-gray-900 truncate">{store.name}</p>
+                        <BadgeCheck className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" />
+                      </div>
+                      <p className="text-[10px] text-gray-400">{store.products.toLocaleString()} items</p>
+                    </div>
+                  </div>
+                  <div className="w-full py-1.5 text-center text-[11px] font-semibold text-brand-600 border border-brand-200 rounded-full hover:bg-brand-50 transition-colors">
+                    Visit Store
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ④ Flash Deals ─────────────────────────────────────────── */}
+        {flashDeals.length > 0 && (
           <section>
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">Just In</h2>
-                <p className="text-sm text-gray-400 mt-0.5">Fresh listings from across Kuwait</p>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                  <span>⚡</span> Flash Deals
+                </h2>
+                <div className="flex items-center gap-1 text-sm text-gray-500">
+                  Ends in <CountdownTimer initialSeconds={28800} />
+                </div>
               </div>
-              <Link href="/search"
-                className="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors">
-                Browse all <ArrowRight className="w-3.5 h-3.5" />
+              <Link href="/search?sortBy=price_asc" className="flex-shrink-0 text-sm font-semibold text-red-500 hover:text-red-600 flex items-center gap-0.5">
+                See all <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
+            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar snap-x snap-mandatory">
+              {flashDeals.map(l => {
+                const pct = Math.round(((l.originalPrice - l.listingPrice) / l.originalPrice) * 100);
+                return (
+                  <Link key={l.id} href={`/listings/${l.id}`}
+                    className="flex-shrink-0 w-36 sm:w-44 bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-all snap-start group">
+                    <div className="relative aspect-square overflow-hidden bg-gray-50">
+                      <img src={l.images[0]} alt={l.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      <span className="absolute top-1.5 left-1.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">-{pct}%</span>
+                    </div>
+                    <div className="p-2">
+                      <p className="text-[11px] font-semibold text-gray-800 line-clamp-2 leading-tight mb-1">{l.title}</p>
+                      <p className="text-sm font-bold text-red-500">KD {l.listingPrice.toFixed(3)}</p>
+                      <p className="text-[10px] text-gray-400 line-through">KD {l.originalPrice.toFixed(3)}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ⑤ Trending Collections ────────────────────────────────── */}
+        <section>
+          <SectionHead title="Trending Collections" href="/search" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+            {COLLECTIONS.map(col => (
+              <Link key={col.title} href={col.href}
+                className="relative rounded-xl overflow-hidden group" style={{ aspectRatio: '4/3' }}>
+                <img src={col.image} alt={col.title}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-3">
+                  <p className="text-xs sm:text-sm font-bold text-white leading-tight">{col.title}</p>
+                  <p className="text-[10px] text-white/70 mt-0.5">{col.items}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ⑥ Best Sellers This Week ──────────────────────────────── */}
+        {bestSellers.length > 0 && (
+          <section>
+            <SectionHead
+              title="Best Sellers This Week"
+              subtitle="Most loved by shoppers across Kuwait"
+              href="/search?sortBy=most_liked"
+            />
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-              {allListings.filter(l => l.status === 'available').slice(0, 10).map(l => (
-                <ProductCard key={l.id} listing={l} />
+              {bestSellers.map(l => (
+                <div key={l.id} className="flex flex-col">
+                  <ProductCard listing={l} />
+                  <div className="px-1 mt-1.5 flex items-center justify-between">
+                    <Stars rating={4 + (l.likesCount % 10) / 10} />
+                    <span className="text-[10px] text-gray-400">({l.likesCount})</span>
+                  </div>
+                </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* ── Gradient CTA Banner ───────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 rounded-2xl sm:rounded-3xl p-7 sm:p-10 md:p-14 text-white text-center shadow-2xl shadow-brand-900/20">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full bg-accent-500/10 blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-brand-600/20 blur-3xl" />
-          </div>
-          <div className="relative">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3">Ready to sell?</h2>
-            <p className="text-brand-200 text-base sm:text-lg mb-6 sm:mb-8 max-w-lg mx-auto">
-              Turn your unwanted items into cash. List in minutes, reach thousands of buyers in Kuwait.
-            </p>
-            <Link
-              href="/sell"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-brand-700 font-bold rounded-full hover:bg-brand-50 transition-colors shadow-lg text-base"
-            >
-              Open Your Closet — It&apos;s Free <ArrowRight className="w-5 h-5" />
-            </Link>
+        {/* ⑦ Just Added ──────────────────────────────────────────── */}
+        {justAdded.length > 0 && (
+          <section>
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900">Just Added</h2>
+                <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Fresh listings from across Kuwait</p>
+              </div>
+              <Link href="/search" className="flex-shrink-0 mt-0.5 text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-0.5">
+                See all <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+            <div className="flex gap-2 mb-4">
+              {(['today', 'week', 'month'] as JustAddedFilter[]).map(f => (
+                <button key={f} onClick={() => setJustAddedFilter(f)}
+                  className={cn(
+                    'px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-full border transition-all',
+                    justAddedFilter === f
+                      ? 'bg-brand-600 border-brand-600 text-white'
+                      : 'border-gray-200 text-gray-600 hover:border-brand-300 hover:text-brand-600'
+                  )}>
+                  {f === 'today' ? 'Today' : f === 'week' ? 'This Week' : 'This Month'}
+                </button>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+              {justAdded.map(l => <ProductCard key={l.id} listing={l} />)}
+            </div>
+          </section>
+        )}
+
+        {/* ⑧ Recommended For You (logged-in only) ───────────────── */}
+        {isAuthenticated && bestSellers.length > 0 && (
+          <section>
+            <SectionHead
+              title="Recommended For You"
+              subtitle="Based on your browsing and wishlist activity"
+              href="/search"
+            />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+              {bestSellers.slice(0, 5).map(l => <ProductCard key={`rec-${l.id}`} listing={l} />)}
+            </div>
+          </section>
+        )}
+
+        {/* ⑨ App Download ────────────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 rounded-2xl p-6 sm:p-8">
+          <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-white/5" />
+          <div className="absolute -bottom-10 -left-8 w-36 h-36 rounded-full bg-accent-500/10" />
+          <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            <div className="text-center sm:text-left flex-1">
+              <p className="text-accent-300 text-[10px] font-semibold uppercase tracking-widest mb-2">Mobile App</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-2 leading-tight">
+                Take Miova Everywhere
+              </h2>
+              <p className="text-brand-200 text-sm mb-5 max-w-sm leading-relaxed">
+                Shop, sell, and track orders on the go. Available on iOS and Android.
+              </p>
+              <div className="flex gap-3 flex-wrap justify-center sm:justify-start">
+                <a href="#"
+                  className="inline-flex items-center gap-3 px-4 py-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                  <svg className="w-5 h-5 text-gray-900" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
+                  <div>
+                    <p className="text-[9px] text-gray-400 leading-none">Download on the</p>
+                    <p className="text-sm font-bold text-gray-900 leading-tight">App Store</p>
+                  </div>
+                </a>
+                <a href="#"
+                  className="inline-flex items-center gap-3 px-4 py-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                    <path d="M3.18 23.82 14.64 12 3.18.18A2 2 0 0 0 2 2v20a2 2 0 0 0 1.18 1.82z" fill="#EA4335"/>
+                    <path d="M20.5 10.5l-2.6-1.5-3.26 3 3.26 3 2.6-1.5A2 2 0 0 0 22 12a2 2 0 0 0-1.5-1.5z" fill="#FBBC05"/>
+                    <path d="M14.64 12l-11.46 11.82c.34.12.7.18 1.07.18.47 0 .93-.13 1.33-.38l13.02-7.5L14.64 12z" fill="#34A853"/>
+                    <path d="M14.64 12 18.6 8.07 5.58 1.38C5.18 1.13 4.72 1 4.25 1c-.37 0-.73.06-1.07.18L14.64 12z" fill="#4285F4"/>
+                  </svg>
+                  <div>
+                    <p className="text-[9px] text-gray-400 leading-none">Get it on</p>
+                    <p className="text-sm font-bold text-gray-900 leading-tight">Google Play</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+            {/* Phone mockup */}
+            <div className="hidden sm:flex gap-2 flex-shrink-0">
+              <div className="w-28 h-52 rounded-2xl overflow-hidden border-2 border-white/20 shadow-xl">
+                <img src="https://picsum.photos/seed/appscreen1/112/208" alt="" className="w-full h-full object-cover opacity-70" loading="lazy" />
+              </div>
+              <div className="w-28 h-52 rounded-2xl overflow-hidden border-2 border-white/20 shadow-xl mt-5">
+                <img src="https://picsum.photos/seed/appscreen2/112/208" alt="" className="w-full h-full object-cover opacity-70" loading="lazy" />
+              </div>
+            </div>
           </div>
         </section>
+
       </div>
     </div>
   );

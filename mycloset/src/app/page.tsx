@@ -127,7 +127,7 @@ function HeroBanner() {
     <section className="relative overflow-hidden select-none">
       <div className={cn('bg-gradient-to-r', slide.bg)}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center min-h-[200px] sm:min-h-[240px] md:min-h-[280px] py-8 gap-6 lg:gap-10">
+          <div className="flex items-center h-[200px] sm:h-[260px] md:h-[300px] gap-6 lg:gap-10">
 
             {/* Text */}
             <div className="flex-1 min-w-0">
@@ -153,7 +153,7 @@ function HeroBanner() {
             </div>
 
             {/* Image */}
-            <div className="hidden sm:block flex-shrink-0 w-44 md:w-56 lg:w-72 h-36 md:h-44 lg:h-56 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="hidden sm:block flex-shrink-0 w-44 md:w-56 lg:w-72 h-36 sm:h-44 md:h-52 rounded-2xl overflow-hidden shadow-2xl">
               <img src={slide.image} alt="" className="w-full h-full object-cover" loading="eager" />
             </div>
           </div>

@@ -1,30 +1,40 @@
-export default function Logo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
-  const dims = { sm: [22, 26], md: [30, 34], lg: [42, 48] }[size];
+interface LogoProps {
+  size?: 'sm' | 'md' | 'lg';
+  invert?: boolean;
+}
+
+export default function Logo({ size = 'md', invert = false }: LogoProps) {
+  const wordmarkSize = { sm: 18, md: 22, lg: 30 }[size];
+  const subSize = { sm: 7, md: 8, lg: 11 }[size];
+  const color = invert ? '#ffffff' : '#111827';
+
   return (
-    <div className="flex items-center gap-2 flex-shrink-0">
-      <svg width={dims[0]} height={dims[1]} viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="mGrad" x1="0" y1="0" x2="40" y2="46" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#4338CA" />
-            <stop offset="0.55" stopColor="#6D28D9" />
-            <stop offset="1" stopColor="#7C3AED" />
-          </linearGradient>
-        </defs>
-        <polyline
-          points="3,43 3,5 20,26 37,5 37,43"
-          stroke="url(#mGrad)"
-          strokeWidth="8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-      </svg>
+    <div className="flex-shrink-0 inline-flex flex-col" style={{ gap: 2 }}>
       <span
-        className="font-bold text-brand-900 tracking-tight"
-        style={{ fontSize: size === 'sm' ? 16 : size === 'lg' ? 26 : 20 }}
+        className="leading-none tracking-tight"
+        style={{
+          fontSize: wordmarkSize,
+          color,
+          fontFamily: 'var(--font-nunito), ui-sans-serif, system-ui, sans-serif',
+          fontWeight: 900,
+        }}
       >
-        miova
+        Miova.
       </span>
+      <div className="flex items-center justify-between" style={{ gap: 6 }}>
+        <span
+          className="font-semibold leading-none tracking-widest uppercase"
+          style={{ fontSize: subSize, color, opacity: 0.5, letterSpacing: '0.12em' }}
+        >
+          Marketplace
+        </span>
+        <span
+          className="font-semibold leading-none tracking-widest uppercase"
+          style={{ fontSize: subSize, color, opacity: 0.5, letterSpacing: '0.12em' }}
+        >
+          Est. 2026
+        </span>
+      </div>
     </div>
   );
 }

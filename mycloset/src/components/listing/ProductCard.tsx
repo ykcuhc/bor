@@ -76,26 +76,24 @@ export default function ProductCard({ listing, showSoldBadge = true }: ProductCa
             {listing.title}
           </h3>
 
-          {/* Brand */}
-          {listing.brand && (
-            <p className="text-xs text-gray-400 mb-2 truncate">{listing.brand}</p>
-          )}
+          {/* Brand + Verified badge */}
+          <div className="flex items-center gap-1.5 mb-2 min-w-0">
+            {listing.brand && (
+              <p className="text-xs text-gray-400 truncate">{listing.brand}</p>
+            )}
+            {listing.seller.isVerified && (
+              <BadgeCheck className="w-3.5 h-3.5 text-accent-500 flex-shrink-0" aria-label="Verified seller" />
+            )}
+          </div>
 
           {/* Pricing row */}
-          <div className="flex items-center justify-between gap-2 min-w-0">
-            <div className="flex items-baseline gap-1 min-w-0">
-              <span className="text-sm font-bold text-brand-900 whitespace-nowrap">
-                {formatKWD(listing.listingPrice)}
-              </span>
-              {listing.originalPrice > listing.listingPrice && (
-                <span className="text-xs text-gray-300 line-through whitespace-nowrap">
-                  {formatKWD(listing.originalPrice)}
-                </span>
-              )}
-            </div>
-            {listing.seller.isVerified && (
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-accent-600 bg-accent-50 px-1.5 py-0.5 rounded-full flex-shrink-0">
-                <BadgeCheck className="w-3 h-3 flex-shrink-0" /> Verified
+          <div className="flex items-baseline gap-1 min-w-0">
+            <span className="text-sm font-bold text-brand-900 whitespace-nowrap">
+              {formatKWD(listing.listingPrice)}
+            </span>
+            {listing.originalPrice > listing.listingPrice && (
+              <span className="text-xs text-gray-300 line-through whitespace-nowrap">
+                {formatKWD(listing.originalPrice)}
               </span>
             )}
           </div>

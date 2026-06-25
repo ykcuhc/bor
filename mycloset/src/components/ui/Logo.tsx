@@ -4,35 +4,59 @@ interface LogoProps {
 }
 
 export default function Logo({ size = 'md', invert = false }: LogoProps) {
-  const wordmarkSize = { sm: 18, md: 22, lg: 30 }[size];
-  const subSize = { sm: 7, md: 8, lg: 11 }[size];
+  const wordmarkSize = { sm: 16, md: 20, lg: 28 }[size];
+  const subSize = { sm: 4.5, md: 5, lg: 6.5 }[size];
   const color = invert ? '#ffffff' : '#111827';
 
   return (
-    <div className="flex-shrink-0 inline-flex flex-col" style={{ gap: 2 }}>
+    <div className="flex-shrink-0" style={{ display: 'inline-block' }}>
       <span
-        className="leading-none tracking-tight"
         style={{
+          display: 'block',
           fontSize: wordmarkSize,
           color,
           fontFamily: 'var(--font-nunito), ui-sans-serif, system-ui, sans-serif',
           fontWeight: 900,
+          lineHeight: 1,
+          whiteSpace: 'nowrap',
         }}
       >
         Miova.
       </span>
-      <div className="flex items-center justify-between" style={{ gap: 6 }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginTop: 3,
+        }}
+      >
         <span
-          className="font-semibold leading-none tracking-widest uppercase"
-          style={{ fontSize: subSize, color, opacity: 0.5, letterSpacing: '0.12em' }}
+          style={{
+            fontSize: subSize,
+            color,
+            opacity: 0.45,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            fontWeight: 600,
+            whiteSpace: 'nowrap',
+            lineHeight: 1,
+          }}
         >
           Marketplace
         </span>
         <span
-          className="font-semibold leading-none tracking-widest uppercase"
-          style={{ fontSize: subSize, color, opacity: 0.5, letterSpacing: '0.12em' }}
+          style={{
+            fontSize: subSize,
+            color,
+            opacity: 0.45,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            fontWeight: 600,
+            whiteSpace: 'nowrap',
+            lineHeight: 1,
+          }}
         >
-          Est. 2026
+          Est.&nbsp;2026
         </span>
       </div>
     </div>

@@ -47,7 +47,7 @@ export default function RegisterPage() {
     });
     setLoading(false);
     if (ok) {
-      showToast('Welcome to Miova! 🎉', 'success');
+      showToast('Welcome to Miova. 🎉', 'success');
       router.push('/');
     } else {
       setError('An account with this email or username already exists.');

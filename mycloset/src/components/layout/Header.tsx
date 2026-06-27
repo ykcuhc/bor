@@ -127,7 +127,7 @@ export default function Header() {
               href="/sell"
               className="text-sm font-semibold text-brand-600 hover:text-brand-700 px-3 py-2 transition-colors"
             >
-              Sell on Miova
+              Sell on Miova.
             </Link>
 
             {isAuthenticated ? (

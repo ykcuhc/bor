@@ -354,7 +354,7 @@ function PricingStep({ data, setData }: { data: PricingData; setData: (d: Pricin
           {[
             ['Listing Price',        formatKWD(listing)],
             ['Shipping (buyer pays)',`+ ${formatKWD(SHIPPING_FEE_KWD)}`],
-            ['Miova Fee (20%)',       `- ${formatKWD(platformFee)}`],
+            ['Miova. Fee (20%)',       `- ${formatKWD(platformFee)}`],
           ].map(([label, value]) => (
             <div key={label} className="flex justify-between text-sm">
               <span className="text-gray-600">{label}</span>

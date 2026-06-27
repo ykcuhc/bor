@@ -326,7 +326,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             </div>
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-gray-400" />
-              <span>Protected by <strong className="text-gray-900">Miova Buyer Guarantee</strong></span>
+              <span>Protected by <strong className="text-gray-900">Miova. Buyer Guarantee</strong></span>
             </div>
             <div className="flex items-center gap-2">
               <RefreshCcw className="w-4 h-4 text-gray-400" />

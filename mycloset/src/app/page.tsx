@@ -256,7 +256,7 @@ export default function HomePage() {
         <section>
           <SectionHead
             title="Shop From Verified Stores"
-            subtitle="Trusted businesses verified by Miova"
+            subtitle="Trusted businesses verified by Miova."
             href="/search"
           />
           <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar snap-x snap-mandatory">
@@ -418,7 +418,7 @@ export default function HomePage() {
             <div className="text-center sm:text-left flex-1">
               <p className="text-accent-300 text-[10px] font-semibold uppercase tracking-widest mb-2">Mobile App</p>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-2 leading-tight">
-                Take Miova Everywhere
+                Take Miova. Everywhere
               </h2>
               <p className="text-brand-200 text-sm mb-5 max-w-sm leading-relaxed">
                 Shop, sell, and track orders on the go. Available on iOS and Android.

@@ -7,15 +7,15 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: "Makeup",             image: 'https://picsum.photos/seed/b-makeup/600/400',    href: '/beauty/makeup'                                        },
-  { label: "Skin Care",          image: 'https://picsum.photos/seed/b-skincare/600/400',  href: '/beauty/skin-care'                                     },
-  { label: "Hair Care",          image: 'https://picsum.photos/seed/b-haircare/600/400',  href: '/beauty/hair-care'                                     },
-  { label: "Body Care",          image: 'https://picsum.photos/seed/b-bodycare/600/400',  href: '/beauty/body-care'                                     },
-  { label: "Nail Care",          image: 'https://picsum.photos/seed/b-nailcare/600/400',  href: '/beauty/nail-care'                                     },
-  { label: "Men's Grooming",     image: 'https://picsum.photos/seed/b-grooming/600/400',  href: '/beauty/mens-grooming'                                 },
+  { label: 'Nail Polish',          image: 'https://picsum.photos/seed/nc-polish/600/400',   href: '/beauty/nail-care/nail-polish'          },
+  { label: 'Manicure & Pedicure',  image: 'https://picsum.photos/seed/nc-mani/600/400',     href: '/beauty/nail-care/manicure-pedicure'    },
+  { label: 'Nail Treatments',      image: 'https://picsum.photos/seed/nc-treat/600/400',    href: '/beauty/nail-care/nail-treatments'      },
+  { label: 'Nail Polish Removers', image: 'https://picsum.photos/seed/nc-remover/600/400',  href: '/beauty/nail-care/nail-polish-removers' },
+  { label: 'Tools',                image: 'https://picsum.photos/seed/nc-tools/600/400',    href: '/beauty/nail-care/tools'               },
+  { label: 'Accessories',          image: 'https://picsum.photos/seed/nc-access/600/400',   href: '/beauty/nail-care/accessories'          },
 ];
 
-export default function BeautyPage() {
+export default function NailCarePage() {
   const { filteredListings, loadListings, setFilters } = useStore();
 
   useEffect(() => {
@@ -28,9 +28,16 @@ export default function BeautyPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-sm text-gray-500">
+        <Link href="/beauty" className="hover:text-brand-600 transition-colors">Beauty</Link>
+        <span>/</span>
+        <span className="text-gray-900 font-semibold">Nail Care</span>
+      </div>
+
       {/* Title */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Beauty</h1>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Nail Care</h1>
         <p className="font-code text-xs text-gray-400 mt-1 tracking-wide">Shop by category</p>
       </div>
 
@@ -61,22 +68,17 @@ export default function BeautyPage() {
         ))}
       </div>
 
-      {/* All Beauty products */}
+      {/* All Nail Care products */}
       <div>
         <div className="flex items-baseline justify-between mb-4">
-          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Beauty</h2>
+          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Nail Care</h2>
           <span className="font-code text-xs text-gray-400 tracking-wide">{listings.length} items</span>
         </div>
-
         {listings.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">
-            <p className="text-sm">No items found yet.</p>
-          </div>
+          <div className="text-center py-16 text-gray-400"><p className="text-sm">No items found yet.</p></div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-            {listings.map(listing => (
-              <ProductCard key={listing.id} listing={listing} />
-            ))}
+            {listings.map(listing => <ProductCard key={listing.id} listing={listing} />)}
           </div>
         )}
       </div>

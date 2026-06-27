@@ -9,7 +9,7 @@ import ProductCard from '@/components/listing/ProductCard';
 const SUBCATEGORY_BANNERS = [
   {
     label: 'Women',
-    href: '/search?category=Women',
+    href: '/fashion/women',
     image: 'https://picsum.photos/seed/fashion-women/900/600',
     desc: 'Dresses, tops, abayas & more',
     gradient: 'from-rose-900/80 via-rose-800/50 to-transparent',

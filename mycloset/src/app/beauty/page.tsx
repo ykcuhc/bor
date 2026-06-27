@@ -7,13 +7,13 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: "Makeup",             image: 'https://picsum.photos/seed/b-makeup/600/400',    q: 'makeup'          },
-  { label: "Skin Care",          image: 'https://picsum.photos/seed/b-skincare/600/400',  q: 'skin care'       },
-  { label: "Hair Care",          image: 'https://picsum.photos/seed/b-haircare/600/400',  q: 'hair care'       },
-  { label: "Body Care",          image: 'https://picsum.photos/seed/b-bodycare/600/400',  q: 'body care'       },
-  { label: "Nail Care",          image: 'https://picsum.photos/seed/b-nailcare/600/400',  q: 'nail care'       },
-  { label: "Tools & Accessories",image: 'https://picsum.photos/seed/b-tools/600/400',     q: 'beauty tools'    },
-  { label: "Men's Grooming",     image: 'https://picsum.photos/seed/b-grooming/600/400',  q: 'grooming'        },
+  { label: "Makeup",             image: 'https://picsum.photos/seed/b-makeup/600/400',    href: '/beauty/makeup'                                        },
+  { label: "Skin Care",          image: 'https://picsum.photos/seed/b-skincare/600/400',  href: '/search?category=Beauty&q=skin+care'                   },
+  { label: "Hair Care",          image: 'https://picsum.photos/seed/b-haircare/600/400',  href: '/search?category=Beauty&q=hair+care'                   },
+  { label: "Body Care",          image: 'https://picsum.photos/seed/b-bodycare/600/400',  href: '/search?category=Beauty&q=body+care'                   },
+  { label: "Nail Care",          image: 'https://picsum.photos/seed/b-nailcare/600/400',  href: '/search?category=Beauty&q=nail+care'                   },
+  { label: "Tools & Accessories",image: 'https://picsum.photos/seed/b-tools/600/400',     href: '/search?category=Beauty&q=beauty+tools'                },
+  { label: "Men's Grooming",     image: 'https://picsum.photos/seed/b-grooming/600/400',  href: '/search?category=Beauty&q=grooming'                    },
 ];
 
 export default function BeautyPage() {
@@ -40,7 +40,7 @@ export default function BeautyPage() {
         {SUBCATEGORIES.map(cat => (
           <Link
             key={cat.label}
-            href={`/search?category=Beauty&q=${encodeURIComponent(cat.q)}`}
+            href={cat.href}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             style={{ aspectRatio: '16/9' }}
           >

@@ -7,11 +7,11 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Luxury Fragrances', image: 'https://picsum.photos/seed/fr-luxury/600/400',  q: 'luxury perfume'    },
-  { label: 'Arabic Oud',        image: 'https://picsum.photos/seed/fr-oud/600/400',      q: 'oud'               },
-  { label: 'Bukhour',           image: 'https://picsum.photos/seed/fr-bukhour/600/400',  q: 'bukhour'           },
-  { label: 'Body Mists',        image: 'https://picsum.photos/seed/fr-mist/600/400',     q: 'body mist'         },
-  { label: 'Gift Sets',         image: 'https://picsum.photos/seed/fr-gifts/600/400',    q: 'fragrance gift set'},
+  { label: 'Luxury Fragrances', image: 'https://loremflickr.com/600/400/perfume,luxury,bottle?lock=60',   q: 'luxury perfume'    },
+  { label: 'Arabic Oud',        image: 'https://loremflickr.com/600/400/oud,arabic,incense?lock=61',       q: 'oud'               },
+  { label: 'Bukhour',           image: 'https://loremflickr.com/600/400/incense,smoke,arabic?lock=62',     q: 'bukhour'           },
+  { label: 'Body Mists',        image: 'https://loremflickr.com/600/400/bodymist,spray,fragrance?lock=63', q: 'body mist'         },
+  { label: 'Gift Sets',         image: 'https://loremflickr.com/600/400/perfume,gift,box?lock=64',         q: 'fragrance gift set'},
 ];
 
 export default function FragrancesPage() {

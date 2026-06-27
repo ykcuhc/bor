@@ -7,14 +7,14 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Smartphones',         image: 'https://picsum.photos/seed/el-phones/600/400',   q: 'smartphone'      },
-  { label: 'Tablets',             image: 'https://picsum.photos/seed/el-tablets/600/400',  q: 'tablet'          },
-  { label: 'Laptops',             image: 'https://picsum.photos/seed/el-laptops/600/400',  q: 'laptop'          },
-  { label: 'Smart Watches',       image: 'https://picsum.photos/seed/el-watch/600/400',    q: 'smart watch'     },
-  { label: 'Headphones & Speakers',image:'https://picsum.photos/seed/el-audio/600/400',    q: 'headphones'      },
-  { label: 'Gaming',              image: 'https://picsum.photos/seed/el-gaming/600/400',   q: 'gaming'          },
-  { label: 'Accessories',         image: 'https://picsum.photos/seed/el-acc/600/400',      q: 'phone accessories'},
-  { label: 'Smart Home Devices',  image: 'https://picsum.photos/seed/el-smarthome/600/400',q: 'smart home'      },
+  { label: 'Smartphones',          image: 'https://loremflickr.com/600/400/smartphone,iphone,mobile?lock=70',     q: 'smartphone'       },
+  { label: 'Tablets',              image: 'https://loremflickr.com/600/400/tablet,ipad,digital?lock=71',          q: 'tablet'           },
+  { label: 'Laptops',              image: 'https://loremflickr.com/600/400/laptop,computer,technology?lock=72',   q: 'laptop'           },
+  { label: 'Smart Watches',        image: 'https://loremflickr.com/600/400/smartwatch,wearable,watch?lock=73',    q: 'smart watch'      },
+  { label: 'Headphones & Speakers',image: 'https://loremflickr.com/600/400/headphones,audio,music?lock=74',       q: 'headphones'       },
+  { label: 'Gaming',               image: 'https://loremflickr.com/600/400/gaming,controller,playstation?lock=75',q: 'gaming'           },
+  { label: 'Accessories',          image: 'https://loremflickr.com/600/400/phone,cable,accessories?lock=76',      q: 'phone accessories'},
+  { label: 'Smart Home Devices',   image: 'https://loremflickr.com/600/400/smarthome,alexa,speaker?lock=77',      q: 'smart home'       },
 ];
 
 export default function ElectronicsPage() {

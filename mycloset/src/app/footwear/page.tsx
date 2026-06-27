@@ -7,13 +7,13 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Sneakers',            image: 'https://picsum.photos/seed/fw-sneakers/600/400',  q: 'sneakers'           },
-  { label: 'Sports Shoes',        image: 'https://picsum.photos/seed/fw-sports/600/400',    q: 'sports shoes'       },
-  { label: 'Sandals & Slides',    image: 'https://picsum.photos/seed/fw-sandals/600/400',   q: 'sandals'            },
-  { label: 'Boots',               image: 'https://picsum.photos/seed/fw-boots/600/400',     q: 'boots'              },
-  { label: 'Traditional Footwear',image: 'https://picsum.photos/seed/fw-trad/600/400',      q: 'traditional shoes'  },
-  { label: 'Formal Shoes',        image: 'https://picsum.photos/seed/fw-formal/600/400',    q: 'formal shoes'       },
-  { label: 'Kids Shoes',          image: 'https://picsum.photos/seed/fw-kids/600/400',      q: 'kids shoes'         },
+  { label: 'Sneakers',            image: 'https://loremflickr.com/600/400/sneakers,shoes,fashion?lock=40',       q: 'sneakers'           },
+  { label: 'Sports Shoes',        image: 'https://loremflickr.com/600/400/sport,athletic,shoes?lock=41',         q: 'sports shoes'       },
+  { label: 'Sandals & Slides',    image: 'https://loremflickr.com/600/400/sandals,slides,summer?lock=42',        q: 'sandals'            },
+  { label: 'Boots',               image: 'https://loremflickr.com/600/400/boots,leather,footwear?lock=43',       q: 'boots'              },
+  { label: 'Traditional Footwear',image: 'https://loremflickr.com/600/400/traditional,sandals,arabic?lock=44',   q: 'traditional shoes'  },
+  { label: 'Formal Shoes',        image: 'https://loremflickr.com/600/400/formal,shoes,leather,oxford?lock=45',  q: 'formal shoes'       },
+  { label: 'Kids Shoes',          image: 'https://loremflickr.com/600/400/children,shoes,kids?lock=46',          q: 'kids shoes'         },
 ];
 
 export default function FootwearPage() {

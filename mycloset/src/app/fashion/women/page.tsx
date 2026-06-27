@@ -7,15 +7,15 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Dresses',        image: 'https://picsum.photos/seed/w-dresses/600/400',    q: 'dresses'    },
-  { label: 'Tops & Blouses', image: 'https://picsum.photos/seed/w-tops/600/400',       q: 'tops'       },
-  { label: 'Pants & Jeans',  image: 'https://picsum.photos/seed/w-pants/600/400',      q: 'pants'      },
-  { label: 'Skirts',         image: 'https://picsum.photos/seed/w-skirts/600/400',     q: 'skirts'     },
-  { label: 'Activewear',     image: 'https://picsum.photos/seed/w-active/600/400',     q: 'activewear' },
-  { label: 'Abayas',         image: 'https://picsum.photos/seed/w-abayas/600/400',     q: 'abayas'     },
-  { label: 'Outerwear',      image: 'https://picsum.photos/seed/w-outer/600/400',      q: 'outerwear'  },
-  { label: 'Pajamas',        image: 'https://picsum.photos/seed/w-pajamas/600/400',    q: 'pajamas'    },
-  { label: 'Swimwear',       image: 'https://picsum.photos/seed/w-swim/600/400',       q: 'swimwear'   },
+  { label: 'Dresses',        image: 'https://loremflickr.com/600/400/dress,fashion?lock=10',      q: 'dresses'    },
+  { label: 'Tops & Blouses', image: 'https://loremflickr.com/600/400/blouse,women,top?lock=11',   q: 'tops'       },
+  { label: 'Pants & Jeans',  image: 'https://loremflickr.com/600/400/jeans,women,pants?lock=12',  q: 'pants'      },
+  { label: 'Skirts',         image: 'https://loremflickr.com/600/400/skirt,fashion?lock=13',       q: 'skirts'     },
+  { label: 'Activewear',     image: 'https://loremflickr.com/600/400/activewear,fitness?lock=14',  q: 'activewear' },
+  { label: 'Abayas',         image: 'https://loremflickr.com/600/400/abaya,islamic,fashion?lock=15',q: 'abayas'    },
+  { label: 'Outerwear',      image: 'https://loremflickr.com/600/400/coat,women,jacket?lock=16',   q: 'outerwear'  },
+  { label: 'Pajamas',        image: 'https://loremflickr.com/600/400/sleepwear,comfort?lock=17',   q: 'pajamas'    },
+  { label: 'Swimwear',       image: 'https://loremflickr.com/600/400/swimsuit,pool,summer?lock=18',q: 'swimwear'   },
 ];
 
 export default function WomenFashionPage() {

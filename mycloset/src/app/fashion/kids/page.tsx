@@ -7,10 +7,10 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Boys Clothing',  image: 'https://picsum.photos/seed/k-boys/600/400',   q: 'boys'   },
-  { label: 'Girls Clothing', image: 'https://picsum.photos/seed/k-girls/600/400',  q: 'girls'  },
-  { label: 'Baby Clothing',  image: 'https://picsum.photos/seed/k-baby/600/400',   q: 'baby'   },
-  { label: 'School Wear',    image: 'https://picsum.photos/seed/k-school/600/400', q: 'school' },
+  { label: 'Boys Clothing',  image: 'https://loremflickr.com/600/400/boy,children,clothing?lock=30',   q: 'boys'   },
+  { label: 'Girls Clothing', image: 'https://loremflickr.com/600/400/girl,children,fashion?lock=31',   q: 'girls'  },
+  { label: 'Baby Clothing',  image: 'https://loremflickr.com/600/400/baby,infant,clothing?lock=32',    q: 'baby'   },
+  { label: 'School Wear',    image: 'https://loremflickr.com/600/400/school,uniform,children?lock=33', q: 'school' },
 ];
 
 export default function KidsFashionPage() {

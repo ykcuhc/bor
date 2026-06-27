@@ -7,13 +7,13 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Furniture',              image: 'https://picsum.photos/seed/hl-furniture/600/400',  q: 'furniture'     },
-  { label: 'Home Decor',             image: 'https://picsum.photos/seed/hl-decor/600/400',      q: 'home decor'    },
-  { label: 'Lighting',               image: 'https://picsum.photos/seed/hl-lighting/600/400',   q: 'lighting'      },
-  { label: 'Bedding & Textiles',     image: 'https://picsum.photos/seed/hl-bedding/600/400',    q: 'bedding'       },
-  { label: 'Kitchenware',            image: 'https://picsum.photos/seed/hl-kitchen/600/400',    q: 'kitchenware'   },
-  { label: 'Storage & Organization', image: 'https://picsum.photos/seed/hl-storage/600/400',    q: 'storage'       },
-  { label: 'Bathroom Essentials',    image: 'https://picsum.photos/seed/hl-bathroom/600/400',   q: 'bathroom'      },
+  { label: 'Furniture',              image: 'https://loremflickr.com/600/400/furniture,interior,sofa?lock=80',    q: 'furniture'     },
+  { label: 'Home Decor',             image: 'https://loremflickr.com/600/400/homedecor,interior,decor?lock=81',  q: 'home decor'    },
+  { label: 'Lighting',               image: 'https://loremflickr.com/600/400/lamp,lighting,interior?lock=82',    q: 'lighting'      },
+  { label: 'Bedding & Textiles',     image: 'https://loremflickr.com/600/400/bedding,pillow,bedroom?lock=83',    q: 'bedding'       },
+  { label: 'Kitchenware',            image: 'https://loremflickr.com/600/400/kitchen,cookware,cooking?lock=84',  q: 'kitchenware'   },
+  { label: 'Storage & Organization', image: 'https://loremflickr.com/600/400/storage,organize,shelves?lock=85',  q: 'storage'       },
+  { label: 'Bathroom Essentials',    image: 'https://loremflickr.com/600/400/bathroom,interior,towel?lock=86',   q: 'bathroom'      },
 ];
 
 export default function HomeLivingPage() {

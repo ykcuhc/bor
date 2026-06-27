@@ -17,7 +17,7 @@ const SUBCATEGORY_BANNERS = [
   },
   {
     label: 'Men',
-    href: '/search?category=Men',
+    href: '/fashion/men',
     image: 'https://picsum.photos/seed/fashion-men/900/600',
     desc: 'Shirts, thobes, streetwear & more',
     gradient: 'from-brand-900/80 via-brand-800/50 to-transparent',

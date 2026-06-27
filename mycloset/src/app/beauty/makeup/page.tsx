@@ -1,7 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useStore } from '@/store/useStore';
+import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
   {
@@ -9,48 +12,44 @@ const SUBCATEGORIES = [
     image: 'https://picsum.photos/seed/mk-face/600/800',
     href: '/beauty/makeup/face',
     q: 'face+makeup',
-    items: [
-      'Foundation', 'Face Primer', 'Highlighter', 'BB & CC Cream',
-      'Blush & Tint', 'Bronzer', 'Contour', 'Color Corrector',
-      'Setting Spray & Powder', 'Loose Powder', 'Compact Powder',
-    ],
   },
   {
     label: 'Eyes',
     image: 'https://picsum.photos/seed/mk-eyes/600/800',
     q: 'eye+makeup',
-    items: ['Mascara', 'Eyebrows', 'Eyeliner', 'Eye Shadow', 'Eye Primer', 'Concealer'],
   },
   {
     label: 'Lips',
     image: 'https://picsum.photos/seed/mk-lips/600/800',
     q: 'lip+makeup',
-    items: ['Lipsticks', 'Liquid Lipsticks', 'Lip Tint', 'Lip Liner', 'Lip Gloss', 'Lip Plumper'],
   },
   {
     label: 'Eyelashes',
     image: 'https://picsum.photos/seed/mk-lashes/600/800',
     q: 'eyelashes',
-    items: [],
   },
   {
     label: 'Brushes & Accessories',
     image: 'https://picsum.photos/seed/mk-brushes/600/800',
     q: 'makeup+brushes',
-    items: [
-      'Face Brushes', 'Eye Brushes', 'Lip Brushes',
-      'Sponges & Applicators', 'Brush Sets', 'Tools & Accessories',
-    ],
   },
   {
     label: 'Makeup Palettes',
     image: 'https://picsum.photos/seed/mk-palettes/600/800',
     q: 'makeup+palettes',
-    items: ['Face Palettes', 'Eye Palettes'],
   },
 ];
 
 export default function MakeupPage() {
+  const { filteredListings, loadListings, setFilters } = useStore();
+
+  useEffect(() => {
+    loadListings();
+    setFilters({ query: '', category: 'Beauty', sortBy: 'newest' });
+  }, []);
+
+  const listings = filteredListings();
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
@@ -69,7 +68,7 @@ export default function MakeupPage() {
         <p className="font-code text-xs text-gray-400 mt-1 tracking-wide">Shop by category</p>
       </div>
 
-      {/* Category cards */}
+      {/* Category banners */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
         {SUBCATEGORIES.map(cat => (
           <Link
@@ -94,6 +93,26 @@ export default function MakeupPage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      {/* All Makeup products */}
+      <div>
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Makeup</h2>
+          <span className="font-code text-xs text-gray-400 tracking-wide">{listings.length} items</span>
+        </div>
+
+        {listings.length === 0 ? (
+          <div className="text-center py-16 text-gray-400">
+            <p className="text-sm">No items found yet.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            {listings.map(listing => (
+              <ProductCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

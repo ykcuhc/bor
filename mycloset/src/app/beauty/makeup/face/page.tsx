@@ -1,22 +1,34 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useStore } from '@/store/useStore';
+import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Face Primer',          image: 'https://picsum.photos/seed/fc-primer/600/400',    q: 'face+primer'           },
-  { label: 'Highlighter',          image: 'https://picsum.photos/seed/fc-highlight/600/400', q: 'highlighter'           },
-  { label: 'BB & CC Cream',        image: 'https://picsum.photos/seed/fc-bbcream/600/400',   q: 'bb+cc+cream'           },
-  { label: 'Blush & Tint',         image: 'https://picsum.photos/seed/fc-blush/600/400',     q: 'blush+tint'            },
-  { label: 'Bronzer',              image: 'https://picsum.photos/seed/fc-bronzer/600/400',   q: 'bronzer'               },
-  { label: 'Contour',              image: 'https://picsum.photos/seed/fc-contour/600/400',   q: 'contour'               },
-  { label: 'Color Corrector',      image: 'https://picsum.photos/seed/fc-corrector/600/400', q: 'color+corrector'       },
-  { label: 'Setting Spray & Powder',image: 'https://picsum.photos/seed/fc-setting/600/400',  q: 'setting+spray+powder'  },
-  { label: 'Loose Powder',         image: 'https://picsum.photos/seed/fc-loose/600/400',     q: 'loose+powder'          },
-  { label: 'Compact Powder',       image: 'https://picsum.photos/seed/fc-compact/600/400',   q: 'compact+powder'        },
+  { label: 'Face Primer',           image: 'https://picsum.photos/seed/fc-primer/600/400',    q: 'face+primer'          },
+  { label: 'Highlighter',           image: 'https://picsum.photos/seed/fc-highlight/600/400', q: 'highlighter'          },
+  { label: 'BB & CC Cream',         image: 'https://picsum.photos/seed/fc-bbcream/600/400',   q: 'bb+cc+cream'          },
+  { label: 'Blush & Tint',          image: 'https://picsum.photos/seed/fc-blush/600/400',     q: 'blush+tint'           },
+  { label: 'Bronzer',               image: 'https://picsum.photos/seed/fc-bronzer/600/400',   q: 'bronzer'              },
+  { label: 'Contour',               image: 'https://picsum.photos/seed/fc-contour/600/400',   q: 'contour'              },
+  { label: 'Color Corrector',       image: 'https://picsum.photos/seed/fc-corrector/600/400', q: 'color+corrector'      },
+  { label: 'Setting Spray & Powder',image: 'https://picsum.photos/seed/fc-setting/600/400',   q: 'setting+spray+powder' },
+  { label: 'Loose Powder',          image: 'https://picsum.photos/seed/fc-loose/600/400',     q: 'loose+powder'         },
+  { label: 'Compact Powder',        image: 'https://picsum.photos/seed/fc-compact/600/400',   q: 'compact+powder'       },
 ];
 
 export default function MakeupFacePage() {
+  const { filteredListings, loadListings, setFilters } = useStore();
+
+  useEffect(() => {
+    loadListings();
+    setFilters({ query: '', category: 'Beauty', sortBy: 'newest' });
+  }, []);
+
+  const listings = filteredListings();
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
@@ -62,6 +74,26 @@ export default function MakeupFacePage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      {/* All Face products */}
+      <div>
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Face</h2>
+          <span className="font-code text-xs text-gray-400 tracking-wide">{listings.length} items</span>
+        </div>
+
+        {listings.length === 0 ? (
+          <div className="text-center py-16 text-gray-400">
+            <p className="text-sm">No items found yet.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            {listings.map(listing => (
+              <ProductCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

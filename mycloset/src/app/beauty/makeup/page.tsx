@@ -7,6 +7,7 @@ const SUBCATEGORIES = [
   {
     label: 'Face',
     image: 'https://picsum.photos/seed/mk-face/600/800',
+    href: '/beauty/makeup/face',
     q: 'face+makeup',
     items: [
       'Foundation', 'Face Primer', 'Highlighter', 'BB & CC Cream',
@@ -73,7 +74,7 @@ export default function MakeupPage() {
         {SUBCATEGORIES.map(cat => (
           <Link
             key={cat.label}
-            href={`/search?category=Beauty&q=${cat.q}`}
+            href={cat.href ?? `/search?category=Beauty&q=${cat.q}`}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             style={{ aspectRatio: '16/9' }}
           >

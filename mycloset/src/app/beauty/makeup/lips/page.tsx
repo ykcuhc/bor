@@ -7,42 +7,15 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  {
-    label: 'Face',
-    image: 'https://picsum.photos/seed/mk-face/600/800',
-    href: '/beauty/makeup/face',
-    q: 'face+makeup',
-  },
-  {
-    label: 'Eyes',
-    image: 'https://picsum.photos/seed/mk-eyes/600/800',
-    href: '/beauty/makeup/eyes',
-    q: 'eye+makeup',
-  },
-  {
-    label: 'Lips',
-    image: 'https://picsum.photos/seed/mk-lips/600/800',
-    href: '/beauty/makeup/lips',
-    q: 'lip+makeup',
-  },
-  {
-    label: 'Eyelashes',
-    image: 'https://picsum.photos/seed/mk-lashes/600/800',
-    q: 'eyelashes',
-  },
-  {
-    label: 'Brushes & Accessories',
-    image: 'https://picsum.photos/seed/mk-brushes/600/800',
-    q: 'makeup+brushes',
-  },
-  {
-    label: 'Makeup Palettes',
-    image: 'https://picsum.photos/seed/mk-palettes/600/800',
-    q: 'makeup+palettes',
-  },
+  { label: 'Lipsticks',        image: 'https://picsum.photos/seed/lp-lipstick/600/400',  q: 'lipsticks'        },
+  { label: 'Liquid Lipsticks', image: 'https://picsum.photos/seed/lp-liquid/600/400',    q: 'liquid+lipsticks' },
+  { label: 'Lip Tint',         image: 'https://picsum.photos/seed/lp-tint/600/400',      q: 'lip+tint'         },
+  { label: 'Lip Liner',        image: 'https://picsum.photos/seed/lp-liner/600/400',     q: 'lip+liner'        },
+  { label: 'Lip Gloss',        image: 'https://picsum.photos/seed/lp-gloss/600/400',     q: 'lip+gloss'        },
+  { label: 'Lip Plumper',      image: 'https://picsum.photos/seed/lp-plumper/600/400',   q: 'lip+plumper'      },
 ];
 
-export default function MakeupPage() {
+export default function MakeupLipsPage() {
   const { filteredListings, loadListings, setFilters } = useStore();
 
   useEffect(() => {
@@ -57,25 +30,27 @@ export default function MakeupPage() {
 
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/beauty" className="flex items-center gap-1 hover:text-brand-600 transition-colors">
-          <ArrowLeft className="w-3.5 h-3.5" /> Beauty
+        <Link href="/beauty" className="hover:text-brand-600 transition-colors">Beauty</Link>
+        <span>/</span>
+        <Link href="/beauty/makeup" className="flex items-center gap-1 hover:text-brand-600 transition-colors">
+          <ArrowLeft className="w-3.5 h-3.5" /> Makeup
         </Link>
         <span>/</span>
-        <span className="text-gray-900 font-semibold">Makeup</span>
+        <span className="text-gray-900 font-semibold">Lips</span>
       </div>
 
       {/* Title */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Makeup</h1>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Lips</h1>
         <p className="font-code text-xs text-gray-400 mt-1 tracking-wide">Shop by category</p>
       </div>
 
-      {/* Category banners */}
+      {/* Subcategory banners */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
         {SUBCATEGORIES.map(cat => (
           <Link
             key={cat.label}
-            href={cat.href ?? `/search?category=Beauty&q=${cat.q}`}
+            href={`/search?category=Beauty&q=${cat.q}`}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             style={{ aspectRatio: '16/9' }}
           >
@@ -97,10 +72,10 @@ export default function MakeupPage() {
         ))}
       </div>
 
-      {/* All Makeup products */}
+      {/* All Lips products */}
       <div>
         <div className="flex items-baseline justify-between mb-4">
-          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Makeup</h2>
+          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Lips</h2>
           <span className="font-code text-xs text-gray-400 tracking-wide">{listings.length} items</span>
         </div>
 

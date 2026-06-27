@@ -25,7 +25,7 @@ const SUBCATEGORY_BANNERS = [
   },
   {
     label: 'Kids',
-    href: '/search?category=Kids',
+    href: '/fashion/kids',
     image: 'https://picsum.photos/seed/fashion-kids/900/600',
     desc: 'Clothing for boys, girls & babies',
     gradient: 'from-amber-900/80 via-amber-800/50 to-transparent',

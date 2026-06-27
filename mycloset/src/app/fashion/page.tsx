@@ -73,13 +73,6 @@ export default function FashionPage() {
             {/* Strong bottom gradient */}
             <div className={`absolute inset-0 bg-gradient-to-t ${cat.gradient}`} />
 
-            {/* Top-left category tag */}
-            <div className="absolute top-4 left-4">
-              <span className={`font-code text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 ${cat.accent}`}>
-                Fashion
-              </span>
-            </div>
-
             {/* Bottom content */}
             <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
               <p className="font-code text-xs text-white/60 uppercase tracking-widest mb-1">{cat.desc}</p>

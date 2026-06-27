@@ -3,9 +3,9 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight, BadgeCheck, ShoppingBag, Shirt, Baby, Watch,
-  Home, Monitor, LayoutGrid, Heart, Sparkles, ChevronLeft,
-  ChevronRight, Wind, Dumbbell, BookOpen, Star,
+  ArrowRight, BadgeCheck, ShoppingBag, Shirt,
+  Home, Monitor, Heart, Sparkles, ChevronLeft,
+  ChevronRight, Wind, Star, Footprints, Gem, Store, BadgePercent,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
@@ -46,18 +46,15 @@ const HERO_SLIDES = [
 ];
 
 const CATEGORIES = [
-  { label: 'Fashion',     icon: Shirt,       href: '/search?category=Women',       color: 'bg-pink-50   text-pink-500' },
-  { label: 'Electronics', icon: Monitor,     href: '/search?category=Electronics', color: 'bg-blue-50   text-blue-500' },
-  { label: 'Beauty',      icon: Sparkles,    href: '/search?category=Beauty',      color: 'bg-rose-50   text-rose-500' },
-  { label: 'Perfumes',    icon: Wind,        href: '/search',                       color: 'bg-purple-50 text-purple-500' },
-  { label: 'Home',        icon: Home,        href: '/search?category=Home',        color: 'bg-amber-50  text-amber-500' },
-  { label: 'Watches',     icon: Watch,       href: '/search',                       color: 'bg-gray-100  text-gray-600' },
-  { label: 'Sports',      icon: Dumbbell,    href: '/search',                       color: 'bg-green-50  text-green-500' },
-  { label: 'Kids',        icon: Baby,        href: '/search?category=Kids',        color: 'bg-yellow-50 text-yellow-500' },
-  { label: 'Health',      icon: Heart,       href: '/search',                       color: 'bg-red-50    text-red-500' },
-  { label: 'Books',       icon: BookOpen,    href: '/search',                       color: 'bg-indigo-50 text-indigo-500' },
-  { label: 'Bags',        icon: ShoppingBag, href: '/search',                       color: 'bg-orange-50 text-orange-500' },
-  { label: 'All',         icon: LayoutGrid,  href: '/search',                       color: 'bg-brand-50  text-brand-600' },
+  { label: 'Fashion',       icon: Shirt,         href: '/search?category=Women',       color: 'bg-pink-50    text-pink-500'   },
+  { label: 'Footwear',      icon: Footprints,    href: '/search',                      color: 'bg-orange-50  text-orange-500' },
+  { label: 'Beauty',        icon: Sparkles,      href: '/search?category=Beauty',      color: 'bg-rose-50    text-rose-500'   },
+  { label: 'Fragrances',    icon: Wind,          href: '/search',                      color: 'bg-purple-50  text-purple-500' },
+  { label: 'Electronics',   icon: Monitor,       href: '/search?category=Electronics', color: 'bg-blue-50    text-blue-500'   },
+  { label: 'Home & Living', icon: Home,          href: '/search?category=Home',        color: 'bg-amber-50   text-amber-500'  },
+  { label: 'Accessories',   icon: Gem,           href: '/search',                      color: 'bg-indigo-50  text-indigo-500' },
+  { label: 'Shops',         icon: Store,         href: '/search',                      color: 'bg-teal-50    text-teal-500'   },
+  { label: 'Deals',         icon: BadgePercent,  href: '/search?sortBy=price_asc',     color: 'bg-red-50     text-red-500'    },
 ];
 
 const MOCK_STORES = [
@@ -240,7 +237,7 @@ export default function HomePage() {
 
         {/* ② Quick Categories ────────────────────────────────────── */}
         <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-1">
+          <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-1">
             {CATEGORIES.map(({ label, icon: Icon, href, color }) => (
               <Link key={label} href={href}
                 className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-gray-50 transition-colors group">

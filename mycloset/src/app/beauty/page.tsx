@@ -12,7 +12,6 @@ const SUBCATEGORIES = [
   { label: "Hair Care",          image: 'https://picsum.photos/seed/b-haircare/600/400',  href: '/search?category=Beauty&q=hair+care'                   },
   { label: "Body Care",          image: 'https://picsum.photos/seed/b-bodycare/600/400',  href: '/search?category=Beauty&q=body+care'                   },
   { label: "Nail Care",          image: 'https://picsum.photos/seed/b-nailcare/600/400',  href: '/search?category=Beauty&q=nail+care'                   },
-  { label: "Tools & Accessories",image: 'https://picsum.photos/seed/b-tools/600/400',     href: '/search?category=Beauty&q=beauty+tools'                },
   { label: "Men's Grooming",     image: 'https://picsum.photos/seed/b-grooming/600/400',  href: '/search?category=Beauty&q=grooming'                    },
 ];
 

@@ -7,13 +7,13 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Furniture',              image: 'https://picsum.photos/seed/hl-furniture/600/400',  q: 'furniture'     },
+  { label: 'Furniture',              image: 'https://picsum.photos/seed/hl-furniture/600/400',  href: '/home-living/furniture'              },
   { label: 'Home Decor',             image: 'https://picsum.photos/seed/hl-decor/600/400',      q: 'home decor'    },
   { label: 'Lighting',               image: 'https://picsum.photos/seed/hl-lighting/600/400',   q: 'lighting'      },
-  { label: 'Bedding & Textiles',     image: 'https://picsum.photos/seed/hl-bedding/600/400',    q: 'bedding'       },
+  { label: 'Bedding & Textiles',     image: 'https://picsum.photos/seed/hl-bedding/600/400',    href: '/home-living/bedding-textiles'        },
   { label: 'Kitchenware',            image: 'https://picsum.photos/seed/hl-kitchen/600/400',    q: 'kitchenware'   },
-  { label: 'Storage & Organization', image: 'https://picsum.photos/seed/hl-storage/600/400',    q: 'storage'       },
-  { label: 'Bathroom Essentials',    image: 'https://picsum.photos/seed/hl-bathroom/600/400',   q: 'bathroom'      },
+  { label: 'Storage & Organization', image: 'https://picsum.photos/seed/hl-storage/600/400',    href: '/home-living/storage-organization'    },
+  { label: 'Bathroom Essentials',    image: 'https://picsum.photos/seed/hl-bathroom/600/400',   href: '/home-living/bathroom-essentials'     },
 ];
 
 export default function HomeLivingPage() {
@@ -37,7 +37,7 @@ export default function HomeLivingPage() {
         {SUBCATEGORIES.map(cat => (
           <Link
             key={cat.label}
-            href={`/search?category=Home&q=${encodeURIComponent(cat.q)}`}
+            href={cat.href ?? `/search?category=Home&q=${encodeURIComponent(cat.q ?? '')}`}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             style={{ aspectRatio: '16/9' }}
           >

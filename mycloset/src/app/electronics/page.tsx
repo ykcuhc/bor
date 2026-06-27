@@ -11,9 +11,9 @@ const SUBCATEGORIES = [
   { label: 'Tablets',              image: 'https://picsum.photos/seed/el-tablets/600/400',   q: 'tablet'           },
   { label: 'Laptops',              image: 'https://picsum.photos/seed/el-laptops/600/400',   q: 'laptop'           },
   { label: 'Smart Watches',        image: 'https://picsum.photos/seed/el-watch/600/400',     q: 'smart watch'      },
-  { label: 'Headphones & Speakers',image: 'https://picsum.photos/seed/el-audio/600/400',     q: 'headphones'       },
-  { label: 'Gaming',               image: 'https://picsum.photos/seed/el-gaming/600/400',    q: 'gaming'           },
-  { label: 'Accessories',          image: 'https://picsum.photos/seed/el-acc/600/400',       q: 'phone accessories'},
+  { label: 'Headphones & Speakers',image: 'https://picsum.photos/seed/el-audio/600/400',     href: '/electronics/headphones-speakers' },
+  { label: 'Gaming',               image: 'https://picsum.photos/seed/el-gaming/600/400',    href: '/electronics/gaming'              },
+  { label: 'Accessories',          image: 'https://picsum.photos/seed/el-acc/600/400',       href: '/electronics/accessories'         },
   { label: 'Smart Home Devices',   image: 'https://picsum.photos/seed/el-smarthome/600/400', q: 'smart home'       },
 ];
 
@@ -38,7 +38,7 @@ export default function ElectronicsPage() {
         {SUBCATEGORIES.map(cat => (
           <Link
             key={cat.label}
-            href={`/search?category=Electronics&q=${encodeURIComponent(cat.q)}`}
+            href={cat.href ?? `/search?category=Electronics&q=${encodeURIComponent(cat.q ?? '')}`}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             style={{ aspectRatio: '16/9' }}
           >

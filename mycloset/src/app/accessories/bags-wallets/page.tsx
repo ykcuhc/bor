@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -7,61 +6,55 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Watches',       image: 'https://picsum.photos/seed/ac-watches/600/400',  q: 'watches'    },
-  { label: 'Jewelry',       image: 'https://picsum.photos/seed/ac-jewelry/600/400',  href: '/accessories/jewelry'      },
-  { label: 'Bags & Wallets',image: 'https://picsum.photos/seed/ac-bags/600/400',     href: '/accessories/bags-wallets' },
-  { label: 'Eyewear',       image: 'https://picsum.photos/seed/ac-glasses/600/400',  href: '/accessories/eyewear'      },
-  { label: 'Belts',         image: 'https://picsum.photos/seed/ac-belts/600/400',    q: 'belts'      },
-  { label: 'Hats & Caps',   image: 'https://picsum.photos/seed/ac-hats/600/400',     q: 'hats'       },
+  { label: 'Handbags', image: 'https://picsum.photos/seed/bw-handbags/600/400', href: '/accessories/bags-wallets/handbags' },
+  { label: 'Crossbody', image: 'https://picsum.photos/seed/bw-crossbody/600/400', href: '/accessories/bags-wallets/crossbody' },
+  { label: 'Backpacks', image: 'https://picsum.photos/seed/bw-backpacks/600/400', href: '/accessories/bags-wallets/backpacks' },
+  { label: 'Travel Bags', image: 'https://picsum.photos/seed/bw-travel/600/400', href: '/accessories/bags-wallets/travel-bags' },
+  { label: 'Wallets', image: 'https://picsum.photos/seed/bw-wallets/600/400', href: '/accessories/bags-wallets/wallets' },
 ];
 
-export default function AccessoriesPage() {
+export default function BagsWalletsPage() {
   const { filteredListings, loadListings, setFilters } = useStore();
-
   useEffect(() => {
     loadListings();
-    setFilters({ query: 'accessories', category: undefined, sortBy: 'newest' });
+    setFilters({ query: '', category: undefined, sortBy: 'newest' });
   }, []);
-
   const listings = filteredListings();
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+      <div className="flex items-center gap-2 text-sm text-gray-500">
+        <Link href="/accessories" className="hover:text-brand-600 transition-colors">Accessories</Link>
+        <span>/</span>
+        <span className="text-gray-900 font-semibold">Bags & Wallets</span>
+      </div>
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Accessories</h1>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Bags & Wallets</h1>
         <p className="font-code text-xs text-gray-400 mt-1 tracking-wide">Shop by category</p>
       </div>
-
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
         {SUBCATEGORIES.map(cat => (
-          <Link
-            key={cat.label}
-            href={cat.href ?? `/search?q=${encodeURIComponent(cat.q ?? '')}`}
+          <Link key={cat.label} href={cat.href}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
-            style={{ aspectRatio: '16/9' }}
-          >
+            style={{ aspectRatio: '16/9' }}>
             <img src={cat.image} alt={cat.label} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/5" />
             <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
               <p className="text-sm sm:text-base font-extrabold text-white uppercase tracking-wide leading-tight">{cat.label}</p>
-              <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] sm:text-xs font-semibold text-white/70 group-hover:text-white transition-colors">
-                Shop <ArrowRight className="w-3 h-3" />
-              </span>
+              <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] sm:text-xs font-semibold text-white/70 group-hover:text-white transition-colors">Shop <ArrowRight className="w-3 h-3" /></span>
             </div>
           </Link>
         ))}
       </div>
-
       <div>
         <div className="flex items-baseline justify-between mb-4">
-          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Accessories</h2>
+          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Bags & Wallets</h2>
           <span className="font-code text-xs text-gray-400 tracking-wide">{listings.length} items</span>
         </div>
         {listings.length === 0 ? (
           <div className="text-center py-16 text-gray-400"><p className="text-sm">No items found yet.</p></div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-            {listings.map(l => <ProductCard key={l.id} listing={l} />)}
+            {listings.map(listing => <ProductCard key={listing.id} listing={listing} />)}
           </div>
         )}
       </div>

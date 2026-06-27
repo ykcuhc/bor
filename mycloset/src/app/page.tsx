@@ -48,7 +48,7 @@ const HERO_SLIDES = [
 const CATEGORIES = [
   { label: 'Fashion',       icon: Shirt,         href: '/fashion',                     color: 'bg-pink-50    text-pink-500'   },
   { label: 'Footwear',      icon: Footprints,    href: '/footwear',                    color: 'bg-orange-50  text-orange-500' },
-  { label: 'Beauty',        icon: Sparkles,      href: '/search?category=Beauty',      color: 'bg-rose-50    text-rose-500'   },
+  { label: 'Beauty',        icon: Sparkles,      href: '/beauty',                      color: 'bg-rose-50    text-rose-500'   },
   { label: 'Fragrances',    icon: Wind,          href: '/search',                      color: 'bg-purple-50  text-purple-500' },
   { label: 'Electronics',   icon: Monitor,       href: '/search?category=Electronics', color: 'bg-blue-50    text-blue-500'   },
   { label: 'Home & Living', icon: Home,          href: '/search?category=Home',        color: 'bg-amber-50   text-amber-500'  },

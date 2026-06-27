@@ -67,7 +67,7 @@ const WOMEN_MEGA_MENU = [
       { label: 'Watches',       href: '/search?q=watches'    },
       { label: 'Jewelry',       href: '/search?q=jewelry'    },
       { label: 'Bags & Wallets',href: '/search?q=bags'       },
-      { label: 'Sunglasses',    href: '/search?q=sunglasses' },
+      { label: 'Eyewear',        href: '/search?q=eyewear'    },
       { label: 'Belts',         href: '/search?q=belts'      },
       { label: 'Hats & Caps',   href: '/search?q=hats'       },
     ],
@@ -118,7 +118,7 @@ const MEN_MEGA_MENU = [
     items: [
       { label: 'Watches',       href: '/search?q=watches'    },
       { label: 'Bags & Wallets',href: '/search?q=bags'       },
-      { label: 'Sunglasses',    href: '/search?q=sunglasses' },
+      { label: 'Eyewear',        href: '/search?q=eyewear'    },
       { label: 'Belts',         href: '/search?q=belts'      },
       { label: 'Hats & Caps',   href: '/search?q=hats'       },
     ],

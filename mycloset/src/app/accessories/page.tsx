@@ -10,7 +10,7 @@ const SUBCATEGORIES = [
   { label: 'Watches',       image: 'https://picsum.photos/seed/ac-watches/600/400',  q: 'watches'    },
   { label: 'Jewelry',       image: 'https://picsum.photos/seed/ac-jewelry/600/400',  q: 'jewelry'    },
   { label: 'Bags & Wallets',image: 'https://picsum.photos/seed/ac-bags/600/400',     q: 'bags'       },
-  { label: 'Sunglasses',    image: 'https://picsum.photos/seed/ac-glasses/600/400',  q: 'sunglasses' },
+  { label: 'Eyewear',       image: 'https://picsum.photos/seed/ac-glasses/600/400',  q: 'eyewear'    },
   { label: 'Belts',         image: 'https://picsum.photos/seed/ac-belts/600/400',    q: 'belts'      },
   { label: 'Hats & Caps',   image: 'https://picsum.photos/seed/ac-hats/600/400',     q: 'hats'       },
 ];

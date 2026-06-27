@@ -69,56 +69,29 @@ export default function MakeupPage() {
       </div>
 
       {/* Category cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
         {SUBCATEGORIES.map(cat => (
-          <div
+          <Link
             key={cat.label}
-            className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
-            style={{ aspectRatio: '3/4' }}
+            href={`/search?category=Beauty&q=${cat.q}`}
+            className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+            style={{ aspectRatio: '16/9' }}
           >
-            {/* Image */}
             <img
               src={cat.image}
               alt={cat.label}
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
             />
-
-            {/* Gradient — strong bottom to let text breathe */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/10" />
-
-            {/* Content */}
-            <div className="absolute inset-0 flex flex-col justify-end p-4 gap-2.5">
-
-              {/* Sub-items */}
-              {cat.items.length > 0 && (
-                <div className="flex flex-wrap gap-x-2 gap-y-1">
-                  {cat.items.map(item => (
-                    <Link
-                      key={item}
-                      href={`/search?category=Beauty&q=${encodeURIComponent(item)}`}
-                      className="text-[10px] sm:text-[11px] text-white/55 hover:text-white transition-colors leading-tight"
-                      onClick={e => e.stopPropagation()}
-                    >
-                      {item}
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-              {/* Category name + shop all */}
-              <div>
-                <p className="text-base sm:text-lg font-extrabold text-white uppercase tracking-wide leading-tight">
-                  {cat.label}
-                </p>
-                <Link
-                  href={`/search?category=Beauty&q=${cat.q}`}
-                  className="inline-flex items-center gap-1 mt-1 text-[11px] sm:text-xs font-semibold text-white/60 hover:text-white transition-colors"
-                >
-                  Shop all <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/5" />
+            <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+              <p className="text-sm sm:text-base font-extrabold text-white uppercase tracking-wide leading-tight">
+                {cat.label}
+              </p>
+              <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] sm:text-xs font-semibold text-white/70 group-hover:text-white transition-colors">
+                Shop <ArrowRight className="w-3 h-3" />
+              </span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

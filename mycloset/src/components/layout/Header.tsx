@@ -12,21 +12,21 @@ import { cn } from '@/lib/utils';
 import Logo from '@/components/ui/Logo';
 
 const NAV_LINKS = [
-  { label: 'Women',       href: '/search?category=Women' },
-  { label: 'Men',         href: '/search?category=Men' },
-  { label: 'Kids',        href: '/search?category=Kids' },
-  { label: 'Home',        href: '/search?category=Home' },
-  { label: 'Electronics', href: '/search?category=Electronics' },
-  { label: 'Collections', href: '/search' },
+  { label: 'Home',  href: '/' },
+  { label: 'Women', href: '/search?category=Women' },
+  { label: 'Men',   href: '/search?category=Men' },
+  { label: 'Kids',  href: '/search?category=Kids' },
+  { label: 'Shops', href: '/search' },
+  { label: 'Deals', href: '/search?sortBy=price_asc' },
 ];
 
 const MOBILE_CATEGORIES = [
-  { label: 'Women',       href: '/search?category=Women' },
-  { label: 'Men',         href: '/search?category=Men' },
-  { label: 'Kids',        href: '/search?category=Kids' },
-  { label: 'Home',        href: '/search?category=Home' },
-  { label: 'Beauty',      href: '/search?category=Beauty' },
-  { label: 'Electronics', href: '/search?category=Electronics' },
+  { label: 'Home',  href: '/' },
+  { label: 'Women', href: '/search?category=Women' },
+  { label: 'Men',   href: '/search?category=Men' },
+  { label: 'Kids',  href: '/search?category=Kids' },
+  { label: 'Shops', href: '/search' },
+  { label: 'Deals', href: '/search?sortBy=price_asc' },
 ];
 
 export default function Header() {

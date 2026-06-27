@@ -7,12 +7,12 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'Watches',       image: 'https://loremflickr.com/600/400/watch,luxury,timepiece?lock=90',  q: 'watches'    },
-  { label: 'Jewelry',       image: 'https://loremflickr.com/600/400/jewelry,necklace,gold?lock=91',   q: 'jewelry'    },
-  { label: 'Bags & Wallets',image: 'https://loremflickr.com/600/400/handbag,wallet,leather?lock=92',  q: 'bags'       },
-  { label: 'Sunglasses',    image: 'https://loremflickr.com/600/400/sunglasses,fashion,shades?lock=93',q: 'sunglasses' },
-  { label: 'Belts',         image: 'https://loremflickr.com/600/400/belt,leather,fashion?lock=94',    q: 'belts'      },
-  { label: 'Hats & Caps',   image: 'https://loremflickr.com/600/400/hat,cap,fashion?lock=95',         q: 'hats'       },
+  { label: 'Watches',       image: 'https://picsum.photos/seed/ac-watches/600/400',  q: 'watches'    },
+  { label: 'Jewelry',       image: 'https://picsum.photos/seed/ac-jewelry/600/400',  q: 'jewelry'    },
+  { label: 'Bags & Wallets',image: 'https://picsum.photos/seed/ac-bags/600/400',     q: 'bags'       },
+  { label: 'Sunglasses',    image: 'https://picsum.photos/seed/ac-glasses/600/400',  q: 'sunglasses' },
+  { label: 'Belts',         image: 'https://picsum.photos/seed/ac-belts/600/400',    q: 'belts'      },
+  { label: 'Hats & Caps',   image: 'https://picsum.photos/seed/ac-hats/600/400',     q: 'hats'       },
 ];
 
 export default function AccessoriesPage() {

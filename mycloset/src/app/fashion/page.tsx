@@ -10,7 +10,7 @@ const SUBCATEGORY_BANNERS = [
   {
     label: 'Women',
     href: '/fashion/women',
-    image: 'https://loremflickr.com/900/600/women,fashion?lock=1',
+    image: 'https://picsum.photos/seed/fashion-women/900/600',
     desc: 'Dresses, tops, abayas & more',
     gradient: 'from-rose-900/80 via-rose-800/50 to-transparent',
     accent: 'text-rose-300',
@@ -18,7 +18,7 @@ const SUBCATEGORY_BANNERS = [
   {
     label: 'Men',
     href: '/fashion/men',
-    image: 'https://loremflickr.com/900/600/men,fashion?lock=2',
+    image: 'https://picsum.photos/seed/fashion-men/900/600',
     desc: 'Shirts, thobes, streetwear & more',
     gradient: 'from-brand-900/80 via-brand-800/50 to-transparent',
     accent: 'text-accent-300',
@@ -26,7 +26,7 @@ const SUBCATEGORY_BANNERS = [
   {
     label: 'Kids',
     href: '/fashion/kids',
-    image: 'https://loremflickr.com/900/600/children,clothing?lock=3',
+    image: 'https://picsum.photos/seed/fashion-kids/900/600',
     desc: 'Clothing for boys, girls & babies',
     gradient: 'from-amber-900/80 via-amber-800/50 to-transparent',
     accent: 'text-amber-300',

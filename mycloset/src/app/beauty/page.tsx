@@ -7,13 +7,13 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: "Makeup",             image: 'https://loremflickr.com/600/400/makeup,cosmetics,lipstick?lock=50',  q: 'makeup'          },
-  { label: "Skin Care",          image: 'https://loremflickr.com/600/400/skincare,cream,beauty?lock=51',      q: 'skin care'       },
-  { label: "Hair Care",          image: 'https://loremflickr.com/600/400/haircare,shampoo,hair?lock=52',      q: 'hair care'       },
-  { label: "Body Care",          image: 'https://loremflickr.com/600/400/bodycare,lotion,skin?lock=53',       q: 'body care'       },
-  { label: "Nail Care",          image: 'https://loremflickr.com/600/400/nails,manicure,nailpolish?lock=54',  q: 'nail care'       },
-  { label: "Tools & Accessories",image: 'https://loremflickr.com/600/400/beauty,brush,tools?lock=55',         q: 'beauty tools'    },
-  { label: "Men's Grooming",     image: 'https://loremflickr.com/600/400/grooming,beard,shaving?lock=56',     q: 'grooming'        },
+  { label: "Makeup",             image: 'https://picsum.photos/seed/b-makeup/600/400',    q: 'makeup'          },
+  { label: "Skin Care",          image: 'https://picsum.photos/seed/b-skincare/600/400',  q: 'skin care'       },
+  { label: "Hair Care",          image: 'https://picsum.photos/seed/b-haircare/600/400',  q: 'hair care'       },
+  { label: "Body Care",          image: 'https://picsum.photos/seed/b-bodycare/600/400',  q: 'body care'       },
+  { label: "Nail Care",          image: 'https://picsum.photos/seed/b-nailcare/600/400',  q: 'nail care'       },
+  { label: "Tools & Accessories",image: 'https://picsum.photos/seed/b-tools/600/400',     q: 'beauty tools'    },
+  { label: "Men's Grooming",     image: 'https://picsum.photos/seed/b-grooming/600/400',  q: 'grooming'        },
 ];
 
 export default function BeautyPage() {

@@ -7,15 +7,15 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  { label: 'T-Shirts',        image: 'https://loremflickr.com/600/400/tshirt,men,casual?lock=20',   q: 'tshirts'     },
-  { label: 'Shirts',          image: 'https://loremflickr.com/600/400/shirt,men,fashion?lock=21',   q: 'shirts'      },
-  { label: 'Pants & Jeans',   image: 'https://loremflickr.com/600/400/jeans,trousers,men?lock=22',  q: 'pants'       },
-  { label: 'Shorts',          image: 'https://loremflickr.com/600/400/shorts,men,summer?lock=23',   q: 'shorts'      },
-  { label: 'Activewear',      image: 'https://loremflickr.com/600/400/sport,gym,men?lock=24',       q: 'activewear'  },
-  { label: 'Outerwear',       image: 'https://loremflickr.com/600/400/jacket,coat,men?lock=25',     q: 'outerwear'   },
-  { label: 'Traditional Wear',image: 'https://loremflickr.com/600/400/thobe,arabic,traditional?lock=26',q: 'traditional'},
-  { label: 'Socks',           image: 'https://loremflickr.com/600/400/socks,fashion,men?lock=27',   q: 'socks'       },
-  { label: 'Suits',           image: 'https://loremflickr.com/600/400/suit,formal,business?lock=28',q: 'suits'       },
+  { label: 'T-Shirts',        image: 'https://picsum.photos/seed/m-tshirts/600/400',    q: 'tshirts'     },
+  { label: 'Shirts',          image: 'https://picsum.photos/seed/m-shirts/600/400',     q: 'shirts'      },
+  { label: 'Pants & Jeans',   image: 'https://picsum.photos/seed/m-pants/600/400',      q: 'pants'       },
+  { label: 'Shorts',          image: 'https://picsum.photos/seed/m-shorts/600/400',     q: 'shorts'      },
+  { label: 'Activewear',      image: 'https://picsum.photos/seed/m-active/600/400',     q: 'activewear'  },
+  { label: 'Outerwear',       image: 'https://picsum.photos/seed/m-outer/600/400',      q: 'outerwear'   },
+  { label: 'Traditional Wear',image: 'https://picsum.photos/seed/m-trad/600/400',       q: 'traditional' },
+  { label: 'Socks',           image: 'https://picsum.photos/seed/m-socks/600/400',      q: 'socks'       },
+  { label: 'Suits',           image: 'https://picsum.photos/seed/m-suits/600/400',      q: 'suits'       },
 ];
 
 export default function MenFashionPage() {

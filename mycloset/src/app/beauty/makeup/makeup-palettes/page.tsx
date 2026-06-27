@@ -7,44 +7,11 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  {
-    label: 'Face',
-    image: 'https://picsum.photos/seed/mk-face/600/800',
-    href: '/beauty/makeup/face',
-    q: 'face+makeup',
-  },
-  {
-    label: 'Eyes',
-    image: 'https://picsum.photos/seed/mk-eyes/600/800',
-    href: '/beauty/makeup/eyes',
-    q: 'eye+makeup',
-  },
-  {
-    label: 'Lips',
-    image: 'https://picsum.photos/seed/mk-lips/600/800',
-    href: '/beauty/makeup/lips',
-    q: 'lip+makeup',
-  },
-  {
-    label: 'Eyelashes',
-    image: 'https://picsum.photos/seed/mk-lashes/600/800',
-    q: 'eyelashes',
-  },
-  {
-    label: 'Brushes & Accessories',
-    image: 'https://picsum.photos/seed/mk-brushes/600/800',
-    href: '/beauty/makeup/brushes-accessories',
-    q: 'makeup+brushes',
-  },
-  {
-    label: 'Makeup Palettes',
-    image: 'https://picsum.photos/seed/mk-palettes/600/800',
-    href: '/beauty/makeup/makeup-palettes',
-    q: 'makeup+palettes',
-  },
+  { label: 'Face Palettes', image: 'https://picsum.photos/seed/pl-face/600/400', q: 'face+palettes' },
+  { label: 'Eye Palettes',  image: 'https://picsum.photos/seed/pl-eye/600/400',  q: 'eye+palettes'  },
 ];
 
-export default function MakeupPage() {
+export default function MakeupPalettesPage() {
   const { filteredListings, loadListings, setFilters } = useStore();
 
   useEffect(() => {
@@ -59,25 +26,27 @@ export default function MakeupPage() {
 
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/beauty" className="flex items-center gap-1 hover:text-brand-600 transition-colors">
-          <ArrowLeft className="w-3.5 h-3.5" /> Beauty
+        <Link href="/beauty" className="hover:text-brand-600 transition-colors">Beauty</Link>
+        <span>/</span>
+        <Link href="/beauty/makeup" className="flex items-center gap-1 hover:text-brand-600 transition-colors">
+          <ArrowLeft className="w-3.5 h-3.5" /> Makeup
         </Link>
         <span>/</span>
-        <span className="text-gray-900 font-semibold">Makeup</span>
+        <span className="text-gray-900 font-semibold">Makeup Palettes</span>
       </div>
 
       {/* Title */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Makeup</h1>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Makeup Palettes</h1>
         <p className="font-code text-xs text-gray-400 mt-1 tracking-wide">Shop by category</p>
       </div>
 
-      {/* Category banners */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+      {/* Subcategory banners */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {SUBCATEGORIES.map(cat => (
           <Link
             key={cat.label}
-            href={cat.href ?? `/search?category=Beauty&q=${cat.q}`}
+            href={`/search?category=Beauty&q=${cat.q}`}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             style={{ aspectRatio: '16/9' }}
           >
@@ -99,10 +68,10 @@ export default function MakeupPage() {
         ))}
       </div>
 
-      {/* All Makeup products */}
+      {/* All products */}
       <div>
         <div className="flex items-baseline justify-between mb-4">
-          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Makeup</h2>
+          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Makeup Palettes</h2>
           <span className="font-code text-xs text-gray-400 tracking-wide">{listings.length} items</span>
         </div>
 

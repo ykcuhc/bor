@@ -14,7 +14,7 @@ import Logo from '@/components/ui/Logo';
 const NAV_LINKS = [
   { label: 'Home',  href: '/' },
   { label: 'Women', href: '/search?category=Women', megaMenu: 'women' },
-  { label: 'Men',   href: '/search?category=Men' },
+  { label: 'Men',   href: '/search?category=Men',   megaMenu: 'men'   },
   { label: 'Kids',  href: '/search?category=Kids' },
   { label: 'Shops', href: '/search' },
   { label: 'Deals', href: '/search?sortBy=price_asc' },
@@ -80,6 +80,69 @@ const WOMEN_MEGA_MENU = [
       { label: 'Arabic Oud',       href: '/search?q=oud'                   },
       { label: 'Body Mists',       href: '/search?q=body+mist'             },
       { label: 'Gift Sets',        href: '/search?q=fragrance+gift+set'    },
+    ],
+  },
+];
+
+const MEN_MEGA_MENU = [
+  {
+    title: 'Fashion',
+    href: '/fashion/men',
+    items: [
+      { label: 'T-Shirts',        href: '/search?category=Men&q=tshirts'     },
+      { label: 'Shirts',          href: '/search?category=Men&q=shirts'      },
+      { label: 'Pants & Jeans',   href: '/search?category=Men&q=pants'       },
+      { label: 'Shorts',          href: '/search?category=Men&q=shorts'      },
+      { label: 'Activewear',      href: '/search?category=Men&q=activewear'  },
+      { label: 'Outerwear',       href: '/search?category=Men&q=outerwear'   },
+      { label: 'Traditional Wear',href: '/search?category=Men&q=traditional' },
+      { label: 'Socks',           href: '/search?category=Men&q=socks'       },
+      { label: 'Suits',           href: '/search?category=Men&q=suits'       },
+    ],
+  },
+  {
+    title: 'Footwear',
+    href: '/footwear',
+    items: [
+      { label: 'Sneakers',            href: '/search?q=sneakers'          },
+      { label: 'Sports Shoes',        href: '/search?q=sports+shoes'      },
+      { label: 'Sandals & Slides',    href: '/search?q=sandals'           },
+      { label: 'Boots',               href: '/search?q=boots'             },
+      { label: 'Traditional Footwear',href: '/search?q=traditional+shoes' },
+      { label: 'Formal Shoes',        href: '/search?q=formal+shoes'      },
+    ],
+  },
+  {
+    title: 'Accessories',
+    href: '/accessories',
+    items: [
+      { label: 'Watches',       href: '/search?q=watches'    },
+      { label: 'Bags & Wallets',href: '/search?q=bags'       },
+      { label: 'Sunglasses',    href: '/search?q=sunglasses' },
+      { label: 'Belts',         href: '/search?q=belts'      },
+      { label: 'Hats & Caps',   href: '/search?q=hats'       },
+    ],
+  },
+  {
+    title: 'Fragrances',
+    href: '/fragrances',
+    items: [
+      { label: 'Luxury Fragrances',href: '/search?q=luxury+perfume'     },
+      { label: 'Arabic Oud',       href: '/search?q=oud'                },
+      { label: 'Bukhour',          href: '/search?q=bukhour'            },
+      { label: 'Body Mists',       href: '/search?q=body+mist'          },
+      { label: 'Gift Sets',        href: '/search?q=fragrance+gift+set' },
+    ],
+  },
+  {
+    title: 'Grooming',
+    href: '/beauty',
+    items: [
+      { label: "Men's Grooming",    href: '/search?category=Beauty&q=grooming'      },
+      { label: 'Skin Care',         href: '/search?category=Beauty&q=skin+care'     },
+      { label: 'Hair Care',         href: '/search?category=Beauty&q=hair+care'     },
+      { label: 'Body Care',         href: '/search?category=Beauty&q=body+care'     },
+      { label: 'Tools & Accessories',href: '/search?category=Beauty&q=beauty+tools' },
     ],
   },
 ];
@@ -379,6 +442,54 @@ export default function Header() {
         </div>
       )}
 
+      {/* Men mega menu */}
+      {activeMenu === 'men' && (
+        <div
+          className="hidden lg:block absolute left-0 right-0 top-full z-40 bg-white border-t border-gray-100 shadow-2xl"
+          onMouseEnter={() => openMenu('men')}
+          onMouseLeave={scheduleClose}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="grid grid-cols-5 gap-8">
+              {MEN_MEGA_MENU.map(col => (
+                <div key={col.title}>
+                  <Link
+                    href={col.href}
+                    onClick={() => setActiveMenu(null)}
+                    className="block text-xs font-bold text-brand-600 uppercase tracking-widest mb-3 hover:text-brand-700 transition-colors"
+                  >
+                    {col.title}
+                  </Link>
+                  <ul className="space-y-1.5">
+                    {col.items.map(item => (
+                      <li key={item.label}>
+                        <Link
+                          href={item.href}
+                          onClick={() => setActiveMenu(null)}
+                          className="text-sm text-gray-600 hover:text-brand-600 hover:translate-x-0.5 transition-all inline-block"
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+              <p className="text-xs text-gray-400 font-code tracking-wide">Browse all men's categories</p>
+              <Link
+                href="/search?category=Men"
+                onClick={() => setActiveMenu(null)}
+                className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors"
+              >
+                Shop All Men →
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
@@ -429,6 +540,25 @@ export default function Header() {
           <div className="px-3 pb-3 border-t border-gray-100">
             <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-3 mt-3 mb-2">Women's Categories</p>
             {WOMEN_MEGA_MENU.map(col => (
+              <div key={col.title} className="mb-3">
+                <Link href={col.href} onClick={closeMobileMenu}
+                  className="block px-3 py-1 text-[10px] font-bold text-brand-600 uppercase tracking-widest">
+                  {col.title}
+                </Link>
+                {col.items.map(item => (
+                  <Link key={item.label} href={item.href} onClick={closeMobileMenu}
+                    className="block px-5 py-1.5 text-sm text-gray-600 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors">
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile Men subcategories */}
+          <div className="px-3 pb-3 border-t border-gray-100">
+            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-3 mt-3 mb-2">Men's Categories</p>
+            {MEN_MEGA_MENU.map(col => (
               <div key={col.title} className="mb-3">
                 <Link href={col.href} onClick={closeMobileMenu}
                   className="block px-3 py-1 text-[10px] font-bold text-brand-600 uppercase tracking-widest">

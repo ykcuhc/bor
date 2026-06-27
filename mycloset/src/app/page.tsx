@@ -421,7 +421,7 @@ export default function HomePage() {
                 Take Miova. Everywhere
               </h2>
               <p className="text-brand-200 text-sm mb-5 max-w-sm leading-relaxed">
-                Shop, sell, and track orders on the go. Available on iOS and Android.
+                Shop, sell, and track orders on the go.<br />Available on iOS and Android.
               </p>
               <div className="flex gap-3 flex-wrap justify-center sm:justify-start">
                 <a href="#"

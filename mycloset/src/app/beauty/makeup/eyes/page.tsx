@@ -7,41 +7,15 @@ import { useStore } from '@/store/useStore';
 import ProductCard from '@/components/listing/ProductCard';
 
 const SUBCATEGORIES = [
-  {
-    label: 'Face',
-    image: 'https://picsum.photos/seed/mk-face/600/800',
-    href: '/beauty/makeup/face',
-    q: 'face+makeup',
-  },
-  {
-    label: 'Eyes',
-    image: 'https://picsum.photos/seed/mk-eyes/600/800',
-    href: '/beauty/makeup/eyes',
-    q: 'eye+makeup',
-  },
-  {
-    label: 'Lips',
-    image: 'https://picsum.photos/seed/mk-lips/600/800',
-    q: 'lip+makeup',
-  },
-  {
-    label: 'Eyelashes',
-    image: 'https://picsum.photos/seed/mk-lashes/600/800',
-    q: 'eyelashes',
-  },
-  {
-    label: 'Brushes & Accessories',
-    image: 'https://picsum.photos/seed/mk-brushes/600/800',
-    q: 'makeup+brushes',
-  },
-  {
-    label: 'Makeup Palettes',
-    image: 'https://picsum.photos/seed/mk-palettes/600/800',
-    q: 'makeup+palettes',
-  },
+  { label: 'Mascara',     image: 'https://picsum.photos/seed/ey-mascara/600/400',  q: 'mascara'    },
+  { label: 'Eyebrows',    image: 'https://picsum.photos/seed/ey-brows/600/400',    q: 'eyebrows'   },
+  { label: 'Eyeliner',    image: 'https://picsum.photos/seed/ey-liner/600/400',    q: 'eyeliner'   },
+  { label: 'Eye Shadow',  image: 'https://picsum.photos/seed/ey-shadow/600/400',   q: 'eye+shadow' },
+  { label: 'Eye Primer',  image: 'https://picsum.photos/seed/ey-primer/600/400',   q: 'eye+primer' },
+  { label: 'Concealer',   image: 'https://picsum.photos/seed/ey-concealer/600/400',q: 'concealer'  },
 ];
 
-export default function MakeupPage() {
+export default function MakeupEyesPage() {
   const { filteredListings, loadListings, setFilters } = useStore();
 
   useEffect(() => {
@@ -56,25 +30,27 @@ export default function MakeupPage() {
 
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/beauty" className="flex items-center gap-1 hover:text-brand-600 transition-colors">
-          <ArrowLeft className="w-3.5 h-3.5" /> Beauty
+        <Link href="/beauty" className="hover:text-brand-600 transition-colors">Beauty</Link>
+        <span>/</span>
+        <Link href="/beauty/makeup" className="flex items-center gap-1 hover:text-brand-600 transition-colors">
+          <ArrowLeft className="w-3.5 h-3.5" /> Makeup
         </Link>
         <span>/</span>
-        <span className="text-gray-900 font-semibold">Makeup</span>
+        <span className="text-gray-900 font-semibold">Eyes</span>
       </div>
 
       {/* Title */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Makeup</h1>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 uppercase tracking-wide">Eyes</h1>
         <p className="font-code text-xs text-gray-400 mt-1 tracking-wide">Shop by category</p>
       </div>
 
-      {/* Category banners */}
+      {/* Subcategory banners */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
         {SUBCATEGORIES.map(cat => (
           <Link
             key={cat.label}
-            href={cat.href ?? `/search?category=Beauty&q=${cat.q}`}
+            href={`/search?category=Beauty&q=${cat.q}`}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
             style={{ aspectRatio: '16/9' }}
           >
@@ -96,10 +72,10 @@ export default function MakeupPage() {
         ))}
       </div>
 
-      {/* All Makeup products */}
+      {/* All Eyes products */}
       <div>
         <div className="flex items-baseline justify-between mb-4">
-          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Makeup</h2>
+          <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 uppercase tracking-wide">All Eyes</h2>
           <span className="font-code text-xs text-gray-400 tracking-wide">{listings.length} items</span>
         </div>
 

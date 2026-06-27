@@ -48,7 +48,7 @@ export default function KidsFashionPage() {
             key={cat.label}
             href={`/search?category=Kids&q=${encodeURIComponent(cat.q)}`}
             className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
-            style={{ aspectRatio: '4/3' }}
+            style={{ aspectRatio: '16/9' }}
           >
             <img
               src={cat.image}

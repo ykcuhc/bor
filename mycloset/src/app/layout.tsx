@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import Toast from '@/components/ui/Toast';
 import OfferModal from '@/components/ui/OfferModal';
 import AuthProvider from '@/components/AuthProvider';
+import BackButton from '@/components/ui/BackButton';
 
 const quicksand = Quicksand({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-quicksand' });
 const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta' });
@@ -25,7 +26,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${quicksand.variable} ${jakarta.variable} ${spaceMono.variable} ${playfair.variable} ${nunito.variable} bg-gray-50 min-h-screen flex flex-col`}>
         <AuthProvider>
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1">
+            <BackButton />
+            {children}
+          </main>
           <Footer />
           <Toast />
           <OfferModal />

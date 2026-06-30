@@ -67,12 +67,9 @@ const MOCK_STORES = [
 ];
 
 const COLLECTIONS = [
-  { title: 'Summer Essentials',  image: 'https://picsum.photos/seed/coll-summer/600/300',  href: '/search?q=summer',            items: '2.4K items' },
-  { title: 'Gaming Setup',       image: 'https://picsum.photos/seed/coll-gaming/600/300',  href: '/search?category=Electronics',items: '890 items'  },
-  { title: 'Luxury Fragrances',  image: 'https://picsum.photos/seed/coll-luxury/600/300',  href: '/search?q=perfume',           items: '340 items'  },
-  { title: 'Home Refresh',       image: 'https://picsum.photos/seed/coll-home/600/300',    href: '/search?category=Home',       items: '1.2K items' },
-  { title: 'Fitness Collection', image: 'https://picsum.photos/seed/coll-fitness/600/300', href: '/search?q=fitness',           items: '560 items'  },
-  { title: 'Kids & Baby',        image: 'https://picsum.photos/seed/coll-kids/600/300',    href: '/search?category=Kids',       items: '780 items'  },
+  { title: 'Summer Essentials', image: 'https://picsum.photos/seed/coll-summer/600/300', href: '/search?q=summer',            items: '2.4K items' },
+  { title: 'Gaming Setup',      image: 'https://picsum.photos/seed/coll-gaming/600/300', href: '/search?category=Electronics',items: '890 items'  },
+  { title: 'Luxury Fragrances', image: 'https://picsum.photos/seed/coll-luxury/600/300', href: '/search?q=perfume',           items: '340 items'  },
 ];
 
 type JustAddedFilter = 'today' | 'week' | 'month';
@@ -327,7 +324,7 @@ export default function HomePage() {
         {/* ⑤ Trending Collections ────────────────────────────────── */}
         <section>
           <SectionHead title="Trending Collections" href="/search" />
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+          <div className="grid grid-cols-3 gap-2.5">
             {COLLECTIONS.map(col => (
               <Link key={col.title} href={col.href}
                 className="relative rounded-xl overflow-hidden group" style={{ aspectRatio: '4/3' }}>

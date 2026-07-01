@@ -67,9 +67,9 @@ const MOCK_STORES = [
 ];
 
 const COLLECTIONS = [
-  { title: 'Summer Essentials', image: 'https://picsum.photos/seed/coll-summer/600/300', href: '/search?q=summer',            items: '2.4K items' },
-  { title: 'Gaming Setup',      image: 'https://picsum.photos/seed/coll-gaming/600/300', href: '/search?category=Electronics',items: '890 items'  },
-  { title: 'Luxury Fragrances', image: 'https://picsum.photos/seed/coll-luxury/600/300', href: '/search?q=perfume',           items: '340 items'  },
+  { title: 'Lorem Collection', image: 'https://picsum.photos/seed/coll-summer/600/300', href: '/search?q=summer',            items: '2.4K items' },
+  { title: 'Ipsum Series',     image: 'https://picsum.photos/seed/coll-gaming/600/300', href: '/search?category=Electronics',items: '890 items'  },
+  { title: 'Dolor Picks',      image: 'https://picsum.photos/seed/coll-luxury/600/300', href: '/search?q=perfume',           items: '340 items'  },
 ];
 
 type JustAddedFilter = 'today' | 'week' | 'month';

@@ -193,18 +193,6 @@ function SectionHead({ title, subtitle, href }: { title: string; subtitle?: stri
   );
 }
 
-// ── Star rating display ────────────────────────────────────────────────────────
-
-function Stars({ rating }: { rating: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map(i => (
-        <Star key={i} className={cn('w-3 h-3', i <= Math.round(rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200 fill-gray-200')} />
-      ))}
-    </div>
-  );
-}
-
 // ── Main page ──────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
@@ -339,28 +327,6 @@ export default function HomePage() {
             ))}
           </div>
         </section>
-
-        {/* ⑥ Best Sellers This Week ──────────────────────────────── */}
-        {bestSellers.length > 0 && (
-          <section>
-            <SectionHead
-              title="Best Sellers This Week"
-              subtitle="Most loved by shoppers across Kuwait"
-              href="/search?sortBy=most_liked"
-            />
-            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar snap-x snap-mandatory">
-              {bestSellers.map(l => (
-                <div key={l.id} className="flex-shrink-0 w-40 sm:w-48 snap-start flex flex-col">
-                  <ProductCard listing={l} />
-                  <div className="px-1 mt-1.5 flex items-center justify-between">
-                    <Stars rating={4 + (l.likesCount % 10) / 10} />
-                    <span className="text-[10px] text-gray-400">({l.likesCount})</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* ⑦ Just Added ──────────────────────────────────────────── */}
         {justAdded.length > 0 && (

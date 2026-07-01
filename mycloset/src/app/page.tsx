@@ -348,9 +348,9 @@ export default function HomePage() {
               subtitle="Most loved by shoppers across Kuwait"
               href="/search?sortBy=most_liked"
             />
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar snap-x snap-mandatory">
               {bestSellers.map(l => (
-                <div key={l.id} className="flex flex-col">
+                <div key={l.id} className="flex-shrink-0 w-40 sm:w-48 snap-start flex flex-col">
                   <ProductCard listing={l} />
                   <div className="px-1 mt-1.5 flex items-center justify-between">
                     <Stars rating={4 + (l.likesCount % 10) / 10} />

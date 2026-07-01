@@ -198,6 +198,7 @@ function SectionHead({ title, subtitle, href }: { title: string; subtitle?: stri
 export default function HomePage() {
   const { filteredListings, loadListings, resetFilters, isAuthenticated } = useStore();
   const [justAddedFilter, setJustAddedFilter] = useState<JustAddedFilter>('week');
+  const justAddedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     resetFilters();
@@ -353,8 +354,24 @@ export default function HomePage() {
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-              {justAdded.map(l => <ProductCard key={l.id} listing={l} />)}
+            <div className="relative">
+              <button
+                onClick={() => justAddedRef.current?.scrollBy({ left: -320, behavior: 'smooth' })}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-8 h-8 bg-white border border-gray-200 rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <ChevronLeft className="w-4 h-4 text-gray-600" />
+              </button>
+              <div ref={justAddedRef} className="flex gap-3 overflow-x-auto pb-1 no-scrollbar snap-x snap-mandatory">
+                {justAdded.map(l => (
+                  <div key={l.id} className="flex-shrink-0 w-40 sm:w-48 snap-start">
+                    <ProductCard listing={l} />
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => justAddedRef.current?.scrollBy({ left: 320, behavior: 'smooth' })}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-8 h-8 bg-white border border-gray-200 rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <ChevronRight className="w-4 h-4 text-gray-600" />
+              </button>
             </div>
           </section>
         )}

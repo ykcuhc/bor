@@ -58,12 +58,12 @@ const CATEGORIES = [
 ];
 
 const MOCK_STORES = [
-  { id: 1, name: 'Zara Kuwait',      cover: 'https://picsum.photos/seed/store-zara/320/140',  logo: 'https://picsum.photos/seed/logo-zara/60/60',  products: 245 },
-  { id: 2, name: 'H&M Kuwait',       cover: 'https://picsum.photos/seed/store-hm/320/140',    logo: 'https://picsum.photos/seed/logo-hm/60/60',    products: 312 },
-  { id: 3, name: 'Noon Electronics', cover: 'https://picsum.photos/seed/store-noon/320/140',  logo: 'https://picsum.photos/seed/logo-noon/60/60',  products: 1840 },
-  { id: 4, name: 'Sephora Kuwait',   cover: 'https://picsum.photos/seed/store-seph/320/140',  logo: 'https://picsum.photos/seed/logo-seph/60/60',  products: 520 },
-  { id: 5, name: 'Mango Fashion',    cover: 'https://picsum.photos/seed/store-mango/320/140', logo: 'https://picsum.photos/seed/logo-mango/60/60', products: 189 },
-  { id: 6, name: 'Nike Kuwait',      cover: 'https://picsum.photos/seed/store-nike/320/140',  logo: 'https://picsum.photos/seed/logo-nike/60/60',  products: 421 },
+  { id: 1, name: 'Lorem Store',    cover: 'https://picsum.photos/seed/store-a/320/140', logo: 'https://picsum.photos/seed/logo-a/60/60', products: 245  },
+  { id: 2, name: 'Ipsum Boutique', cover: 'https://picsum.photos/seed/store-b/320/140', logo: 'https://picsum.photos/seed/logo-b/60/60', products: 312  },
+  { id: 3, name: 'Dolor Shop',     cover: 'https://picsum.photos/seed/store-c/320/140', logo: 'https://picsum.photos/seed/logo-c/60/60', products: 1840 },
+  { id: 4, name: 'Amet Market',    cover: 'https://picsum.photos/seed/store-d/320/140', logo: 'https://picsum.photos/seed/logo-d/60/60', products: 520  },
+  { id: 5, name: 'Sit Fashion',    cover: 'https://picsum.photos/seed/store-e/320/140', logo: 'https://picsum.photos/seed/logo-e/60/60', products: 189  },
+  { id: 6, name: 'Consectetur Co', cover: 'https://picsum.photos/seed/store-f/320/140', logo: 'https://picsum.photos/seed/logo-f/60/60', products: 421  },
 ];
 
 const COLLECTIONS = [

@@ -200,6 +200,7 @@ export default function HomePage() {
   const [justAddedFilter, setJustAddedFilter] = useState<JustAddedFilter>('week');
   const justAddedRef = useRef<HTMLDivElement>(null);
   const recommendedRef = useRef<HTMLDivElement>(null);
+  const flashDealsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     resetFilters();
@@ -289,7 +290,13 @@ export default function HomePage() {
                 See all <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
-            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar snap-x snap-mandatory">
+            <div className="relative">
+              <button
+                onClick={() => flashDealsRef.current?.scrollBy({ left: -320, behavior: 'smooth' })}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-8 h-8 bg-white border border-gray-200 rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <ChevronLeft className="w-4 h-4 text-gray-600" />
+              </button>
+            <div ref={flashDealsRef} className="flex gap-3 overflow-x-auto pb-1 no-scrollbar snap-x snap-mandatory">
               {flashDeals.map(l => {
                 const pct = Math.round(((l.originalPrice - l.listingPrice) / l.originalPrice) * 100);
                 return (
@@ -307,6 +314,12 @@ export default function HomePage() {
                   </Link>
                 );
               })}
+            </div>
+              <button
+                onClick={() => flashDealsRef.current?.scrollBy({ left: 320, behavior: 'smooth' })}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-8 h-8 bg-white border border-gray-200 rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <ChevronRight className="w-4 h-4 text-gray-600" />
+              </button>
             </div>
           </section>
         )}

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Class-based dark mode — works alongside System (JS applies .dark to <html>) */
+@variant dark (&:is(.dark, .dark *));
+
 @theme {
   /* Miova brand palette — deep indigo */
   --color-brand-50:  #EEF2FF;

@@ -23,6 +23,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" dir="ltr">
+      {/* Apply theme class before first paint to prevent flash of wrong theme */}
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var p=JSON.parse(localStorage.getItem('miova_prefs')||'{}');var t=p.theme||'system';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark');if(p.language==='ar'){document.documentElement.lang='ar';document.documentElement.dir='rtl';}}catch(e){}})();` }} />
+      </head>
       <body className={`${quicksand.variable} ${jakarta.variable} ${spaceMono.variable} ${playfair.variable} ${nunito.variable} bg-gray-50 min-h-screen flex flex-col`}>
         <AuthProvider>
           <Header />

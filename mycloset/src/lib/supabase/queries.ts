@@ -364,3 +364,18 @@ export async function markNotificationsRead(client: Client, userId: string) {
     .eq('read', false)
     .throwOnError();
 }
+
+export async function fetchSimilarStores(
+  client: Client,
+  excludeUserId: string,
+  limit = 4,
+): Promise<User[]> {
+  const { data } = await client
+    .from('users')
+    .select('*')
+    .neq('id', excludeUserId)
+    .gt('sold_count', 0)
+    .order('sold_count', { ascending: false })
+    .limit(limit);
+  return (data ?? []).map(rowToUser);
+}

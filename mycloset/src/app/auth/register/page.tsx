@@ -300,6 +300,7 @@ export default function RegisterPage() {
         email:    form.email.trim(),
         password: form.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             username:           form.username,
             display_name:       `${form.firstName.trim()} ${form.lastName.trim()}`,

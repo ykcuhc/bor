@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   Search, Bell, Heart, ChevronDown, MessageCircle,
-  Menu, X, User, LogOut, Plus, Package, Settings,
+  Menu, X, User, LogOut, Plus, Package, Settings, Store,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { cn } from '@/lib/utils';
@@ -386,6 +386,10 @@ export default function Header() {
                       <Link href="/settings" onClick={() => setProfileOpen(false)}
                         className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                         <Settings className="w-4 h-4 text-gray-400 flex-shrink-0" /> Settings
+                      </Link>
+                      <Link href="/vendor/register" onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-brand-600 hover:bg-brand-50 transition-colors font-medium">
+                        <Store className="w-4 h-4 flex-shrink-0" /> Become a Vendor
                       </Link>
                       <hr className="my-1 border-gray-100" />
                       <button onClick={handleLogout}

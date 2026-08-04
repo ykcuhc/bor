@@ -15,7 +15,7 @@ description: >
 # MyCloset Debugging Playbook
 
 Triage guide for `/home/user/bor/mycloset`. Every repo-specific claim below was
-verified by reading the code **as of 2026-07-13** and is cited `path:line`
+verified by reading the code **as of 2026-08-04** and is cited `path:line`
 (paths relative to `mycloset/`). Items marked **[generic Next.js/React]** are
 framework knowledge, not repo facts.
 
@@ -47,8 +47,8 @@ cd /home/user/bor/mycloset && npx tsc --noEmit
   often downstream of a bad refactor the compiler already sees.
 - **Clean** → it's runtime/config. Use the table below.
 
-Note: `npm run lint` has **40 pre-existing warnings, 0 errors** (as of
-2026-07-13). New *warnings* matching that baseline are not your bug; a new
+Note: `npm run lint` has **40 pre-existing warnings, 0 errors** (baseline
+reported 2026-07-13, not re-run since). New *warnings* matching that baseline are not your bug; a new
 *error* is. Do NOT run `npm run build` / `npm run dev` if another agent owns
 the dev server — reason from code and `npx tsc --noEmit`.
 
@@ -408,7 +408,7 @@ be inconsistent with the rest of the app. RULE: always derive liked state as
 
 ## Provenance and maintenance
 
-All repo claims verified 2026-07-13 against the working tree. Re-verify before
+All repo claims verified 2026-08-04 against the working tree. Re-verify before
 trusting after significant changes:
 
 ```bash

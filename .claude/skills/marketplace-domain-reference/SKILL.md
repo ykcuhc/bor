@@ -13,7 +13,7 @@ description: >-
 
 # MyCloset Marketplace Domain Reference
 
-MyCloset (repo: `/home/user/bor/mycloset`) is a **social commerce resale marketplace for Kuwait**, modeled on Poshmark: individual sellers list secondhand items from their "closet," buyers negotiate via time-limited offers, and the platform takes a percentage fee plus flat shipping. All facts below are verified against the repo **as of 2026-07-13**.
+MyCloset (repo: `/home/user/bor/mycloset`) is a **social commerce resale marketplace for Kuwait**, modeled on Poshmark: individual sellers list secondhand items from their "closet," buyers negotiate via time-limited offers, and the platform takes a percentage fee plus flat shipping. All facts below are verified against the repo **as of 2026-08-04**.
 
 **Read this first — implementation status legend.** Every claim in this document carries one of three labels. Do not conflate them; most bugs in this codebase come from assuming schema-only features work.
 
@@ -134,7 +134,7 @@ What is actually implemented (store: `OfferSlice` in useStore.ts; UI: `src/compo
 
 **Statuses** (`order_status` enum, schema.sql line 143 = `Order['status']`): `pending → shipped → delivered → completed`, with `disputed` as the off-ramp. Columns carry the full money snapshot (`amount`, `shipping_fee` default 1.500, `platform_fee`, `seller_earnings`) plus `tracking_number`/`shipping_provider`, and RLS restricts reads to buyer or seller (schema.sql line 205).
 
-**Orders are entirely schema-only today (as of 2026-07-13).** No store slice, no seed orders, no orders page. "Buy Now" on the listing detail page just toasts `'Redirecting to checkout...'` and returns (`handleBuyNow`, listings/[id]/page.tsx line 176–180). There is no checkout, no payment, no order record. **Industry context, not encoded in this repo:** in the Poshmark model, funds are escrowed and released to the seller only after delivery confirmation or a 3-day acceptance window — the detail page's static "Returns accepted within 3 days" copy gestures at this, but nothing implements it.
+**Orders are entirely schema-only today (as of 2026-08-04).** No store slice, no seed orders, no orders page. "Buy Now" on the listing detail page just toasts `'Redirecting to checkout...'` and returns (`handleBuyNow`, listings/[id]/page.tsx line 176–180). There is no checkout, no payment, no order record. **Industry context, not encoded in this repo:** in the Poshmark model, funds are escrowed and released to the seller only after delivery confirmation or a 3-day acceptance window — the detail page's static "Returns accepted within 3 days" copy gestures at this, but nothing implements it.
 
 ## 6. Listing lifecycle
 
@@ -152,7 +152,7 @@ What is actually implemented (store: `OfferSlice` in useStore.ts; UI: `src/compo
 
 **All 8 are seed/render-only.** No store action ever creates a notification — `toggleLike`, `addComment`, `makeOffer`, `respondToOffer`, `followUser` all skip it. The notifications page (`src/app/notifications/page.tsx`) renders `MOCK_NOTIFICATIONS` directly from mockData.ts (bypassing the store), and the header badge count is computed once from seed unread items (`notificationCount` in useStore.ts line 380). "Mark all read" has no handler.
 
-| Type | Intended trigger (recipient) | Reality as of 2026-07-13 |
+| Type | Intended trigger (recipient) | Reality as of 2026-08-04 |
 |---|---|---|
 | `new_like` | Someone likes your listing (seller) | Seed only (`n1`); icon+label maps exist for rendering |
 | `new_comment` | Comment on your listing (seller) | Render map only, no seed instance |
@@ -173,7 +173,7 @@ Open gaps (not implemented — treat as future work; cross-reference the `resear
 - **No Arabic / RTL**: `layout.tsx` hardcodes `lang="en" dir="ltr"`; zero i18n scaffolding.
 - **No KNET or any payment integration**: no checkout at all (§5). Industry context, not encoded in this repo: KNET is Kuwait's dominant domestic debit network and table-stakes for local e-commerce; cash-on-delivery is also common in the Gulf.
 - **No local shipping/courier integration**: `shipping_provider` is a bare text column.
-- Kuwait has no VAT (as of 2026-07-13) — no tax fields exist anywhere, consistent with that (industry context, not encoded in this repo).
+- Kuwait has no VAT (as of 2026-08-04) — no tax fields exist anywhere, consistent with that (industry context, not encoded in this repo).
 
 ## 9. When NOT to use this skill
 
@@ -184,7 +184,7 @@ Open gaps (not implemented — treat as future work; cross-reference the `resear
 
 ## Provenance and maintenance
 
-Every "Implemented"/"Schema-only" claim above was verified by reading the cited files on 2026-07-13. Re-verify before trusting volatile facts:
+Every "Implemented"/"Schema-only" claim above was verified by reading the cited files on 2026-08-04. Re-verify before trusting volatile facts:
 
 - Fees/rounding: `grep -n "PLATFORM_FEE_RATE\|SHIPPING_FEE_KWD\|calcEarnings" mycloset/src/lib/mockData.ts`
 - Currency/discount: `grep -n "formatKWD\|getDiscountPercent" mycloset/src/lib/utils.ts`
